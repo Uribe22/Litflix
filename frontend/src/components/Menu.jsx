@@ -5,15 +5,13 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Offcanvas from 'react-bootstrap/Offcanvas';
-import '../styles/navbar.css';
+import '../styles/Menu.css';  
 
-
-function NavbarComponent() {
+function Menu() {
   return (
-   <Navbar expand="lg" className="custom-navbar mb-3"> {/* Clase personalizada */}
-
+    <Navbar expand="lg" className="custom-navbar mb-3">
       <Container fluid>
-        <Navbar.Brand href="#">Litflix</Navbar.Brand>
+        <Navbar.Brand href="#" className="litflix-title">Litflix</Navbar.Brand>
         <Navbar.Toggle aria-controls="offcanvasNavbar" />
         <Navbar.Offcanvas
           id="offcanvasNavbar"
@@ -25,11 +23,11 @@ function NavbarComponent() {
           </Offcanvas.Header>
           <Offcanvas.Body>
             <Nav className="justify-content-end flex-grow-1 pe-3">
-              <Nav.Link href="/">Inicio</Nav.Link>
-              <Nav.Link href="/sobre-nosotros">Sobre Nosotros</Nav.Link>
+             
+              <Nav.Link href="/sobre-nosotros">Sobre Nosotros</Nav.Link> 
               <Nav.Link href="/contacto">Contacto</Nav.Link>
               <NavDropdown title="Categorías" id="offcanvasNavbarDropdown">
-                <NavDropdown.Item href="#accion1">Acción</NavDropdown.Item>
+                <NavDropdown.Item href="#menaccion1">Acción</NavDropdown.Item>
                 <NavDropdown.Item href="#accion2">Comedia</NavDropdown.Item>
                 <NavDropdown.Divider />
                 <NavDropdown.Item href="#accion3">Drama</NavDropdown.Item>
@@ -42,7 +40,7 @@ function NavbarComponent() {
                 className="me-2"
                 aria-label="Buscar"
               />
-              <Button variant="outline-success">Buscar</Button>
+             <Button className="custom-search-button">Buscar</Button>
             </Form>
           </Offcanvas.Body>
         </Navbar.Offcanvas>
@@ -51,4 +49,4 @@ function NavbarComponent() {
   );
 }
 
-export default NavbarComponent;
+export default Menu;

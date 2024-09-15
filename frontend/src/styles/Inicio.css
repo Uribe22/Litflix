@@ -1,0 +1,34 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+  }
+  
+  .obras-card {
+    background-color: white;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 1);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .obras-card img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+  
+  .obras-card h3 {
+    font-size: 1.25rem;
+    font-weight: bold;
+  }
+  
+  .obras-card p {
+    font-size: 1rem;
+    color: rgb(255, 255, 255);
+  }

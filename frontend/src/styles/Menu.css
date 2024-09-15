@@ -1,0 +1,54 @@
+.custom-navbar {
+    background-color: #0a60b1 !important; /* Color del menu */
+    
+  }
+
+  /* botón de búsqueda */
+  .custom-search-button {
+    background-color: #071bcf !important; /* Azul claro */
+    color: rgb(242, 242, 242); /* Texto en blanco */
+    border: none; /* Sin borde */
+  }
+  
+  .custom-search-button:hover {
+    background-color: #664dd3 !important; /* al pasar el mouse */
+  }
+  .navbar .nav-link {
+    text-align: right;
+    color: #ffffff !important;  
+  }
+  .navbar .nav-link:hover {
+    color: #0c8fc3 !important;  /* Cambia el color cuando pases el mouse */
+  }
+
+.navbar .dropdown-item:hover {
+  background-color: #87CEEB !important;  /* Color de fondo del dropdown al pasar el ratón */
+  color: #6b8cbc !important;  /* Color del texto al pasar el ratón */
+}
+  nav {
+    background-color: #ffffff;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  nav ul li {
+    display: inline;
+    margin-right: 20px;
+  }
+  
+  nav ul li a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  nav ul li a:hover {
+    color: #adb5bd;
+  }
+  

@@ -1,19 +1,22 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import NavbarComponent from './components/Navbar';
-import Home from './pages/Home';
-import About from './pages/About';
+import Menu from './components/Menu'; 
+import Inicio from './pages/Inicio';  
+import Nosotros from './pages/Nosotros';  
+import './styles/General.css'; 
+
 
 function App() {
   return (
     <Router>
       <div>
-        <NavbarComponent /> {/* Usa el componente Navbar */}
+        {/* Aquí incluimos la barra de navegación */}
+        <Menu />  {/* Cambié 'NavbarComponent' por 'Menu' */}
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<h1>Contact Page</h1>} />
+          {/* Definir las rutas de las diferentes páginas */}
+          <Route path="/" element={<Inicio />} />  {/* Cambié 'Home' por 'Inicio' */}
+          <Route path="/sobre-nosotros" element={<Nosotros />} />  {/* Cambié 'About' por 'Nosotros' */}
         </Routes>
       </div>
     </Router>

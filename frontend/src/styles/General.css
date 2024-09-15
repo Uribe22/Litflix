@@ -1,0 +1,100 @@
+/* Fondo azul para toda la página */
+body {
+    background-color: #122444;  /* Azul personalizado */
+    margin: 0;                  /* Elimina márgenes */
+    padding: 0;                 /* Elimina padding */
+    min-height: 100vh;          /* Asegura que cubra al menos toda la ventana */
+    font-family: Arial, sans-serif; /* Opcional: Ajusta la fuente global */
+}
+.litflix-title {
+font-family: "Merriweather", serif;
+font-size: 3rem;
+color: #ffffff;
+font-style: italic;
+}
+  
+.titulo-tipo { /*para pelicula, serie, libro*/
+font-family: "Merriweather", serif;
+color: #fffadc;  /*color de los titulos de los tipos de obras*/
+font-size: 2rem; /* Tamaño del texto*/
+text-align: center; /* Opcional: Centrar el texto */
+margin-bottom: 20px; /* Espacio inferior para separar el título del contenido */
+}
+ 
+/* Contenedor principal de las tarjetas */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  /* Estilo para las tarjetas */
+  .tarjeta-obra {
+    background-color: white;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.389);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
+    max-width: 100%;
+  }
+  
+  /* Hover para dar efecto a las tarjetas */
+  .tarjeta-obra:hover {
+    transform: translateY(-50px); /* Eleva la tarjeta al pasar el ratón */
+  }
+  
+  /* Estilo para la imagen dentro de la tarjeta */
+  .tarjeta-obra-imagen {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+  
+  /* Espaciado para el contenido de la tarjeta */
+  .p-4 {
+    padding: 16px;
+  }
+  
+  /* Título de la tarjeta */
+  .tarjeta-obra h3 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  
+  /* Media Queries para dispositivos más pequeños (tabletas y móviles) */
+  @media (max-width: 768px) {
+    .grid {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));  /* Ajustar el tamaño de las columnas */
+    }
+  
+    .tarjeta-obra {
+      margin: 10px;
+    }
+  
+    .tarjeta-obra h3 {
+      font-size: 1rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .grid {
+      grid-template-columns: 1fr;  /* Mostrar una tarjeta por fila en móviles */
+    }
+  
+    .tarjeta-obra {
+      margin: 5px;
+    }
+  
+    .tarjeta-obra h3 {
+      font-size: 0.9rem;
+    }
+  }
+  .calificacion-estrellas {
+    color: #af9f41;  /* Color dorado para las estrellas */
+    font-size: 30px; /* Tamaño de las estrellas */
+  }
+   
+  
