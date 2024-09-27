@@ -12,11 +12,11 @@ Configuración del archivo .env
 
 Crea un archivo llamado .env en la raíz de tu proyecto y asegúrate de incluir la siguiente configuración:
 
-DB_HOST=localhost
-DB_USER=root # Reemplaza con tu usuario
-DB_PASSWORD=tu_contraseña   # Reemplaza con tu contraseña de la base de datos
-DB_NAME=litflix
-PORT=3000 # Configuración del puerto (opcional)
+-DB_HOST=localhost
+-DB_USER=root # Reemplaza con tu usuario
+-DB_PASSWORD=tu_contraseña   # Reemplaza con tu contraseña de la base de datos
+-DB_NAME=litflix
+-PORT=3000 # Configuración del puerto (opcional)
 
 Configuración de la Base de Datos
 
