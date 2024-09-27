@@ -16,8 +16,7 @@ Modifique o cree un archivo llamado .env en la raíz de tu proyecto y asegúrate
 - DB_USER=root # Reemplaza con tu usuario
 - DB_PASSWORD=tu_contraseña # Reemplaza con tu contraseña de la base de datos
 - DB_NAME=litflix
-- PORT=3001 # Configuración del puerto (opcional)
-
+- PORT=3001
 
 Configuración de la Base de Datos
 
