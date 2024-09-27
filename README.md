@@ -23,3 +23,4 @@ Configuración de la Base de Datos
 Crear la base de datos: Asegúrate de que la base de datos se llame "litflix" ejecutando el siguiente comando en MySQL:
 
 CREATE DATABASE litflix;
+Nota:El código de este proyecto se encuentran en la rama 'master' del repositorio.
