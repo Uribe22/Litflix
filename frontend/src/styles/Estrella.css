@@ -1,0 +1,10 @@
+.calificacion-estrellas {
+    display: inline-block;
+  }
+  
+  .estrella {
+    color: gold;  /* Color dorado para las estrellas */
+    font-size: 1.5rem;  /* Tamaño de las estrellas */
+    margin-right: 5px;  /* Espaciado entre las estrellas */
+  }
+  

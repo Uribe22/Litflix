@@ -1,52 +1,45 @@
-import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
-import Form from 'react-bootstrap/Form';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
-import Offcanvas from 'react-bootstrap/Offcanvas';
-import '../styles/Menu.css';  
+import React, { useState } from 'react';
+import { Button, Container, Nav, Navbar, Form } from 'react-bootstrap';
+import { Search } from 'lucide-react'; // Importa los iconos de lucide-react
+import { Link } from 'react-router-dom'; // Usamos react-router-dom para las rutas
 
-function Menu() {
+function MenuComponent() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   return (
     <Navbar expand="lg" className="custom-navbar mb-3">
       <Container fluid>
-        <Navbar.Brand href="#" className="litflix-title">Litflix</Navbar.Brand>
-        <Navbar.Toggle aria-controls="offcanvasNavbar" />
-        <Navbar.Offcanvas
-          id="offcanvasNavbar"
-          aria-labelledby="offcanvasNavbarLabel"
-          placement="end"
-        >
-          <Offcanvas.Header closeButton>
-            <Offcanvas.Title id="offcanvasNavbarLabel">Menú</Offcanvas.Title>
-          </Offcanvas.Header>
-          <Offcanvas.Body>
-            <Nav className="justify-content-end flex-grow-1 pe-3">
-             
-              <Nav.Link href="/sobre-nosotros">Sobre Nosotros</Nav.Link> 
-              <Nav.Link href="/contacto">Contacto</Nav.Link>
-              <NavDropdown title="Categorías" id="offcanvasNavbarDropdown">
-                <NavDropdown.Item href="#menaccion1">Acción</NavDropdown.Item>
-                <NavDropdown.Item href="#accion2">Comedia</NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item href="#accion3">Drama</NavDropdown.Item>
-              </NavDropdown>
-            </Nav>
-            <Form className="d-flex">
-              <Form.Control
-                type="search"
-                placeholder="Buscar"
-                className="me-2"
-                aria-label="Buscar"
-              />
-             <Button className="custom-search-button">Buscar</Button>
-            </Form>
-          </Offcanvas.Body>
-        </Navbar.Offcanvas>
+        {/* Utiliza Link para la navegación interna */}
+        <Navbar.Brand as={Link} to="/" className="litflix-title text-[#4cc9f0]">Litflix</Navbar.Brand>
+        <Navbar.Toggle aria-controls="offcanvasNavbar" onClick={() => setIsMenuOpen(!isMenuOpen)} />
+        <Navbar.Collapse id="offcanvasNavbar" className={`${isMenuOpen ? 'show' : ''}`}>
+        <Nav className="justify-content-end flex-grow-1 pe-3">
+        <Link className="nav-link" to="/libros">Libros</Link>
+        <Link className="nav-link" to="/peliculas">Películas</Link>
+        <Link className="nav-link" to="/series">Series</Link>
+        </Nav>
+
+          {/* Sección de búsqueda */}
+          <Form className="search-form d-flex">
+            <Form.Control
+              type="search"
+              placeholder="Buscar"
+              className="search-input me-2"
+              aria-label="Buscar"
+            />
+            <Button className="search-button">Buscar</Button>
+          </Form>
+
+          {/* User section */}
+          <Nav className="ml-auto">
+            <Nav.Link href="/login" className="text-white">
+              <i className="bi bi-person-circle" style={{ fontSize: '1.5rem' }}></i> Iniciar Sesión
+            </Nav.Link>
+          </Nav>
+        </Navbar.Collapse>
       </Container>
     </Navbar>
   );
 }
 
-export default Menu;
+export default MenuComponent;

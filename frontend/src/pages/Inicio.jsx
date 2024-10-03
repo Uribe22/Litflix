@@ -3,20 +3,21 @@ import axios from 'axios';
 import TarjetaObra from '../components/TarjetaObra';
 
 export default function Inicio() {
-  const [peliculas, setPeliculas] = useState([]);
-  const [series, setSeries] = useState([]);
-  const [libros, setLibros] = useState([]);
+  const [mejorValoradas, setMejorValoradas] = useState([]);
+  const [ultimosEstrenos, setUltimosEstrenos] = useState([]);
+  const [masResenadas, setMasResenadas] = useState([]);
 
   useEffect(() => {
     const obtenerDatos = async () => {
       try {
-        const respuestaPeliculas = await axios.get('http://localhost:3001/api/peliculas');
-        const respuestaSeries = await axios.get('http://localhost:3001/api/series');
-        const respuestaLibros = await axios.get('http://localhost:3001/api/libros');
+        const resMejorValoradas = await axios.get('http://localhost:3001/api/mejor-valoradas');
+        const resUltimosEstrenos = await axios.get('http://localhost:3001/api/ultimos-estrenos');
+        const resMasResenadas = await axios.get('http://localhost:3001/api/mas-reseñadas');
 
-        setPeliculas(respuestaPeliculas.data);
-        setSeries(respuestaSeries.data);
-        setLibros(respuestaLibros.data);
+        // Guardar los datos obtenidos
+        setMejorValoradas(resMejorValoradas.data);
+        setUltimosEstrenos(resUltimosEstrenos.data);
+        setMasResenadas(resMasResenadas.data);
       } catch (error) {
         console.error('Error al obtener los datos:', error);
       }
@@ -25,40 +26,50 @@ export default function Inicio() {
     obtenerDatos();
   }, []);
 
+  // Función para calcular el promedio de calificaciones basado en las reseñas
+  const calcularPromedio = (reseñas) => {
+    if (reseñas.length === 0) return 0;
+    const total = reseñas.reduce((sum, reseña) => sum + reseña.valoracion, 0);
+    return total / reseñas.length;
+  };
+
   return (
-    <div className="contenedor">¿
-      <h1 className="titulo-tipo">Películas</h1>
+    <div className="contenedor">
+      {/* Sección Mejor Valoradas */}
+      <h1 className="titulo-tipo">Mejor Valoradas</h1>
       <div className="grid">
-        {peliculas.map((pelicula, index) => (
+        {mejorValoradas.map((obra, index) => (
           <TarjetaObra
             key={index}
-            titulo={pelicula.titulo}
-            urlImagen={pelicula.imagen}
-            calificacion={pelicula.rating}
+            titulo={obra.titulo}
+            urlImagen={obra.imagen}
+            calificacion_promedio={calcularPromedio(obra.reseñas)} // Pasamos el promedio de las reseñas
           />
         ))}
       </div>
 
-      <h1 Series className="titulo-tipo">Series</h1>
+      {/* Sección Últimos Estrenos */}
+      <h1 className="titulo-tipo">Últimos Estrenos</h1>
       <div className="grid">
-        {series.map((serie, index) => (
+        {ultimosEstrenos.map((obra, index) => (
           <TarjetaObra
             key={index}
-            titulo={serie.titulo}
-            urlImagen={serie.imagen}
-            calificacion={serie.rating}
+            titulo={obra.titulo}
+            urlImagen={obra.imagen}
+            calificacion_promedio={null}  // No hay calificación aquí
           />
         ))}
       </div>
 
-      <h1 Series className="titulo-tipo">Libros</h1>
+      {/* Sección Más Reseñadas */}
+      <h1 className="titulo-tipo">Más Reseñadas</h1>
       <div className="grid">
-        {libros.map((libro, index) => (
+        {masResenadas.map((obra, index) => (
           <TarjetaObra
             key={index}
-            titulo={libro.titulo}
-            urlImagen={libro.imagen}
-            calificacion={libro.rating}
+            titulo={obra.titulo}
+            urlImagen={obra.imagen}
+            calificacion_promedio={calcularPromedio(obra.reseñas)}  // Pasamos el promedio de las reseñas
           />
         ))}
       </div>
