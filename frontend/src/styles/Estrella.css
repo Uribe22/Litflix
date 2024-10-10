@@ -1,10 +1,25 @@
 .calificacion-estrellas {
-    display: inline-block;
-  }
-  
-  .estrella {
-    color: gold;  /* Color dorado para las estrellas */
-    font-size: 1.5rem;  /* Tamaño de las estrellas */
-    margin-right: 5px;  /* Espaciado entre las estrellas */
-  }
-  
+  font-size: 24px;
+  display: flex;
+  justify-content: center;  /* Centra las estrellas horizontalmente */
+  align-items: center;  /* Centra las estrellas verticalmente */
+  margin-top: 10px;  /* Añadir espacio superior para separación */
+}
+
+.calificacion-estrellas svg {
+  color: rgb(209, 179, 6);  /* Color personalizado para las estrellas */
+  margin-right: 4px;
+  width: 1.3em;
+  height: 1.3em;
+  stroke: rgb(63, 55, 10);  /* Color del borde */
+  stroke-width: 0.2em;  /* Grosor del borde */
+
+}
+
+
+.calificacion-vacia {
+  font-size: 0.8rem;
+  color: #676666;
+  margin-top: 5px;
+  text-align: center;
+}

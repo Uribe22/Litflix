@@ -33,42 +33,23 @@ process.on('SIGINT', () => {
         process.exit();
     });
 });
+
 // Asegúrate de crear una carpeta '/images' donde estarán tus imágenes
 app.use('/imagenes', express.static('public/imagenes'));
-
-// Rutas para obtener películas
-app.get('/api/peliculas', (req, res) => {
-    db.query("SELECT * FROM obra WHERE tipo = 'pelicula'", (err, results) => {
-        if (err) return res.status(500).json({ error: err.message });
-        res.json(results);
-    });
-});
-
-// Rutas para obtener series
-app.get('/api/series', (req, res) => {
-    db.query("SELECT * FROM obra WHERE tipo = 'serie'", (err, results) => {
-        if (err) return res.status(500).json({ error: err.message });
-        res.json(results);
-    });
-});
-
-// Rutas para obtener libros
-app.get('/api/libros', (req, res) => {
-    db.query("SELECT * FROM obra WHERE tipo = 'libro'", (err, results) => {
-        if (err) return res.status(500).json({ error: err.message });
-        res.json(results);
-    });
-});
 
 // Rutas para obtener las mejores valoradas
 app.get('/api/mejor-valoradas', (req, res) => {
     const query = `
-        SELECT obra.*, AVG(resenia.valoracion) as valoracion_promedio
+        SELECT obra.*, 
+            IFNULL(AVG(resenia.valoracion), 0) as valoracion_promedio, 
+            COUNT(resenia.Id_resenia) as total_resenias
         FROM obra
-        JOIN resenia ON obra.Id_obra = resenia.Id_obra
+        LEFT JOIN resenia ON obra.Id_obra = resenia.Id_obra
         GROUP BY obra.Id_obra
+        HAVING total_resenias > 0
         ORDER BY valoracion_promedio DESC
         LIMIT 5`;
+
     db.query(query, (err, results) => {
         if (err) return res.status(500).json({ error: err.message });
         res.json(results);
@@ -78,10 +59,15 @@ app.get('/api/mejor-valoradas', (req, res) => {
 // Rutas para obtener los últimos estrenos
 app.get('/api/ultimos-estrenos', (req, res) => {
     const query = `
-        SELECT *
+        SELECT obra.*, 
+            IFNULL(AVG(resenia.valoracion), 0) as valoracion_promedio, 
+            COUNT(resenia.Id_resenia) as total_resenias
         FROM obra
+        LEFT JOIN resenia ON obra.Id_obra = resenia.Id_obra
+        GROUP BY obra.Id_obra
         ORDER BY fecha_lanzamiento DESC
         LIMIT 5`;
+
     db.query(query, (err, results) => {
         if (err) return res.status(500).json({ error: err.message });
         res.json(results);
@@ -89,19 +75,149 @@ app.get('/api/ultimos-estrenos', (req, res) => {
 });
 
 // Rutas para obtener las más reseñadas
-app.get('/api/mas-reseñadas', (req, res) => {
+app.get('/api/mas-resenadas', (req, res) => {
     const query = `
-        SELECT obra.*, COUNT(resenia.Id_resenia) as total_resenias
+        SELECT obra.*, 
+            IFNULL(AVG(resenia.valoracion), 0) as valoracion_promedio, 
+            COUNT(resenia.Id_resenia) as total_resenias
         FROM obra
-        JOIN resenia ON obra.Id_obra = resenia.Id_obra
+        LEFT JOIN resenia ON obra.Id_obra = resenia.Id_obra
         GROUP BY obra.Id_obra
+        HAVING total_resenias > 0
         ORDER BY total_resenias DESC
         LIMIT 5`;
+
     db.query(query, (err, results) => {
         if (err) return res.status(500).json({ error: err.message });
         res.json(results);
     });
 });
+
+// Ruta genérica para buscar en todas las categorías (libros, series, películas)
+app.get('/api/buscar', (req, res) => {
+    const termino = req.query.q;
+    const query = `
+      SELECT * FROM obra 
+      WHERE titulo LIKE ? 
+      OR autor LIKE ? 
+      OR sinopsis LIKE ?`;
+
+    db.query(query, [`%${termino}%`, `%${termino}%`, `%${termino}%`], (err, results) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json(results);
+    });
+});
+app.get('/api/peliculas', (req, res) => {
+    const query = `
+      SELECT obra.Id_obra, obra.titulo, obra.imagen, obra.fecha_lanzamiento, 
+             IFNULL(AVG(resenia.valoracion), 0) as promedio_valoracion, 
+             COUNT(resenia.Id_resenia) as total_resenias
+      FROM obra
+      LEFT JOIN resenia ON obra.Id_obra = resenia.Id_obra
+      WHERE obra.tipo = 'pelicula'
+      GROUP BY obra.Id_obra
+    `;
+
+    db.query(query, (err, results) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(results);
+    });
+});
+app.get('/api/series', (req, res) => {
+    const query = `
+      SELECT obra.Id_obra, obra.titulo, obra.imagen, obra.fecha_lanzamiento, 
+             IFNULL(AVG(resenia.valoracion), 0) as promedio_valoracion, 
+             COUNT(resenia.Id_resenia) as total_resenias
+      FROM obra
+      LEFT JOIN resenia ON obra.Id_obra = resenia.Id_obra
+      WHERE obra.tipo = 'serie'
+      GROUP BY obra.Id_obra
+    `;
+
+    db.query(query, (err, results) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(results);
+    });
+});
+app.get('/api/libros', (req, res) => {
+    const query = `
+      SELECT obra.Id_obra, obra.titulo, obra.imagen, obra.fecha_lanzamiento, 
+             IFNULL(AVG(resenia.valoracion), 0) as promedio_valoracion, 
+             COUNT(resenia.Id_resenia) as total_resenias
+      FROM obra
+      LEFT JOIN resenia ON obra.Id_obra = resenia.Id_obra
+      WHERE obra.tipo = 'libro'
+      GROUP BY obra.Id_obra
+    `;
+
+    db.query(query, (err, results) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(results);
+    });
+});
+
+
+// Ruta para buscar series
+app.get('/api/buscar-series', (req, res) => {
+    const termino = req.query.q;
+    const query = `
+      SELECT * FROM obra 
+      WHERE tipo = 'serie' 
+      AND (titulo LIKE ? OR autor LIKE ? OR sinopsis LIKE ?)`;
+
+    db.query(query, [`%${termino}%`, `%${termino}%`, `%${termino}%`], (err, results) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json(results);
+    });
+});
+app.get('/api/buscar-libros', (req, res) => {
+    const termino = req.query.q;
+    const query = `
+      SELECT * FROM obra 
+      WHERE tipo = 'libro' 
+      AND (titulo LIKE ? OR autor LIKE ? OR sinopsis LIKE ?)`;
+  
+    db.query(query, [`%${termino}%`, `%${termino}%`, `%${termino}%`], (err, results) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json(results);
+    });
+  });
+  
+// Ruta para buscar películas
+app.get('/api/buscar-peliculas', (req, res) => {
+    const termino = req.query.q;
+    const query = `
+      SELECT * FROM obra 
+      WHERE tipo = 'pelicula' 
+      AND (titulo LIKE ? OR autor LIKE ? OR sinopsis LIKE ?)`;
+
+    db.query(query, [`%${termino}%`, `%${termino}%`, `%${termino}%`], (err, results) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json(results);
+    });
+});
+
+// Ruta para obtener el promedio de calificación de una obra
+app.get('/api/calificacion/:idObra', (req, res) => {
+    const idObra = req.params.idObra;  // Extrae el ID de la obra de los parámetros
+    const query = `
+        SELECT IFNULL(AVG(valoracion), 0) as valoracion_promedio
+        FROM resenia
+        WHERE Id_obra = ?
+    `;
+
+    db.query(query, [idObra], (err, results) => {
+        if (err) {
+            console.error('Error en la consulta:', err);
+            return res.status(500).json({ error: 'Error en la consulta' });
+        }
+        if (results.length === 0) {
+            return res.status(404).json({ error: 'No se encontraron reseñas para esta obra' });
+        }
+        res.json(results[0]);
+    });
+});
+
 
 // Ruta raíz para mostrar un mensaje de bienvenida
 app.get('/', (req, res) => {

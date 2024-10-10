@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'; 
 import axios from 'axios';
 import TarjetaObra from '../components/TarjetaObra'; // Asegúrate de que el componente TarjetaObra ya exista
 
@@ -22,12 +22,14 @@ export default function Peliculas() {
     <div className="contenedor">
       <h1 className="titulo-tipo">Películas</h1>
       <div className="grid">
-        {peliculas.map((pelicula, index) => (
+        {peliculas.map((pelicula) => (
           <TarjetaObra
-            key={index}
+            key={pelicula.Id_obra} // Usa el Id_obra como key
+            idObra={pelicula.Id_obra} // Asegúrate de pasar el idObra al componente
             titulo={pelicula.titulo}
             urlImagen={pelicula.imagen}
-            calificacion={pelicula.rating}
+            calificacion_promedio={pelicula.promedio_valoracion}  // Usa promedio_valoracion para la calificación
+            fecha_lanzamiento={pelicula.fecha_lanzamiento}  // Pasar la fecha de lanzamiento
           />
         ))}
       </div>

@@ -1,0 +1,69 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Ajusta las columnas automáticamente */
+  gap: 20px; /* Añadir espacio entre las tarjetas */
+  justify-content: center;
+  padding: 20px;
+  max-width: 95%;
+  margin: 0 auto;
+}
+
+.tarjeta-obra {
+  background-color: white;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: transform 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  height: 450px; /* Mantener la altura fija para uniformidad */
+  text-align: center;
+  padding-bottom: 10px; /* Añadir padding en la parte inferior */
+}
+
+.tarjeta-obra:hover {
+  transform: translateY(-10px);
+}
+
+.tarjeta-obra-imagen {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+}
+
+.tarjeta-obra h3 {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  min-height: 40px; /* Asegura que el título ocupe el mismo espacio */
+}
+
+/* Media Queries para pantallas más pequeñas */
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+
+  .tarjeta-obra h3 {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tarjeta-obra h3 {
+    font-size: 0.8rem;
+  }
+}
+.fecha-lanzamiento {
+  font-size: 0.8rem; /* Ajustar el tamaño de la fecha */
+  color: #6e6c6c; /* Un color gris suave para el texto */
+  margin-bottom: 3px; /* Un pequeño margen superior */
+  text-align: center; 
+}

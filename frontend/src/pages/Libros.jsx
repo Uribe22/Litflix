@@ -22,12 +22,14 @@ export default function Libros() {
     <div className="contenedor">
       <h1 className="titulo-tipo">Libros</h1>
       <div className="grid">
-        {libros.map((libro, index) => (
+        {libros.map((libro) => (
           <TarjetaObra
-            key={index}
+            key={libro.Id_obra}
+            idObra={libro.Id_obra}
             titulo={libro.titulo}
             urlImagen={libro.imagen}
-            calificacion={libro.rating}
+            calificacion_promedio={libro.promedio_valoracion}
+            fecha_lanzamiento={libro.fecha_lanzamiento}  // Pasar fecha_lanzamiento aquí
           />
         ))}
       </div>
