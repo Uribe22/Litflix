@@ -1,0 +1,30 @@
+/* Menú de navegación */
+.custom-navbar {
+  height: 70px;
+  background-color: #1a3b5d !important;
+}
+
+.filtro {
+  justify-content:left;
+}
+
+.custom-search-button {
+  background-color: #ffffff !important;
+  color: rgb(58, 185, 224);
+  border: none;
+}
+
+.navbar .nav-link {
+  text-align: left;
+  color: #ffffff !important;
+  font-size: 1.5rem;
+}
+
+.navbar .nav-link:hover {
+  color: #0c8fc3 !important;
+}
+
+.navbar .dropdown-item:hover {
+  background-color: #87CEEB !important;
+  color: #6b8cbc !important;
+}

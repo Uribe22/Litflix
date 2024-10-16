@@ -1,0 +1,19 @@
+.calificacion-estrellas {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.estrella-imagen {
+  width: 20px;
+  height: 20px;
+  margin-right: 4px;
+}
+
+.calificacion-vacia {
+  font-size: 0.8rem;
+  color: #676666;
+  margin-top: 5px;
+  text-align: center;
+}
