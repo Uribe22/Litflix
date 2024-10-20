@@ -1,9 +1,5 @@
 const mongoose = require('mongoose');
 
-const generarUrlImagen = (imagen) => {
-    return `/imagenes/${imagen}`;
-};
-
 const esquemaLibro = new mongoose.Schema({
   titulo: { type: String, required: true },
   autor: { type: String, required: true },
@@ -17,7 +13,6 @@ const esquemaLibro = new mongoose.Schema({
   }],
   sinopsis: { type: String, required: true },
   imagen: { type: String, required: true },
-  imagenRuta: { type: String, default: function() { return generarUrlImagen(this.imagen); } },
   tipo: { type: String, required: true }
 });
 

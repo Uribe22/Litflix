@@ -3,7 +3,7 @@ import React from 'react';
 //import Estrellas from './Estrellas';
 
 export default function TarjetaObra({ idObra, titulo, imagen, fecha_publicacion }) {
-  const imagenFinal = `http://localhost:5000${imagen}.jpg`;
+  const imagenFinal = `http://localhost:5000/imagenes/${imagen}.jpg`;
 
   const formatearFecha = (fecha) => {
     const opciones = { year: 'numeric', month: 'short', day: 'numeric' };
