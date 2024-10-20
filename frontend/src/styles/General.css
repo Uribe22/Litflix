@@ -1,0 +1,37 @@
+
+body {
+  background-color: #0a1929;  /* Fondo azul personalizado */
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;  /* Fuente global */
+}
+
+.litflix-title {
+  font-family: "Londrina Sketch", sans-serif;
+  font-size: 4rem;
+  color: #fff;
+  font-style: italic;
+}
+
+.titulo-tipo {
+  font-family: "Merriweather", serif;
+  color: #4bc8f0;
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 20px;
+  margin-top: 30px;
+}
+
+/* Mensaje de "sin resultados" */
+.sin-resultados {
+  font-size: 1.5rem;
+  margin-top: 20px;
+  color: #ffffff; 
+  font-weight: bold;
+  position: absolute;
+}
+
+.sin-resultados a:hover {
+  text-decoration: underline; /* Subrayar al pasar el mouse */
+}

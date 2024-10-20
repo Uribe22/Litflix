@@ -1,0 +1,17 @@
+{
+  "name": "litflix",
+  "version": "1.0.0",
+  "description": "Para conectar la base de datos abra MySQL e importe litflix.sql\r Luego abra el archivo .env y configure su contraseña y usuario en caso de ser necesario\r Para ejecutar el backend abrir una terminal en la carpeta raíz\r Usar \"cd backend\" para entrar en la carpeta del backend, luego \"node index.js\"\r Si la conexión fue exitosa, vaya a su navegador y escriba \"localhost:3001\"\r Debería ver el resultado a la consulta de ejemplo \"SELECT * FROM Obra\"",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"cd frontend && npm start\" \"cd backend && npm run dev\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^9.0.1",
+    "react-icons": "^5.3.0"
+  }
+}
