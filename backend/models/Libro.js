@@ -17,7 +17,8 @@ const esquemaLibro = new mongoose.Schema({
   }],
   sinopsis: { type: String, required: true },
   imagen: { type: String, required: true },
-  imagenRuta: { type: String, default: function() { return generarUrlImagen(this.imagen); } }
+  imagenRuta: { type: String, default: function() { return generarUrlImagen(this.imagen); } },
+  tipo: { type: String, required: true }
 });
 
 module.exports = mongoose.model('Libro', esquemaLibro);

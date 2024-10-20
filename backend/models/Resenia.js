@@ -6,6 +6,7 @@ const esquemaResenia = new mongoose.Schema({
   comentario: { type: String, required: true },
   valoracion: { type: Number, required: true },
   fecha: { type: Date, required: true },
+  tipo: { type: String, required: true }
 });
 
 module.exports = mongoose.model('Resenia', esquemaResenia);
