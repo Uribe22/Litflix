@@ -26,7 +26,7 @@ export default function Series() {
           <TarjetaObra
             key={serie.id}
             titulo={serie.titulo}
-            imagen={serie.imagenRuta}
+            imagen={serie.imagen}
             //calificacion_promedio={serie.promedio_valoracion}
             fecha_publicacion={serie.fecha_estreno}
           />

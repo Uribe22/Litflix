@@ -31,7 +31,7 @@ export default function Peliculas() {
           <TarjetaObra
             key={pelicula.id}
             titulo={pelicula.titulo}
-            imagen={pelicula.imagenRuta}
+            imagen={pelicula.imagen}
             //calificacion_promedio={pelicula.promedio_valoracion}
             fecha_publicacion={pelicula.fecha_estreno}
           />

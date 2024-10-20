@@ -26,7 +26,7 @@ export default function Libros() {
           <TarjetaObra
             key={libro.id}
             titulo={libro.titulo}
-            imagen={libro.imagenRuta}
+            imagen={libro.imagen}
             //calificacion_promedio={libro.promedio_valoracion}
             fecha_publicacion={libro.fecha_publicacion}
           />
