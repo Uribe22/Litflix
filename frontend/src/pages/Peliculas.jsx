@@ -29,11 +29,11 @@ export default function Peliculas() {
       <div className="grid">
         {peliculas.map((pelicula) => (
           <TarjetaObra
-            key={pelicula.id}
+            key={pelicula._id}
             titulo={pelicula.titulo}
             imagen={pelicula.imagen}
             //calificacion_promedio={pelicula.promedio_valoracion}
-            fecha_publicacion={pelicula.fecha_estreno}
+            fecha_publicacion={pelicula.fecha_publicacion}
           />
         ))}
       </div>

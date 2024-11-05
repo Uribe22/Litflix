@@ -1,73 +1,40 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import TarjetaObra from '../components/TarjetaObra';
 
 export default function Inicio() {
-  const [mejorValoradas, setMejorValoradas] = useState([]);
-  const [ultimosEstrenos, setUltimosEstrenos] = useState([]);
-  const [masResenadas, setMasResenadas] = useState([]);
+  const [peliculas, setPeliculas] = useState([]);
+  const [errorPeliculas, setErrorPeliculas] = useState('');
 
   useEffect(() => {
-    const obtenerDatos = async () => {
+    const obtenerPeliculas = async () => {
       try {
-        const resMejorValoradas = await axios.get('http://localhost:3001/api/mejor-valoradas');
-        setMejorValoradas(resMejorValoradas.data);
-
-        const resUltimosEstrenos = await axios.get('http://localhost:3001/api/ultimos-estrenos');
-        setUltimosEstrenos(resUltimosEstrenos.data);
-
-        const resMasResenadas = await axios.get('http://localhost:3001/api/mas-resenadas');
-        setMasResenadas(resMasResenadas.data);
-
-      } catch (error) {
-        console.error('Error al obtener los datos:', error);
+        const response = await fetch('http://localhost:5000/api/peliculas-mejor-valoradas');
+        if (!response.ok) {
+          throw new Error('Error en la carga de las películas');
+        }
+        const data = await response.json();
+        setPeliculas(data);
+      } catch (err) {
+        setErrorPeliculas(err.message);
       }
     };
 
-    obtenerDatos();
+    obtenerPeliculas();
   }, []);
 
   return (
     <div className="contenedor">
       <h1 className="titulo-tipo">Mejor Valoradas</h1>
+      <h1 className="titulo-tipo">Películas</h1>
+      {errorPeliculas && <p>{errorPeliculas}</p>}
       <div className="grid">
-        {mejorValoradas.map((obra, index) => (
-         <TarjetaObra
-         key={obra.Id_obra}
-         idObra={obra.Id_obra}
-         titulo={obra.titulo}
-         urlImagen={obra.imagen}
-         calificacion_promedio={obra.promedio_valoracion}
-         fecha_lanzamiento={obra.fecha_lanzamiento}
-       />
-        ))}
-      </div>
-
-      <h1 className="titulo-tipo">Últimos Estrenos</h1>
-      <div className="grid">
-        {ultimosEstrenos.map((obra, index) => (
+        {peliculas.map((pelicula) => (
           <TarjetaObra
-          key={obra.Id_obra}
-          idObra={obra.Id_obra}
-          titulo={obra.titulo}
-          urlImagen={obra.imagen}
-          calificacion_promedio={obra.promedio_valoracion}
-          fecha_lanzamiento={obra.fecha_lanzamiento}
-        />
-        ))}
-      </div>
-
-      <h1 className="titulo-tipo">Más Reseñadas</h1>
-      <div className="grid">
-        {masResenadas.map((obra, index) => (
-           <TarjetaObra
-           key={obra.Id_obra}
-           idObra={obra.Id_obra}
-           titulo={obra.titulo}
-           urlImagen={obra.imagen}
-           calificacion_promedio={obra.promedio_valoracion}
-           fecha_lanzamiento={obra.fecha_lanzamiento}
-         />
+            key={pelicula._id}
+            titulo={pelicula.titulo}
+            imagen={pelicula.imagen}
+            fecha_publicacion={pelicula.fecha_publicacion}
+          />
         ))}
       </div>
     </div>

@@ -24,7 +24,7 @@ export default function Series() {
       <div className="grid">
         {series.map((serie) => (
           <TarjetaObra
-            key={serie.id}
+            key={serie._id}
             titulo={serie.titulo}
             imagen={serie.imagen}
             //calificacion_promedio={serie.promedio_valoracion}

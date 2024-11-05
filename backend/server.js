@@ -47,6 +47,43 @@ app.get('/api/libros', async (req, res) => {
     }
 });
 
+app.get('/api/peliculas-mejor-valoradas', async (req, res) => {
+    try {
+        const peliculas = await pelicula.aggregate([
+            {
+                $unwind: {
+                    path: '$resenias', 
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $group: {
+                    _id: '$_id',
+                    titulo: { $first: '$titulo' },
+                    imagen: { $first: '$imagen' },
+                    promedioValoracion: { $avg: '$resenias.valoracion' }
+                }
+            },
+            {
+                $match: { promedioValoracion: { $ne: null } }
+            },
+            {
+                $sort: { promedioValoracion: -1 }
+            },
+            {
+                $limit: 5
+            }
+        ]);
+        
+        res.json(peliculas);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+
+
+
 app.get('/', (req, res) => {
   res.send('¡Bienvenido a Litflix!');
 });
@@ -54,4 +91,6 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Servidor en ejecución en http://localhost:${PORT}`);
 });
+
+
 
