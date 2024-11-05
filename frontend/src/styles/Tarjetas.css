@@ -24,12 +24,14 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  min-height: 350px;
+  min-height: 450px;
   text-align: center;
   padding-bottom: 10px;
   border: 2px solid #3690ae;
 }
-
+.fecha{
+  color: white;
+}
 .tarjeta-obra:hover {
   transform: translateY(-10px);
   box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
@@ -37,7 +39,7 @@
 
 .tarjeta-obra-imagen {
   width: 100%;
-  height: 350px;
+  height: 100%;
   object-fit: cover;
 }
 
@@ -72,7 +74,7 @@
 
 .fecha-publicacion {
   font-size: 0.8rem;
-  color: #cecbcb;
+  color: #ffffff;
   margin-bottom: 20px;
   text-align: center;
 }
@@ -99,6 +101,6 @@
   };
 
   .tarjeta-obra h3 {
-    font-size: 0.8rem
+    font-size:0.8rem
   };
 }

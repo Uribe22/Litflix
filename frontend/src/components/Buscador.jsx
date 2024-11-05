@@ -40,9 +40,11 @@ function Buscador() {
       urlBusqueda = `http://localhost:5000/api/buscar-series?q=${busqueda}`;
     }
 
+    console.log('URL de búsqueda:', urlBusqueda); // Depuración
+
     try {
       const res = await axios.get(urlBusqueda);
-      console.log('Resultados de la búsqueda:', res.data);
+      console.log('Resultados de la búsqueda:', res.data); // Depuración
       navigate(`/resultados?q=${busqueda}`, { state: { resultados: res.data, termino: busqueda } });
       setBusqueda('');
     } catch (error) {
@@ -63,6 +65,8 @@ function Buscador() {
           onChange={handleInputChange}
         />
       </div>
+      {/* Agregar un botón de envío oculto */}
+      <button type="submit" style={{ display: 'none' }}></button>
     </Form>
   );
 }

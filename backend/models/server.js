@@ -46,11 +46,8 @@ app.get('/api/libros', async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 });
-
 app.get('/api/buscar-peliculas', async (req, res) => { 
     const termino = req.query.q;
-    console.log('Término de búsqueda para películas:', termino);
-
     try {
         const results = await pelicula.find({
             $or: [
@@ -59,93 +56,28 @@ app.get('/api/buscar-peliculas', async (req, res) => {
             ]
         });
 
-        console.log('Resultados de búsqueda para películas:', results);
-        res.json(results);
-    } catch (err) {
-        console.error('Error en la búsqueda de películas:', err);
-        res.status(500).json({ error: err.message });
-    }
-});
+        const formattedResults = results.map(item => ({
+            Id_obra: item._id,
+            titulo: item.titulo,
+            imagen: item.imagen || 'default_image.jpg',
+            fecha_publicacion: item.fecha_publicacion,
+        }));
 
-// Ruta de búsqueda para series
-app.get('/api/buscar-series', async (req, res) => {
-    const termino = req.query.q;
-    try {
-        const results = await serie.find({
-            $or: [
-                { titulo: { $regex: termino, $options: 'i' } },
-                { autor: { $regex: termino, $options: 'i' } }
-            ]
-        });
-
-        res.json(results);
+        res.json(formattedResults);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
 
-// Ruta de búsqueda para libros
-app.get('/api/buscar-libros', async (req, res) => {
-    const termino = req.query.q;
-    try {
-        const results = await libro.find({
-            $or: [
-                { titulo: { $regex: termino, $options: 'i' } },
-                { autor: { $regex: termino, $options: 'i' } }
-            ]
-        });
-
-        res.json(results);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// Ruta de búsqueda general (en todas las colecciones)
-app.get('/api/buscar', async (req, res) => {
-    const termino = req.query.q;
-    try {
-        const peliculas = await pelicula.find({
-            $or: [
-                { titulo: { $regex: termino, $options: 'i' } },
-                { autor: { $regex: termino, $options: 'i' } }
-            ]
-        });
-
-        const series = await serie.find({
-            $or: [
-                { titulo: { $regex: termino, $options: 'i' } },
-                { autor: { $regex: termino, $options: 'i' } }
-            ]
-        });
-
-        const libros = await libro.find({
-            $or: [
-                { titulo: { $regex: termino, $options: 'i' } },
-                { autor: { $regex: termino, $options: 'i' } }
-            ]
-        });
-
-        // Combinamos los resultados sin modificar los datos
-        const allResults = [...peliculas, ...series, ...libros];
-
-        res.json(allResults);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-
-// Ruta de bienvenida
 app.get('/', (req, res) => {
-    res.send('¡Bienvenido a Litflix!');
+  res.send('¡Bienvenido a Litflix!');
 });
 
 app.listen(PORT, () => {
-    console.log(`Servidor en ejecución en http://localhost:${PORT}`);
+  console.log(`Servidor en ejecución en http://localhost:${PORT}`);
 });
 
-const serieSchema = new mongoose.Schema({
+/*const serieSchema = new mongoose.Schema({
     titulo: { type: String, required: true },
     autor: { type: String, required: true },
     productora: { type: String, required: true },
@@ -160,7 +92,7 @@ const serieSchema = new mongoose.Schema({
     sinopsis: { type: String, required: true },
     imagen: { type: String, default: function() { return generarUrlImagen(this.titulo); } },
 });
-/*
+
 const libroSchema = new mongoose.Schema({
     titulo: { type: String, required: true },
     autor: { type: String, required: true },

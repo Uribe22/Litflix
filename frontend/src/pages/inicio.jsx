@@ -38,7 +38,7 @@ export default function Inicio() {
          titulo={obra.titulo}
          urlImagen={obra.imagen}
          calificacion_promedio={obra.promedio_valoracion}
-         fecha_lanzamiento={obra.fecha_lanzamiento}
+         fecha_lanzamiento={obra.fecha_publicacion}
        />
         ))}
       </div>
