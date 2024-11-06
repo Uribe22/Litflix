@@ -1,5 +1,9 @@
 import '../styles/Tarjetas.css';
 import React from 'react';
+//import Estrellas from './Estrellas';
+
+export default function TarjetaObra({ idObra, titulo, imagen, fecha_publicacion }) {
+  const imagenFinal = `http://localhost:5000/imagenes/${imagen}.jpg`;
 
 const formatearFecha = (fecha) => {
     const opciones = { year: 'numeric', month: 'short', day: 'numeric' };
@@ -9,25 +13,18 @@ const formatearFecha = (fecha) => {
 export default function TarjetaObra({ titulo, autor, imagen, fecha_publicacion, fecha_estreno }) {
     const imagenFinal = `http://localhost:5000/imagenes/${imagen}.jpg`;
 
-    return (
-        <div className="tarjeta-obra">
-            <img src={imagenFinal} alt={titulo} className="tarjeta-obra-imagen" />
-            <div className="p-4">
-                <h3>{titulo}</h3>
-                {autor && <p>Autor: {autor}</p>}
-                
-                {/* Mostrar solo la fecha sin texto adicional */}
-                {fecha_publicacion && (
-                    <p className="fecha">
-                        {formatearFecha(fecha_publicacion)}
-                    </p>
-                )}
-                {fecha_estreno && (
-                    <p className="fecha">
-                        {formatearFecha(fecha_estreno)}
-                    </p>
-                )}
-            </div>
-        </div>
-    );
+  return (
+    <div className="tarjeta-obra">
+      <img src={imagenFinal} alt={titulo} className="tarjeta-obra-imagen" />
+      <div className="p-4">
+        <h3>{titulo}</h3>
+        {fecha_publicacion && (
+          <p className="fecha-publicacion">
+            {formatearFecha(fecha_publicacion)}
+          </p>
+        )}
+        {/*<Estrellas idObra={idObra} />*/}
+      </div>
+    </div>
+  );
 }

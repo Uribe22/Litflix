@@ -47,171 +47,49 @@ app.get('/api/libros', async (req, res) => {
     }
 });
 
-app.get('/api/buscar-peliculas', async (req, res) => { 
-    const termino = req.query.q;
-    console.log('Término de búsqueda para películas:', termino);
-
+app.get('/api/peliculas-mejor-valoradas', async (req, res) => {
     try {
-        const results = await pelicula.find({
-            $or: [
-                { titulo: { $regex: termino, $options: 'i' } },
-                { autor: { $regex: termino, $options: 'i' } }
-            ]
-        });
+        const peliculas = await pelicula.aggregate([
+            {
+                $unwind: {
+                    path: '$resenias', 
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $group: {
+                    _id: '$_id',
+                    titulo: { $first: '$titulo' },
+                    imagen: { $first: '$imagen' },
+                    fecha_publicacion: { $first: '$fecha_estreno' },
+                    promedio_valoracion: { $avg: '$resenias.valoracion' }
+                }
+            },
+            {
+                $match: { promedio_valoracion: { $ne: null } }
+            },
+            {
+                $sort: { promedio_valoracion: -1 }
+            },
+            {
+                $limit: 5
+            }
+        ]);
 
-        console.log('Resultados de búsqueda para películas:', results);
-        res.json(results);
+        res.json(peliculas);
     } catch (err) {
-        console.error('Error en la búsqueda de películas:', err);
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// Ruta de búsqueda para series
-app.get('/api/buscar-series', async (req, res) => {
-    const termino = req.query.q;
-    try {
-        const results = await serie.find({
-            $or: [
-                { titulo: { $regex: termino, $options: 'i' } },
-                { autor: { $regex: termino, $options: 'i' } }
-            ]
-        });
-
-        res.json(results);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// Ruta de búsqueda para libros
-app.get('/api/buscar-libros', async (req, res) => {
-    const termino = req.query.q;
-    try {
-        const results = await libro.find({
-            $or: [
-                { titulo: { $regex: termino, $options: 'i' } },
-                { autor: { $regex: termino, $options: 'i' } }
-            ]
-        });
-
-        res.json(results);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// Ruta de búsqueda general (en todas las colecciones)
-app.get('/api/buscar', async (req, res) => {
-    const termino = req.query.q;
-    try {
-        const peliculas = await pelicula.find({
-            $or: [
-                { titulo: { $regex: termino, $options: 'i' } },
-                { autor: { $regex: termino, $options: 'i' } }
-            ]
-        });
-
-        const series = await serie.find({
-            $or: [
-                { titulo: { $regex: termino, $options: 'i' } },
-                { autor: { $regex: termino, $options: 'i' } }
-            ]
-        });
-
-        const libros = await libro.find({
-            $or: [
-                { titulo: { $regex: termino, $options: 'i' } },
-                { autor: { $regex: termino, $options: 'i' } }
-            ]
-        });
-
-        // Combinamos los resultados sin modificar los datos
-        const allResults = [...peliculas, ...series, ...libros];
-
-        res.json(allResults);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ message: err.message });
     }
 });
 
 
-// Ruta de bienvenida
 app.get('/', (req, res) => {
-    res.send('¡Bienvenido a Litflix!');
+  res.send('¡Bienvenido a Litflix!');
 });
 
 app.listen(PORT, () => {
-    console.log(`Servidor en ejecución en http://localhost:${PORT}`);
+  console.log(`Servidor en ejecución en http://localhost:${PORT}`);
 });
 
-const serieSchema = new mongoose.Schema({
-    titulo: { type: String, required: true },
-    autor: { type: String, required: true },
-    productora: { type: String, required: true },
-    temporadas: { type: Number, required: true },
-    fecha_estreno: { type: Date, required: true },
-    fecha_finalizacion: { type: Date },
-    generos: { type: [String], required: true },
-    elenco: [{
-        nombre: { type: String, required: true },
-        rol: { type: String, required: true },
-    }],
-    sinopsis: { type: String, required: true },
-    imagen: { type: String, default: function() { return generarUrlImagen(this.titulo); } },
-});
-/*
-const libroSchema = new mongoose.Schema({
-    titulo: { type: String, required: true },
-    autor: { type: String, required: true },
-    productora: { type: String, required: true },
-    fecha_publicacion: { type: Date, required: true },
-    generos: { type: [String], required: true },
-    numero_paginas: { type: Number, required: true },
-    sinopsis: { type: String, required: true },
-    imagen: { type: String, default: function() { return generarUrlImagen(this.titulo); } },
-});
 
-const reseñaSchema = new mongoose.Schema({
-    obra: { type: mongoose.Schema.Types.ObjectId, ref: 'Obra' },
-    autor: { type: String, required: true },
-    comentario: { type: String, required: true },
-    valoracion: { type: Number, required: true, min: 1, max: 5, validate: {
-        validator: Number.isFinite,
-        message: 'La valoración debe ser un número.'
-    }},
-    fecha: { type: Date, default: Date.now },
-});*/
-
-//const Pelicula = mongoose.model('Pelicula', peliculaSchema);
-/*const Serie = mongoose.model('Serie', serieSchema);
-const Libro = mongoose.model('Libro', libroSchema);
-const Resenia = mongoose.model('Resenia', reseñaSchema);*/
-
-/*app.get('/api/mejor-valoradas', async (req, res) => {
-    try {
-        const peliculas = await Pelicula.aggregate([
-            {
-                $lookup: {
-                    from: 'resenias',
-                    localField: '_id',
-                    foreignField: 'obra',
-                    as: 'resenias',
-                },
-            },
-            {
-                $addFields: {
-                    valoracion_promedio: { $avg: '$resenias.valoracion' },
-                    total_resenias: { $size: '$resenias' },
-                },
-            },
-            { $match: { total_resenias: { $gt: 0 } } },
-            { $sort: { valoracion_promedio: -1 } },
-            { $limit: 5 },
-        ]);
-        res.json(peliculas);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});*/
 
