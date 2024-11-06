@@ -61,27 +61,26 @@ app.get('/api/peliculas-mejor-valoradas', async (req, res) => {
                     _id: '$_id',
                     titulo: { $first: '$titulo' },
                     imagen: { $first: '$imagen' },
-                    promedioValoracion: { $avg: '$resenias.valoracion' }
+                    fecha_publicacion: { $first: '$fecha_estreno' },
+                    promedio_valoracion: { $avg: '$resenias.valoracion' }
                 }
             },
             {
-                $match: { promedioValoracion: { $ne: null } }
+                $match: { promedio_valoracion: { $ne: null } }
             },
             {
-                $sort: { promedioValoracion: -1 }
+                $sort: { promedio_valoracion: -1 }
             },
             {
                 $limit: 5
             }
         ]);
-        
+
         res.json(peliculas);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
 });
-
-
 
 
 app.get('/', (req, res) => {

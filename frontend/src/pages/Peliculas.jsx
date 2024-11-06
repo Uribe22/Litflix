@@ -10,10 +10,20 @@ export default function Peliculas() {
       try {
         const response = await fetch('http://localhost:5000/api/peliculas');
         if (!response.ok) {
-            throw new Error('Error en la carga de las películas');
+          throw new Error('Error en la carga de películas');
         }
         const data = await response.json();
-        setPeliculas(data);
+
+        const peliculasConValoracion = data.map(pelicula => {
+          const valoraciones = pelicula.resenias.map(r => r.valoracion);
+          const promedio = valoraciones.length > 0 
+            ? (valoraciones.reduce((sum, val) => sum + val, 0) / valoraciones.length).toFixed(1) 
+            : null;
+
+          return { ...pelicula, promedio_valoracion: promedio };
+        });
+
+        setPeliculas(peliculasConValoracion);
       } catch (err) {
         setError(err.message);
       }
@@ -30,10 +40,11 @@ export default function Peliculas() {
         {peliculas.map((pelicula) => (
           <TarjetaObra
             key={pelicula._id}
+            idObra={pelicula._id}
             titulo={pelicula.titulo}
             imagen={pelicula.imagen}
-            //calificacion_promedio={pelicula.promedio_valoracion}
-            fecha_publicacion={pelicula.fecha_publicacion}
+            fecha_publicacion={pelicula.fecha_estreno}
+            calificacion_promedio={pelicula.promedio_valoracion}
           />
         ))}
       </div>

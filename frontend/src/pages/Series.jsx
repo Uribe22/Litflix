@@ -1,17 +1,31 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import TarjetaObra from '../components/TarjetaObra';
 
 export default function Series() {
   const [series, setSeries] = useState([]);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const obtenerSeries = async () => {
       try {
-        const respuesta = await axios.get('http://localhost:5000/api/series');
-        setSeries(respuesta.data);
-      } catch (error) {
-        console.error('Error al obtener las series:', error);
+        const response = await fetch('http://localhost:5000/api/series');
+        if (!response.ok) {
+          throw new Error('Error en la carga de series');
+        }
+        const data = await response.json();
+
+        const seriesConValoracion = data.map(serie => {
+          const valoraciones = serie.resenias.map(r => r.valoracion);
+          const promedio = valoraciones.length > 0 
+            ? (valoraciones.reduce((sum, val) => sum + val, 0) / valoraciones.length).toFixed(1) 
+            : null;
+
+          return { ...serie, promedio_valoracion: promedio };
+        });
+
+        setSeries(seriesConValoracion);
+      } catch (err) {
+        setError(err.message);
       }
     };
 
@@ -21,17 +35,20 @@ export default function Series() {
   return (
     <div className="contenedor">
       <h1 className="titulo-tipo">Series</h1>
+      {error && <p>{error}</p>}
       <div className="grid">
         {series.map((serie) => (
           <TarjetaObra
             key={serie._id}
+            idObra={serie._id}
             titulo={serie.titulo}
             imagen={serie.imagen}
-            //calificacion_promedio={serie.promedio_valoracion}
             fecha_publicacion={serie.fecha_estreno}
+            calificacion_promedio={serie.promedio_valoracion}
           />
         ))}
       </div>
     </div>
   );
 }
+

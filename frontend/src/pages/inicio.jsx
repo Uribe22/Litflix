@@ -3,19 +3,19 @@ import TarjetaObra from '../components/TarjetaObra';
 
 export default function Inicio() {
   const [peliculas, setPeliculas] = useState([]);
-  const [errorPeliculas, setErrorPeliculas] = useState('');
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const obtenerPeliculas = async () => {
       try {
         const response = await fetch('http://localhost:5000/api/peliculas-mejor-valoradas');
         if (!response.ok) {
-          throw new Error('Error en la carga de las películas');
+          throw new Error('Error en la carga de películas');
         }
         const data = await response.json();
         setPeliculas(data);
       } catch (err) {
-        setErrorPeliculas(err.message);
+        setError(err.message);
       }
     };
 
@@ -24,16 +24,17 @@ export default function Inicio() {
 
   return (
     <div className="contenedor">
-      <h1 className="titulo-tipo">Mejor Valoradas</h1>
       <h1 className="titulo-tipo">Películas</h1>
-      {errorPeliculas && <p>{errorPeliculas}</p>}
+      {error && <p>{error}</p>}
       <div className="grid">
         {peliculas.map((pelicula) => (
           <TarjetaObra
             key={pelicula._id}
+            idObra={pelicula._id}
             titulo={pelicula.titulo}
             imagen={pelicula.imagen}
-            fecha_publicacion={pelicula.fecha_publicacion}
+            fecha_publicacion={pelicula.fecha_estreno}
+            calificacion_promedio={pelicula.promedio_valoracion}
           />
         ))}
       </div>
