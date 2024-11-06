@@ -81,15 +81,156 @@ app.get('/api/peliculas-mejor-valoradas', async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 });
+// Ruta de búsqueda específica para películas
+app.get('/api/buscar-peliculas', async (req, res) => {
+    const termino = req.query.q;
+    try {
+        const peliculas = await pelicula.aggregate([
+            { $match: { $or: [ { titulo: { $regex: termino, $options: 'i' } }, { autor: { $regex: termino, $options: 'i' } } ] } },
+            { $unwind: { path: '$resenias', preserveNullAndEmptyArrays: true } },
+            {
+                $group: {
+                    _id: '$_id',
+                    tipo: { $first: 'pelicula' },
+                    titulo: { $first: '$titulo' },
+                    imagen: { $first: '$imagen' },
+                    fecha: { $first: '$fecha_estreno' },
+                    promedio_valoracion: { $avg: '$resenias.valoracion' }
+                }
+            }
+        ]);
+
+        res.json(peliculas);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Ruta de búsqueda específica para series
+app.get('/api/buscar-series', async (req, res) => {
+    const termino = req.query.q;
+    try {
+        const series = await serie.aggregate([
+            { $match: { $or: [ { titulo: { $regex: termino, $options: 'i' } }, { autor: { $regex: termino, $options: 'i' } } ] } },
+            { $unwind: { path: '$resenias', preserveNullAndEmptyArrays: true } },
+            {
+                $group: {
+                    _id: '$_id',
+                    tipo: { $first: 'serie' },
+                    titulo: { $first: '$titulo' },
+                    imagen: { $first: '$imagen' },
+                    fecha: { $first: '$fecha_estreno' },
+                    promedio_valoracion: { $avg: '$resenias.valoracion' }
+                }
+            }
+        ]);
+
+        res.json(series);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Ruta de búsqueda específica para libros
+app.get('/api/buscar-libros', async (req, res) => {
+    const termino = req.query.q;
+    try {
+        const libros = await libro.aggregate([
+            { $match: { $or: [ { titulo: { $regex: termino, $options: 'i' } }, { autor: { $regex: termino, $options: 'i' } } ] } },
+            { $unwind: { path: '$resenias', preserveNullAndEmptyArrays: true } },
+            {
+                $group: {
+                    _id: '$_id',
+                    tipo: { $first: 'libro' },
+                    titulo: { $first: '$titulo' },
+                    imagen: { $first: '$imagen' },
+                    fecha: { $first: '$fecha_publicacion' },
+                    promedio_valoracion: { $avg: '$resenias.valoracion' }
+                }
+            }
+        ]);
+
+        res.json(libros);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.get('/api/buscar', async (req, res) => {
+    const termino = req.query.q;
+    console.log(`Término de búsqueda recibido: ${termino}`);  // Log para verificar el término de búsqueda
+
+    try {
+        const filtro = {
+            $or: [
+                { titulo: { $regex: termino, $options: 'i' } },
+                { autor: { $regex: termino, $options: 'i' } }
+            ]
+        };
+        const peliculas = await pelicula.aggregate([
+            { $match: filtro },
+            { $unwind: { path: '$resenias', preserveNullAndEmptyArrays: true } },
+            {
+                $group: {
+                    _id: '$_id',
+                    tipo: { $first: 'pelicula' },
+                    titulo: { $first: '$titulo' },
+                    imagen: { $first: '$imagen' },
+                    fecha: { $first: '$fecha_estreno' },
+                    promedio_valoracion: { $avg: '$resenias.valoracion' }
+                }
+            }
+        ]);
+        console.log("Peliculas encontradas:", peliculas);  // Log de resultados de películas
+
+        const series = await serie.aggregate([
+            { $match: filtro },
+            { $unwind: { path: '$resenias', preserveNullAndEmptyArrays: true } },
+            {
+                $group: {
+                    _id: '$_id',
+                    tipo: { $first: 'serie' },
+                    titulo: { $first: '$titulo' },
+                    imagen: { $first: '$imagen' },
+                    fecha: { $first: '$fecha_estreno' },
+                    promedio_valoracion: { $avg: '$resenias.valoracion' }
+                }
+            }
+        ]);
+        console.log("Series encontradas:", series);  // Log de resultados de series
+
+        const libros = await libro.aggregate([
+            { $match: filtro },
+            { $unwind: { path: '$resenias', preserveNullAndEmptyArrays: true } },
+            {
+                $group: {
+                    _id: '$_id',
+                    tipo: { $first: 'libro' },
+                    titulo: { $first: '$titulo' },
+                    imagen: { $first: '$imagen' },
+                    fecha: { $first: '$fecha_publicacion' },
+                    promedio_valoracion: { $avg: '$resenias.valoracion' }
+                }
+            }
+        ]);
+        console.log("Libros encontrados:", libros);  // Log de resultados de libros
+
+        // Combina los resultados y envíalos al frontend
+        const allResults = [...peliculas, ...series, ...libros];
+        console.log("Todos los resultados:", allResults);  // Log de todos los resultados combinados
+
+        res.json(allResults);
+    } catch (err) {
+        console.error('Error en la consulta:', err);
+        res.status(500).json({ error: err.message });
+    }
+});
 
 
 app.get('/', (req, res) => {
-  res.send('¡Bienvenido a Litflix!');
+    res.send('¡Bienvenido a Litflix!');
 });
 
 app.listen(PORT, () => {
-  console.log(`Servidor en ejecución en http://localhost:${PORT}`);
+    console.log(`Servidor en ejecución en http://localhost:${PORT}`);
 });
-
-
-

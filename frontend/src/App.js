@@ -6,9 +6,10 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Peliculas from './pages/Peliculas';  
 import Series from './pages/Series';  
 import Libros from './pages/Libros';  
-/*import Inicio from './pages/Inicio';  
-import Registro from './pages/Registro';*/
-import './styles/General.css';
+import Inicio from './pages/Inicio';
+import './styles/General.css';  
+//import Registro from './pages/Registro';
+
 
 function App() {
   return (

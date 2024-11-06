@@ -6,7 +6,7 @@ export default function Resultados() {
     const location = useLocation();
     const { resultados, termino } = location.state || { resultados: [], termino: '' };
 
-    console.log('Datos recibidos en Resultados:', resultados); 
+    console.log('Datos recibidos en Resultados:', resultados);
 
     return (
         <div className="contenedor">
@@ -15,10 +15,11 @@ export default function Resultados() {
                 {resultados.length > 0 ? (
                     resultados.map((obra) => (
                         <TarjetaObra
-                            key={obra._id} 
+                            key={obra._id || obra.id} 
                             titulo={obra.titulo}
                             imagen={obra.imagen}
-                            fecha_publicacion={obra.fecha_publicacion || obra.fecha_estreno}  // Usar el campo disponible
+                            fecha_publicacion={obra.fecha}
+                            calificacion_promedio={obra.promedio_valoracion}
                         />
                     ))
                 ) : (
