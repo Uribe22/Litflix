@@ -18,7 +18,7 @@ export default function Resultados() {
                             key={obra._id || obra.id} 
                             titulo={obra.titulo}
                             imagen={obra.imagen}
-                            fecha_publicacion={obra.fecha}
+                            fecha_lanzamiento={obra.fecha}
                             calificacion_promedio={obra.promedio_valoracion}
                         />
                     ))

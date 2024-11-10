@@ -33,7 +33,7 @@ export default function Inicio() {
             idObra={pelicula._id}
             titulo={pelicula.titulo}
             imagen={pelicula.imagen}
-            fecha_publicacion={pelicula.fecha_estreno}
+            fecha_lanzamiento={pelicula.fecha}
             calificacion_promedio={pelicula.promedio_valoracion}
           />
         ))}

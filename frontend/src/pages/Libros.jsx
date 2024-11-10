@@ -43,7 +43,7 @@ export default function Libros() {
             idObra={libro._id}
             titulo={libro.titulo}
             imagen={libro.imagen}
-            fecha_publicacion={libro.fecha_publicacion}
+            fecha_lanzamiento={libro.fecha_lanzamiento}
             calificacion_promedio={libro.promedio_valoracion}
           />
         ))}

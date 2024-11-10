@@ -43,7 +43,7 @@ export default function Series() {
             idObra={serie._id}
             titulo={serie.titulo}
             imagen={serie.imagen}
-            fecha_publicacion={serie.fecha_estreno}
+            fecha_lanzamiento={serie.fecha_lanzamiento}
             calificacion_promedio={serie.promedio_valoracion}
           />
         ))}
