@@ -20,6 +20,7 @@ mongoose.connect(process.env.DB_HOST, {
 .then(() => console.log('Conectado a MongoDB'))
 .catch(err => console.error('Error de conexión a MongoDB', err));
 
+
 app.get('/api/peliculas', async (req, res) => {
     try {
         const peliculas = await pelicula.find();
@@ -59,6 +60,7 @@ app.get('/api/peliculas-mejor-valoradas', async (req, res) => {
             {
                 $group: {
                     _id: '$_id',
+                    tipo: { $first: 'pelicula' },
                     titulo: { $first: '$titulo' },
                     imagen: { $first: '$imagen' },
                     fecha_publicacion: { $first: '$fecha_estreno' },
@@ -130,6 +132,7 @@ app.get('/api/buscar-series', async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
+
 
 // Ruta de búsqueda específica para libros
 app.get('/api/buscar-libros', async (req, res) => {

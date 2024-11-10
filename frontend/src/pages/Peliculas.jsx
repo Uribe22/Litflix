@@ -13,17 +13,7 @@ export default function Peliculas() {
           throw new Error('Error en la carga de películas');
         }
         const data = await response.json();
-
-        const peliculasConValoracion = data.map(pelicula => {
-          const valoraciones = pelicula.resenias.map(r => r.valoracion);
-          const promedio = valoraciones.length > 0 
-            ? (valoraciones.reduce((sum, val) => sum + val, 0) / valoraciones.length).toFixed(1) 
-            : null;
-
-          return { ...pelicula, promedio_valoracion: promedio };
-        });
-
-        setPeliculas(peliculasConValoracion);
+        setPeliculas(data);
       } catch (err) {
         setError(err.message);
       }
@@ -39,9 +29,10 @@ export default function Peliculas() {
       <div className="grid">
         {peliculas.map((pelicula) => (
           <TarjetaObra
-            key={pelicula._id}
-            idObra={pelicula._id}
+            key={pelicula._id || pelicula.id}
+            idObra={pelicula._id || pelicula.id} 
             titulo={pelicula.titulo}
+            tipo={pelicula.tipo}
             imagen={pelicula.imagen}
             fecha_publicacion={pelicula.fecha_estreno}
             calificacion_promedio={pelicula.promedio_valoracion}

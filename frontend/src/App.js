@@ -6,10 +6,10 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Peliculas from './pages/Peliculas';  
 import Series from './pages/Series';  
 import Libros from './pages/Libros';  
+import DetalleObra from './pages/DetalleObra';
+import './styles/General.css';
 import Inicio from './pages/Inicio';
-import './styles/General.css';  
 //import Registro from './pages/Registro';
-
 
 function App() {
   return (
@@ -21,6 +21,7 @@ function App() {
           <Route path="/peliculas" element={<Peliculas />} />
           <Route path="/series" element={<Series />} />
           <Route path="/libros" element={<Libros />} />
+          <Route path="/detalleobra/:tipo/:id" element={<DetalleObra />} />
           <Route path="/resultados" element={<Resultados />} />
           {/*<Route path="/registro" element={<Registro />} />*/}
         </Routes>

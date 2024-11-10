@@ -1,8 +1,9 @@
 import '../styles/Tarjetas.css';
 import React from 'react';
 import Estrellas from './Estrellas';
+import { Link } from 'react-router-dom';
 
-export default function TarjetaObra({ idObra, titulo, imagen, fecha_publicacion, calificacion_promedio }) {
+export default function TarjetaObra({ idObra, titulo, imagen, tipo, fecha_publicacion, calificacion_promedio }) {
   const imagenFinal = `http://localhost:5000/imagenes/${imagen}.jpg`;
 
   const formatearFecha = (fecha) => {
@@ -12,16 +13,14 @@ export default function TarjetaObra({ idObra, titulo, imagen, fecha_publicacion,
 
   return (
     <div className="tarjeta-obra">
-      <img src={imagenFinal} alt={titulo} className="tarjeta-obra-imagen" />
-      <div className="p-4">
-        <h3>{titulo}</h3>
-        {fecha_publicacion && (
-          <p className="fecha-publicacion">
-            {formatearFecha(fecha_publicacion)}
-          </p>
-        )}
-        <Estrellas idObra={idObra} calificacion={calificacion_promedio} />
-      </div>
+      <Link to={`/detalleobra/${tipo}/${idObra}`}>
+        <img src={imagenFinal} alt={titulo} className="tarjeta-obra-imagen" />
+        <div className="p-4">
+          <h3>{titulo}</h3>
+          {fecha_publicacion && <p className="fecha-publicacion">{formatearFecha(fecha_publicacion)}</p>}
+          <Estrellas idObra={idObra} calificacion={calificacion_promedio} />
+        </div>
+      </Link>
     </div>
   );
 }

@@ -39,9 +39,10 @@ export default function Libros() {
       <div className="grid">
         {libros.map((libro) => (
           <TarjetaObra
-            key={libro._id}
-            idObra={libro._id}
+            key={libro._id || libro.id}
+            idObra={libro._id || libro.id} 
             titulo={libro.titulo}
+            tipo={libro.tipo}
             imagen={libro.imagen}
             fecha_publicacion={libro.fecha_publicacion}
             calificacion_promedio={libro.promedio_valoracion}

@@ -15,8 +15,10 @@ export default function Resultados() {
                 {resultados.length > 0 ? (
                     resultados.map((obra) => (
                         <TarjetaObra
-                            key={obra._id || obra.id} 
+                            key={obra._id || obra.id}
+                            idObra={obra._id || obra.id} 
                             titulo={obra.titulo}
+                            tipo={obra.tipo}
                             imagen={obra.imagen}
                             fecha_publicacion={obra.fecha}
                             calificacion_promedio={obra.promedio_valoracion}
