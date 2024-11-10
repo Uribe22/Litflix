@@ -83,7 +83,7 @@ app.get('/api/peliculas-mejor-valoradas', async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 });
-// Ruta de búsqueda específica para películas
+
 app.get('/api/buscar-peliculas', async (req, res) => {
     const termino = req.query.q;
     try {
