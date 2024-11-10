@@ -91,7 +91,7 @@ function DetalleObra() {
             <h1>{obra.titulo}</h1>
             <p>Director/Autor: {obra.director || obra.creador || obra.autor}</p>
             <p>Productora: {obra.productora}</p>
-            <p>Fecha de estreno: {new Date(obra.fecha_estreno || obra.fecha_publicacion).toLocaleDateString()}</p>
+            <p>Fecha de estreno: {new Date(obra.fecha_lanzamiento).toLocaleDateString()}</p>
             <p className="sinopsis">Sinopsis: {obra.sinopsis}</p>
             <div className="calificacion">
             <Estrellas calificacion={obra.promedio_valoracion || 0} />
@@ -109,7 +109,9 @@ function DetalleObra() {
             obra.resenias.map((reseña, index) => (
               <div key={index} className="reseña">
                 <h4>{reseña.autor}</h4>
-                <Estrellas calificacion={reseña.valoracion} />
+                <div className="mi-calificacion">
+                  <Estrellas calificacion={reseña.valoracion} />
+                </div>
                 <p>{reseña.comentario}</p>
                 <span>{new Date(reseña.fecha).toLocaleDateString()}</span>
               </div>

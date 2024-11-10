@@ -63,7 +63,7 @@ app.get('/api/peliculas-mejor-valoradas', async (req, res) => {
                     tipo: { $first: 'pelicula' },
                     titulo: { $first: '$titulo' },
                     imagen: { $first: '$imagen' },
-                    fecha_publicacion: { $first: '$fecha_estreno' },
+                    fecha_lanzamiento: { $first: '$fecha_lanzamiento' },
                     promedio_valoracion: { $avg: '$resenias.valoracion' }
                 }
             },
@@ -96,7 +96,7 @@ app.get('/api/buscar-peliculas', async (req, res) => {
                     tipo: { $first: 'pelicula' },
                     titulo: { $first: '$titulo' },
                     imagen: { $first: '$imagen' },
-                    fecha: { $first: '$fecha_estreno' },
+                    fecha: { $first: '$fecha_lanzamiento' },
                     promedio_valoracion: { $avg: '$resenias.valoracion' }
                 }
             }
@@ -121,7 +121,7 @@ app.get('/api/buscar-series', async (req, res) => {
                     tipo: { $first: 'serie' },
                     titulo: { $first: '$titulo' },
                     imagen: { $first: '$imagen' },
-                    fecha: { $first: '$fecha_estreno' },
+                    fecha: { $first: '$fecha_lanzamiento' },
                     promedio_valoracion: { $avg: '$resenias.valoracion' }
                 }
             }
@@ -147,7 +147,7 @@ app.get('/api/buscar-libros', async (req, res) => {
                     tipo: { $first: 'libro' },
                     titulo: { $first: '$titulo' },
                     imagen: { $first: '$imagen' },
-                    fecha: { $first: '$fecha_publicacion' },
+                    fecha: { $first: '$fecha_lanzamiento' },
                     promedio_valoracion: { $avg: '$resenias.valoracion' }
                 }
             }
@@ -179,7 +179,7 @@ app.get('/api/buscar', async (req, res) => {
                     tipo: { $first: 'pelicula' },
                     titulo: { $first: '$titulo' },
                     imagen: { $first: '$imagen' },
-                    fecha: { $first: '$fecha_estreno' },
+                    fecha: { $first: '$fecha_lanzamiento' },
                     promedio_valoracion: { $avg: '$resenias.valoracion' }
                 }
             }
@@ -195,7 +195,7 @@ app.get('/api/buscar', async (req, res) => {
                     tipo: { $first: 'serie' },
                     titulo: { $first: '$titulo' },
                     imagen: { $first: '$imagen' },
-                    fecha: { $first: '$fecha_estreno' },
+                    fecha: { $first: '$fecha_lanzamiento' },
                     promedio_valoracion: { $avg: '$resenias.valoracion' }
                 }
             }
@@ -211,7 +211,7 @@ app.get('/api/buscar', async (req, res) => {
                     tipo: { $first: 'libro' },
                     titulo: { $first: '$titulo' },
                     imagen: { $first: '$imagen' },
-                    fecha: { $first: '$fecha_publicacion' },
+                    fecha: { $first: '$fecha_lanzamiento' },
                     promedio_valoracion: { $avg: '$resenias.valoracion' }
                 }
             }

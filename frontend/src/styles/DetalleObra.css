@@ -118,6 +118,9 @@
   justify-content: flex-start;
   margin-top: 5px;
 }
+.mi-calificacion{
+  justify-content: left;
+}
 
 .reseña .calificacion .estrellas {
   margin-left: 0;
@@ -182,6 +185,7 @@ textarea {
   .calificacion {
     justify-content: center;
   }
+
   
   .obra-imagen {
     margin-bottom: 20px;

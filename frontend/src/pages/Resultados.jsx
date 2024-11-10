@@ -20,7 +20,7 @@ export default function Resultados() {
                             titulo={obra.titulo}
                             tipo={obra.tipo}
                             imagen={obra.imagen}
-                            fecha_publicacion={obra.fecha}
+                            fecha_lanzamiento={obra.fecha}
                             calificacion_promedio={obra.promedio_valoracion}
                         />
                     ))

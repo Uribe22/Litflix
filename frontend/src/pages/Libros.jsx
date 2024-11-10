@@ -44,7 +44,7 @@ export default function Libros() {
             titulo={libro.titulo}
             tipo={libro.tipo}
             imagen={libro.imagen}
-            fecha_publicacion={libro.fecha_publicacion}
+            fecha_lanzamiento={libro.fecha_lanzamiento}
             calificacion_promedio={libro.promedio_valoracion}
           />
         ))}

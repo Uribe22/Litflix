@@ -10,7 +10,7 @@ export default function Peliculas() {
       try {
         const response = await fetch('http://localhost:5000/api/peliculas');
         if (!response.ok) {
-          throw new Error('Error en la carga de series');
+          throw new Error('Error en la carga de Peliculas');
         }
         const data = await response.json();
 
@@ -44,7 +44,7 @@ export default function Peliculas() {
             titulo={pelicula.titulo}
             tipo={pelicula.tipo}
             imagen={pelicula.imagen}
-            fecha_publicacion={pelicula.fecha_estreno}
+            fecha_lanzamiento={pelicula.fecha_lanzamiento}
             calificacion_promedio={pelicula.promedio_valoracion}
           />
         ))}

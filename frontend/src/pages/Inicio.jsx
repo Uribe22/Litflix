@@ -34,7 +34,7 @@ export default function Inicio() {
             titulo={pelicula.titulo}
             tipo={pelicula.tipo}
             imagen={pelicula.imagen}
-            fecha_publicacion={pelicula.fecha_publicacion}
+            fecha_lanzamiento={pelicula.fecha_lanzamiento}
             calificacion_promedio={pelicula.promedio_valoracion}
           />
         ))}
