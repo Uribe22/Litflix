@@ -9,7 +9,9 @@ import Libros from './pages/Libros';
 import DetalleObra from './pages/DetalleObra';
 import './styles/General.css';
 import Inicio from './pages/Inicio';
-//import Registro from './pages/Registro';
+import './styles/General.css';  
+import Registro from './pages/Registro';
+import InicioSesion from './pages/InicioSesion'
 
 function App() {
   return (
@@ -23,7 +25,8 @@ function App() {
           <Route path="/libros" element={<Libros />} />
           <Route path="/detalleobra/:tipo/:id" element={<DetalleObra />} />
           <Route path="/resultados" element={<Resultados />} />
-          {/*<Route path="/registro" element={<Registro />} />*/}
+          <Route path="/registro" element={<Registro />} />
+          <Route path="/inicio-sesion" element={<InicioSesion />} />
         </Routes>
       </div>
     </Router>

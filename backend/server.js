@@ -161,7 +161,7 @@ app.get('/api/buscar-libros', async (req, res) => {
 
 app.get('/api/buscar', async (req, res) => {
     const termino = req.query.q;
-    console.log(`Término de búsqueda recibido: ${termino}`);  // Log para verificar el término de búsqueda
+    console.log(`Término de búsqueda recibido: ${termino}`);
 
     try {
         const filtro = {
@@ -184,7 +184,7 @@ app.get('/api/buscar', async (req, res) => {
                 }
             }
         ]);
-        console.log("Peliculas encontradas:", peliculas);  // Log de resultados de películas
+        console.log("Peliculas encontradas:", peliculas);
 
         const series = await serie.aggregate([
             { $match: filtro },
@@ -200,7 +200,7 @@ app.get('/api/buscar', async (req, res) => {
                 }
             }
         ]);
-        console.log("Series encontradas:", series);  // Log de resultados de series
+        console.log("Series encontradas:", series);
 
         const libros = await libro.aggregate([
             { $match: filtro },
@@ -216,11 +216,10 @@ app.get('/api/buscar', async (req, res) => {
                 }
             }
         ]);
-        console.log("Libros encontrados:", libros);  // Log de resultados de libros
+        console.log("Libros encontrados:", libros);
 
-        // Combina los resultados y envíalos al frontend
         const allResults = [...peliculas, ...series, ...libros];
-        console.log("Todos los resultados:", allResults);  // Log de todos los resultados combinados
+        console.log("Todos los resultados:", allResults);
 
         res.json(allResults);
     } catch (err) {
