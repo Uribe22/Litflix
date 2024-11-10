@@ -23,17 +23,18 @@ export default function Inicio() {
   }, []);
 
   return (
-    <div className="contenedor">
-      <h1 className="titulo-tipo">Películas</h1>
+    <div className="contenedor-inicio">
+      <h1 className="titulo-tipo">Películas Mejor Valoradas</h1>
       {error && <p>{error}</p>}
       <div className="grid">
         {peliculas.map((pelicula) => (
           <TarjetaObra
-            key={pelicula._id}
-            idObra={pelicula._id}
+            key={pelicula._id || pelicula.id}
+            idObra={pelicula._id || pelicula.id} 
             titulo={pelicula.titulo}
+            tipo={pelicula.tipo}
             imagen={pelicula.imagen}
-            fecha_publicacion={pelicula.fecha_estreno}
+            fecha_lanzamiento={pelicula.fecha_lanzamiento}
             calificacion_promedio={pelicula.promedio_valoracion}
           />
         ))}

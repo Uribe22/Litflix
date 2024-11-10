@@ -4,7 +4,7 @@ const esquemaLibro = new mongoose.Schema({
   titulo: { type: String, required: true },
   autor: { type: String, required: true },
   productora: { type: String, required: true },
-  fecha_publicacion: { type: Date, required: true },
+  fecha_lanzamiento: { type: Date, required: true },
   generos: [{ type: String }],
   num_paginas: { type: Number, required: true},
   elenco: [{
