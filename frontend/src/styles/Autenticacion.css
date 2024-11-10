@@ -1,0 +1,125 @@
+.contenedor {
+    max-width: 600px;
+    width: 80%;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #1a3b5d;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  h2 {
+    text-align: center;
+    font-family: "Merriweather", serif;
+    font-size: 28px;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 20px;
+  }
+  
+  .formulario {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .campo-texto {
+    position: relative;
+    margin-bottom: 20px;
+  }
+  
+  .campo-texto input {
+    width: 100%;
+    padding: 18px;
+    font-size: 18px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  .campo-texto input::placeholder {
+    color: #aaa;
+    font-size: 16px;
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .campo-texto input:focus::placeholder {
+    color: transparent;
+  }
+  
+  .campo-texto input:not(:placeholder-shown) {
+    padding-top: 22px;
+  }
+  
+  .contrasenia {
+    display: flex;
+    align-items: center;
+  }
+  
+  .contrasenia input {
+    flex: 1;
+    padding-right: 50px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+  
+  .mostrar-contrasenia {
+    position: absolute;
+    right: 15px;
+    font-size: 22px;
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+  }
+  
+  .mostrar-contrasenia:hover {
+    text-decoration: underline;
+  }
+  
+  .mensaje-error {
+    color: red;
+    font-size: 16px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .registrar {
+    padding: 12px;
+    background-color: #4c87af;
+    color: white;
+    font-family: "Merriweather", serif;
+    border: none;
+    border-radius: 4px;
+    font-size: 28px;
+    cursor: pointer;
+    width: 100%;
+  }
+  
+  .registrar:hover {
+    background-color: #36519c;
+  }
+
+  .iniciar-sesion {
+    padding: 5px;
+    color: white;
+    font-family: "Merriweather", serif;
+    border: none;
+    font-size: 15px;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+  }
+
+input[type="password"]::-webkit-outer-spin-button,
+input[type="password"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="password"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+  

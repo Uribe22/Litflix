@@ -8,8 +8,8 @@ import Series from './pages/Series';
 import Libros from './pages/Libros';  
 import Inicio from './pages/Inicio';
 import './styles/General.css';  
-//import Registro from './pages/Registro';
-
+import Registro from './pages/Registro';
+import InicioSesion from './pages/InicioSesion'
 
 function App() {
   return (
@@ -22,7 +22,8 @@ function App() {
           <Route path="/series" element={<Series />} />
           <Route path="/libros" element={<Libros />} />
           <Route path="/resultados" element={<Resultados />} />
-          {/*<Route path="/registro" element={<Registro />} />*/}
+          <Route path="/registro" element={<Registro />} />
+          <Route path="/inicio-sesion" element={<InicioSesion />} />
         </Routes>
       </div>
     </Router>
