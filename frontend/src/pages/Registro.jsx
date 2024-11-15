@@ -27,7 +27,11 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.contrasenia !== formData.confirmar_contrasenia) {
+    if (formData.contrasenia.length < 8) {
+      setError("Contraseña insegura, mínimo 8 caracteres");
+      return;
+    }
+    else if (formData.contrasenia !== formData.confirmar_contrasenia) {
       setError("Las contraseñas no coinciden");
       return;
     }
