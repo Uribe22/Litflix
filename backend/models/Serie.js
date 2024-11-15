@@ -5,7 +5,7 @@ const esquemaSerie = new mongoose.Schema({
   autor: { type: String, required: true },
   productora: { type: String, required: true },
   temporadas: { type: Number, required: true },
-  fecha_estreno: { type: Date, required: true },
+  fecha_lanzamiento: { type: Date, required: true },
   fecha_finalizacion: { type: Date, required: false },
   generos: [{ type: String }],
   elenco: [{
@@ -23,4 +23,4 @@ const esquemaSerie = new mongoose.Schema({
   }]
 });
 
-module.exports = mongoose.model('Serie', esquemaSerie);
+module.exports = mongoose.model('Serie', esquemaSerie, 'series');

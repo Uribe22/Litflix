@@ -1,5 +1,5 @@
 import React from 'react';
-import {Container, Nav, Navbar } from 'react-bootstrap';
+import { Container, Nav, Navbar, Dropdown } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import '../styles/Menu.css';
 import Buscador from './Buscador';
@@ -21,13 +21,20 @@ function MenuComponent() {
           <Buscador/> 
                    
           <Nav className="ml-auto">
-            <Nav.Link as={Link} to="/registro" className="text-white">
-              <img 
-                src="../iconos/usuario.png" 
-                alt="Usuario" 
-                style={{ width: '3rem', height: '3rem' }} 
-              />
-            </Nav.Link>
+            <Dropdown align="end">
+              <Dropdown.Toggle variant="link" className="text-white">
+                <img 
+                  src="../iconos/usuario.png" 
+                  alt="Usuario" 
+                  style={{ width: '3rem', height: '3rem' }} 
+                />
+              </Dropdown.Toggle>
+
+              <Dropdown.Menu>
+                <Dropdown.Item as={Link} to="/registro">Registrarse</Dropdown.Item>
+                <Dropdown.Item as={Link} to="/inicio-sesion">Iniciar sesión</Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
           </Nav>
 
         </Navbar.Collapse>

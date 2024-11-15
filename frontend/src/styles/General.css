@@ -1,10 +1,9 @@
-
 body {
-  background-color: #0a1929;  /* Fondo azul personalizado */
+  background-color: #0a1929;  
   margin: 0;
   padding: 0;
   min-height: 100vh;
-  font-family: Arial, sans-serif;  /* Fuente global */
+  font-family: Arial, sans-serif;
 }
 
 .litflix-title {
@@ -23,15 +22,15 @@ body {
   margin-top: 30px;
 }
 
-/* Mensaje de "sin resultados" */
 .sin-resultados {
   font-size: 1.5rem;
   margin-top: 20px;
   color: #ffffff; 
   font-weight: bold;
   position: absolute;
+  justify-content: center;
 }
 
 .sin-resultados a:hover {
-  text-decoration: underline; /* Subrayar al pasar el mouse */
+  text-decoration: underline; 
 }

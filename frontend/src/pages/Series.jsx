@@ -39,11 +39,12 @@ export default function Series() {
       <div className="grid">
         {series.map((serie) => (
           <TarjetaObra
-            key={serie._id}
-            idObra={serie._id}
+            key={serie._id || serie.id}
+            idObra={serie._id || serie.id} 
             titulo={serie.titulo}
+            tipo={serie.tipo}
             imagen={serie.imagen}
-            fecha_publicacion={serie.fecha_estreno}
+            fecha_lanzamiento={serie.fecha_lanzamiento}
             calificacion_promedio={serie.promedio_valoracion}
           />
         ))}

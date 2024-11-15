@@ -4,7 +4,7 @@ const esquemaPelicula = new mongoose.Schema({
   titulo: { type: String, required: true },
   director: { type: String, required: true },
   productora: { type: String, required: true },
-  fecha_estreno: { type: Date, required: true },
+  fecha_lanzamiento: { type: Date, required: true },
   duracion: { type: Number, required: true },
   generos: [{ type: String }],
   elenco: [{

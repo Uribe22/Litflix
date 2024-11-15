@@ -20,6 +20,7 @@ mongoose.connect(process.env.DB_HOST, {
 .then(() => console.log('Conectado a MongoDB'))
 .catch(err => console.error('Error de conexión a MongoDB', err));
 
+
 app.get('/api/peliculas', async (req, res) => {
     try {
         const peliculas = await pelicula.find();
@@ -59,9 +60,10 @@ app.get('/api/peliculas-mejor-valoradas', async (req, res) => {
             {
                 $group: {
                     _id: '$_id',
+                    tipo: { $first: 'pelicula' },
                     titulo: { $first: '$titulo' },
                     imagen: { $first: '$imagen' },
-                    fecha_publicacion: { $first: '$fecha_estreno' },
+                    fecha_lanzamiento: { $first: '$fecha_lanzamiento' },
                     promedio_valoracion: { $avg: '$resenias.valoracion' }
                 }
             },
@@ -81,7 +83,7 @@ app.get('/api/peliculas-mejor-valoradas', async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 });
-// Ruta de búsqueda específica para películas
+
 app.get('/api/buscar-peliculas', async (req, res) => {
     const termino = req.query.q;
     try {
@@ -94,7 +96,7 @@ app.get('/api/buscar-peliculas', async (req, res) => {
                     tipo: { $first: 'pelicula' },
                     titulo: { $first: '$titulo' },
                     imagen: { $first: '$imagen' },
-                    fecha: { $first: '$fecha_estreno' },
+                    fecha: { $first: '$fecha_lanzamiento' },
                     promedio_valoracion: { $avg: '$resenias.valoracion' }
                 }
             }
@@ -119,7 +121,7 @@ app.get('/api/buscar-series', async (req, res) => {
                     tipo: { $first: 'serie' },
                     titulo: { $first: '$titulo' },
                     imagen: { $first: '$imagen' },
-                    fecha: { $first: '$fecha_estreno' },
+                    fecha: { $first: '$fecha_lanzamiento' },
                     promedio_valoracion: { $avg: '$resenias.valoracion' }
                 }
             }
@@ -130,6 +132,7 @@ app.get('/api/buscar-series', async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
+
 
 // Ruta de búsqueda específica para libros
 app.get('/api/buscar-libros', async (req, res) => {
@@ -144,7 +147,7 @@ app.get('/api/buscar-libros', async (req, res) => {
                     tipo: { $first: 'libro' },
                     titulo: { $first: '$titulo' },
                     imagen: { $first: '$imagen' },
-                    fecha: { $first: '$fecha_publicacion' },
+                    fecha: { $first: '$fecha_lanzamiento' },
                     promedio_valoracion: { $avg: '$resenias.valoracion' }
                 }
             }
@@ -158,7 +161,7 @@ app.get('/api/buscar-libros', async (req, res) => {
 
 app.get('/api/buscar', async (req, res) => {
     const termino = req.query.q;
-    console.log(`Término de búsqueda recibido: ${termino}`);  // Log para verificar el término de búsqueda
+    console.log(`Término de búsqueda recibido: ${termino}`);
 
     try {
         const filtro = {
@@ -176,12 +179,12 @@ app.get('/api/buscar', async (req, res) => {
                     tipo: { $first: 'pelicula' },
                     titulo: { $first: '$titulo' },
                     imagen: { $first: '$imagen' },
-                    fecha: { $first: '$fecha_estreno' },
+                    fecha: { $first: '$fecha_lanzamiento' },
                     promedio_valoracion: { $avg: '$resenias.valoracion' }
                 }
             }
         ]);
-        console.log("Peliculas encontradas:", peliculas);  // Log de resultados de películas
+        console.log("Peliculas encontradas:", peliculas);
 
         const series = await serie.aggregate([
             { $match: filtro },
@@ -192,12 +195,12 @@ app.get('/api/buscar', async (req, res) => {
                     tipo: { $first: 'serie' },
                     titulo: { $first: '$titulo' },
                     imagen: { $first: '$imagen' },
-                    fecha: { $first: '$fecha_estreno' },
+                    fecha: { $first: '$fecha_lanzamiento' },
                     promedio_valoracion: { $avg: '$resenias.valoracion' }
                 }
             }
         ]);
-        console.log("Series encontradas:", series);  // Log de resultados de series
+        console.log("Series encontradas:", series);
 
         const libros = await libro.aggregate([
             { $match: filtro },
@@ -208,16 +211,15 @@ app.get('/api/buscar', async (req, res) => {
                     tipo: { $first: 'libro' },
                     titulo: { $first: '$titulo' },
                     imagen: { $first: '$imagen' },
-                    fecha: { $first: '$fecha_publicacion' },
+                    fecha: { $first: '$fecha_lanzamiento' },
                     promedio_valoracion: { $avg: '$resenias.valoracion' }
                 }
             }
         ]);
-        console.log("Libros encontrados:", libros);  // Log de resultados de libros
+        console.log("Libros encontrados:", libros);
 
-        // Combina los resultados y envíalos al frontend
         const allResults = [...peliculas, ...series, ...libros];
-        console.log("Todos los resultados:", allResults);  // Log de todos los resultados combinados
+        console.log("Todos los resultados:", allResults);
 
         res.json(allResults);
     } catch (err) {
