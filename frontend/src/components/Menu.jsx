@@ -8,7 +8,7 @@ function MenuComponent() {
   return (
     <Navbar expand="lg" className="custom-navbar mb-3">
       <Container fluid>
-        <Navbar.Brand as={Link} to="/" className="litflix-title text-[#4cc9f0]">Litflix</Navbar.Brand>
+        <Navbar.Brand as={Link} to="/" className="litflix-title">Litflix</Navbar.Brand>
         <Navbar.Toggle aria-controls="offcanvasNavbar" />
         <Navbar.Collapse id="offcanvasNavbar">
           

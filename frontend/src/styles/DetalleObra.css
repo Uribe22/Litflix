@@ -16,6 +16,7 @@
   }
 }
 
+
 .detalle-obra-header {
   display: flex;
   flex-direction: column;
@@ -116,9 +117,6 @@
   align-items: center;
   justify-content: flex-start;
   margin-top: 5px;
-}
-.mi-calificacion{
-  justify-content: left;
 }
 
 .reseña .calificacion .estrellas {

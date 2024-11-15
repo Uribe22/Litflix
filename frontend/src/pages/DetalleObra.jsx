@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import Estrellas from '../components/Estrellas';
+import Resenias from '../components/Resenias';
 import '../styles/DetalleObra.css';
 
 function DetalleObra() {
@@ -32,13 +33,11 @@ function DetalleObra() {
         const obraEncontrada = data.find((item) => item._id === id);
   
         if (obraEncontrada) {
-          // Calcula el promedio de las valoraciones si existen reseñas
           const valoraciones = obraEncontrada.resenias.map(r => r.valoracion);
           const promedioValoracion = valoraciones.length > 0
             ? (valoraciones.reduce((sum, val) => sum + val, 0) / valoraciones.length).toFixed(1)
             : 0;
   
-          // Añade el promedio de valoración al objeto obra
           setObra({ ...obraEncontrada, promedio_valoracion: promedioValoracion });
         } else {
           console.log('Obra no encontrada');
@@ -50,15 +49,14 @@ function DetalleObra() {
   
     obtenerObra();
   }, [tipo, id]);
-  
 
   const enviarReseña = async () => {
     try {
       const reseñaData = {
         comentario: nuevaReseña,
-        valoracion: 5, // Ajusta esto para capturar la calificación deseada
+        valoracion: 5,
         Id_obra: obra._id,
-        Id_usuario: 1, // Usa el ID del usuario autenticado si está disponible
+        Id_usuario: 1,
       };
       await axios.post(`http://localhost:5000/api/obra/${obra._id}/resenias`, reseñaData);
   
@@ -78,7 +76,6 @@ function DetalleObra() {
       console.error('Error al enviar la reseña:', error);
     }
   };
-  
 
   if (!obra) return <p>Cargando...</p>;
 
@@ -94,33 +91,14 @@ function DetalleObra() {
             <p>Fecha de estreno: {new Date(obra.fecha_lanzamiento).toLocaleDateString()}</p>
             <p className="sinopsis">Sinopsis: {obra.sinopsis}</p>
             <div className="calificacion">
-            <Estrellas calificacion={obra.promedio_valoracion || 0} />
-            <p>{obra.promedio_valoracion ? `${obra.promedio_valoracion} / 5` : 'No hay valoraciones aún'}</p>
+              <Estrellas calificacion={obra.promedio_valoracion || 0} />
+              <p>{obra.promedio_valoracion ? `${obra.promedio_valoracion} / 5` : 'No hay valoraciones aún'}</p>
             </div>
-
-
             <button className="boton-lista">+ Agregar a lista de pendientes</button>
           </div>
         </div>
 
-        <div className="reseñas">
-          <h2>Reseñas</h2>
-          {obra.resenias && obra.resenias.length > 0 ? (
-            obra.resenias.map((reseña, index) => (
-              <div key={index} className="reseña">
-                <h4>{reseña.autor}</h4>
-                <div className="mi-calificacion">
-                  <Estrellas calificacion={reseña.valoracion} />
-                </div>
-                <p>{reseña.comentario}</p>
-                <span>{new Date(reseña.fecha).toLocaleDateString()}</span>
-              </div>
-            ))
-          ) : (
-            <p>No hay reseñas disponibles.</p>
-          )}
-          <button className="boton-reseñas">Ver más reseñas</button>
-        </div>
+        <Resenias resenias={obra.resenias} />
 
         <div className="agregar-reseña">
           <h3>Agregar reseña</h3>

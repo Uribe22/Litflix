@@ -11,6 +11,7 @@
 .tarjeta-link {
   text-decoration: none;
   color: inherit;
+
 }
 
 .tarjeta-obra {
@@ -29,8 +30,12 @@
   padding-bottom: 10px;
   border: 2px solid #3690ae;
   position: relative;
+ 
+  
 }
-
+.sin-subrayado{
+  text-decoration: none;
+}
 .tarjeta-obra:hover {
   transform: translateY(-10px);
   box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.5);
@@ -64,6 +69,7 @@
   -webkit-line-clamp: 2;
   line-clamp: 2;
   text-overflow: ellipsis;
+
 }
 .fecha-publicacion {
   font-size: 0.8rem;
