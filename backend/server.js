@@ -108,7 +108,7 @@ app.get('/api/buscar-peliculas', async (req, res) => {
     const termino = req.query.q;
     try {
         const peliculas = await pelicula.aggregate([
-            { $match: { $or: [ { titulo: { $regex: termino, $options: 'i' } }, { autor: { $regex: termino, $options: 'i' } } ] } },
+            { $match: { titulo: { $regex: termino, $options: 'i' } } },
             { $unwind: { path: '$resenias', preserveNullAndEmptyArrays: true } },
             {
                 $group: {
@@ -139,7 +139,7 @@ app.get('/api/buscar-series', async (req, res) => {
     const termino = req.query.q;
     try {
         const series = await serie.aggregate([
-            { $match: { $or: [ { titulo: { $regex: termino, $options: 'i' } }, { autor: { $regex: termino, $options: 'i' } } ] } },
+            { $match: { titulo: { $regex: termino, $options: 'i' } } },
             { $unwind: { path: '$resenias', preserveNullAndEmptyArrays: true } },
             {
                 $group: {
@@ -171,7 +171,7 @@ app.get('/api/buscar-libros', async (req, res) => {
     const termino = req.query.q;
     try {
         const libros = await libro.aggregate([
-            { $match: { $or: [ { titulo: { $regex: termino, $options: 'i' } }, { autor: { $regex: termino, $options: 'i' } } ] } },
+            { $match: { titulo: { $regex: termino, $options: 'i' } } },
             { $unwind: { path: '$resenias', preserveNullAndEmptyArrays: true } },
             {
                 $group: {
@@ -202,15 +202,8 @@ app.get('/api/buscar', async (req, res) => {
     console.log(`Término de búsqueda recibido: ${termino}`);
 
     try {
-        const filtro = {
-            $or: [
-                { titulo: { $regex: termino, $options: 'i' } },
-                { autor: { $regex: termino, $options: 'i' } }
-            ]
-        };
-
         const createPipeline = (tipo) => [
-            { $match: filtro },
+            { $match: { titulo: { $regex: termino, $options: 'i' } } },
             { $unwind: { path: '$resenias', preserveNullAndEmptyArrays: true } },
             {
                 $group: {
