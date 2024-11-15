@@ -13,7 +13,7 @@ export default function TarjetaObra({ idObra, titulo, imagen, tipo, fecha_lanzam
 
   return (
     <div className="tarjeta-obra">
-      <Link to={`/detalleobra/${tipo}/${idObra}`}>
+      <Link to={`/detalleobra/${tipo}/${idObra}`} className='sin-subrayado'>
         <img src={imagenFinal} alt={titulo} className="tarjeta-obra-imagen" />
         <div className="p-4">
           <h3>{titulo}</h3>

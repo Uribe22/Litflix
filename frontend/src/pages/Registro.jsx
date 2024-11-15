@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/Autenticacion.css";
+import axios from 'axios';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -14,6 +15,7 @@ const Register = () => {
   const [error, setError] = useState("");
   const [MostrarContrasenia, setMostrarContrasenia] = useState(false);
   const [MostrarConfirmarContrasenia, setMostrarConfirmarContrasenia] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,14 +25,38 @@ const Register = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.contrasenia !== formData.confirmar_contrasenia) {
       setError("Las contraseñas no coinciden");
       return;
     }
-    console.log("Usuario registrado:", formData);
-    setError("");
+    
+    try {
+      const verificacion = await axios.post('http://localhost:5000/api/verificar-usuario', {
+        nombre: formData.nombre_usuario,
+        correo: formData.correo
+      });
+
+      if (verificacion.status === 200) {
+        const registro = await axios.post('http://localhost:5000/api/usuarios', {
+          nombre: formData.nombre_usuario,
+          correo: formData.correo,
+          contrasenia: formData.contrasenia
+        });
+
+        const { token } = registro.data;
+        localStorage.setItem('token', token);
+
+        setError('');
+        alert('Usuario registrado exitósamente', token);
+
+        navigate('/');
+      }
+    } catch (error) {
+      setError(error.response?.data?.message || 'Error al registrar al usuario');
+      console.error('Error al registrar usuario:', error);
+    }
   };
 
   return (
