@@ -8,7 +8,7 @@ export default function Inicio() {
   useEffect(() => {
     const obtenerPeliculas = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/peliculas-mejor-valoradas');
+        const response = await fetch('http://localhost:5000/api/peliculas-recientes');
         if (!response.ok) {
           throw new Error('Error en la carga de películas');
         }
@@ -24,7 +24,8 @@ export default function Inicio() {
 
   return (
     <div className="contenedor-inicio">
-      <h1 className="titulo-tipo">Películas Mejor Valoradas</h1>
+      <h1 className="titulo-tipo">Novedades</h1>
+      <h2 className="categoria">Películas</h2>
       {error && <p>{error}</p>}
       <div className="grid">
         {peliculas.map((pelicula) => (

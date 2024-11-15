@@ -28,7 +28,12 @@ mongoose.connect(process.env.DB_HOST, {
 
 app.get('/api/peliculas', async (req, res) => {
     try {
-        const peliculas = await pelicula.find();
+        const peliculas = await pelicula.aggregate([
+            {
+                $sort: { titulo: 1 }
+            }
+        ]);
+
         res.json(peliculas);
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -37,7 +42,11 @@ app.get('/api/peliculas', async (req, res) => {
 
 app.get('/api/series', async (req, res) => {
     try {
-        const series = await serie.find();
+        const series = await serie.aggregate([
+            {
+                $sort: { titulo: 1 }
+            }
+        ]);
         res.json(series);
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -46,19 +55,23 @@ app.get('/api/series', async (req, res) => {
 
 app.get('/api/libros', async (req, res) => {
     try {
-        const libros = await libro.find();
+        const libros = await libro.aggregate([
+            {
+                $sort: { titulo: 1 }
+            }
+        ]);
         res.json(libros);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
 });
 
-app.get('/api/peliculas-mejor-valoradas', async (req, res) => {
+app.get('/api/peliculas-recientes', async (req, res) => {
     try {
         const peliculas = await pelicula.aggregate([
             {
                 $unwind: {
-                    path: '$resenias', 
+                    path: '$resenias',
                     preserveNullAndEmptyArrays: true
                 }
             },
@@ -73,10 +86,12 @@ app.get('/api/peliculas-mejor-valoradas', async (req, res) => {
                 }
             },
             {
-                $match: { promedio_valoracion: { $ne: null } }
+                $addFields: {
+                    promedio_valoracion: { $ifNull: ["$promedio_valoracion", 0] }
+                }
             },
             {
-                $sort: { promedio_valoracion: -1 }
+                $sort: { fecha_lanzamiento: -1 }
             },
             {
                 $limit: 5
@@ -104,7 +119,13 @@ app.get('/api/buscar-peliculas', async (req, res) => {
                     fecha: { $first: '$fecha_lanzamiento' },
                     promedio_valoracion: { $avg: '$resenias.valoracion' }
                 }
-            }
+            },
+            {
+                $addFields: {
+                    promedio_valoracion: { $ifNull: ["$promedio_valoracion", 0] }
+                }
+            },
+            { $sort: { titulo: 1 } }
         ]);
 
         res.json(peliculas);
@@ -129,7 +150,13 @@ app.get('/api/buscar-series', async (req, res) => {
                     fecha: { $first: '$fecha_lanzamiento' },
                     promedio_valoracion: { $avg: '$resenias.valoracion' }
                 }
-            }
+            },
+            {
+                $addFields: {
+                    promedio_valoracion: { $ifNull: ["$promedio_valoracion", 0] }
+                }
+            },
+            { $sort: { titulo: 1 } }
         ]);
 
         res.json(series);
@@ -155,7 +182,13 @@ app.get('/api/buscar-libros', async (req, res) => {
                     fecha: { $first: '$fecha_lanzamiento' },
                     promedio_valoracion: { $avg: '$resenias.valoracion' }
                 }
-            }
+            },
+            {
+                $addFields: {
+                    promedio_valoracion: { $ifNull: ["$promedio_valoracion", 0] }
+                }
+            },
+            { $sort: { titulo: 1 } }
         ]);
 
         res.json(libros);
@@ -175,56 +208,37 @@ app.get('/api/buscar', async (req, res) => {
                 { autor: { $regex: termino, $options: 'i' } }
             ]
         };
-        const peliculas = await pelicula.aggregate([
-            { $match: filtro },
-            { $unwind: { path: '$resenias', preserveNullAndEmptyArrays: true } },
-            {
-                $group: {
-                    _id: '$_id',
-                    tipo: { $first: 'pelicula' },
-                    titulo: { $first: '$titulo' },
-                    imagen: { $first: '$imagen' },
-                    fecha: { $first: '$fecha_lanzamiento' },
-                    promedio_valoracion: { $avg: '$resenias.valoracion' }
-                }
-            }
-        ]);
-        console.log("Peliculas encontradas:", peliculas);
 
-        const series = await serie.aggregate([
+        const createPipeline = (tipo) => [
             { $match: filtro },
             { $unwind: { path: '$resenias', preserveNullAndEmptyArrays: true } },
             {
                 $group: {
                     _id: '$_id',
-                    tipo: { $first: 'serie' },
+                    tipo: { $first: tipo },
                     titulo: { $first: '$titulo' },
                     imagen: { $first: '$imagen' },
                     fecha: { $first: '$fecha_lanzamiento' },
                     promedio_valoracion: { $avg: '$resenias.valoracion' }
                 }
+            },
+            {
+                $addFields: {
+                    promedio_valoracion: { $ifNull: ['$promedio_valoracion', 0] }
+                }
             }
-        ]);
-        console.log("Series encontradas:", series);
+        ];
 
-        const libros = await libro.aggregate([
-            { $match: filtro },
-            { $unwind: { path: '$resenias', preserveNullAndEmptyArrays: true } },
-            {
-                $group: {
-                    _id: '$_id',
-                    tipo: { $first: 'libro' },
-                    titulo: { $first: '$titulo' },
-                    imagen: { $first: '$imagen' },
-                    fecha: { $first: '$fecha_lanzamiento' },
-                    promedio_valoracion: { $avg: '$resenias.valoracion' }
-                }
-            }
+        const [peliculas, series, libros] = await Promise.all([
+            pelicula.aggregate(createPipeline('pelicula')),
+            serie.aggregate(createPipeline('serie')),
+            libro.aggregate(createPipeline('libro'))
         ]);
-        console.log("Libros encontrados:", libros);
 
         const allResults = [...peliculas, ...series, ...libros];
-        console.log("Todos los resultados:", allResults);
+        allResults.sort((a, b) => a.titulo.localeCompare(b.titulo));
+
+        console.log("Todos los resultados ordenados:", allResults);
 
         res.json(allResults);
     } catch (err) {
