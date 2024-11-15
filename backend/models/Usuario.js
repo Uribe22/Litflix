@@ -5,7 +5,7 @@ const esquemaUsuario = new mongoose.Schema({
   contrasenia: { type: String, required: true },
   pendientes: [{
     fecha: { type: Date, required: true },
-    espectativa: { type: Number, required: true },
+    espectativa: { type: Number, required: false },
   }],
   nombre: { type: String, required: true }
 });
