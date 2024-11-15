@@ -66,43 +66,51 @@ app.get('/api/libros', async (req, res) => {
     }
 });
 
-app.get('/api/peliculas-recientes', async (req, res) => {
+app.get('/api/novedades-recientes', async (req, res) => {
     try {
-        const peliculas = await pelicula.aggregate([
-            {
-                $unwind: {
-                    path: '$resenias',
-                    preserveNullAndEmptyArrays: true
-                }
-            },
-            {
-                $group: {
-                    _id: '$_id',
-                    tipo: { $first: 'pelicula' },
-                    titulo: { $first: '$titulo' },
-                    imagen: { $first: '$imagen' },
-                    fecha_lanzamiento: { $first: '$fecha_lanzamiento' },
-                    promedio_valoracion: { $avg: '$resenias.valoracion' }
-                }
-            },
-            {
-                $addFields: {
-                    promedio_valoracion: { $ifNull: ["$promedio_valoracion", 0] }
-                }
-            },
-            {
-                $sort: { fecha_lanzamiento: -1 }
-            },
-            {
-                $limit: 5
+      const obtenerDatos = async (tipo) => {
+        const model = tipo === 'pelicula' ? pelicula : tipo === 'serie' ? serie : libro;
+        return await model.aggregate([
+          {
+            $unwind: {
+              path: '$resenias',
+              preserveNullAndEmptyArrays: true
             }
+          },
+          {
+            $group: {
+              _id: '$_id',
+              tipo: { $first: tipo },
+              titulo: { $first: '$titulo' },
+              imagen: { $first: '$imagen' },
+              fecha_lanzamiento: { $first: '$fecha_lanzamiento' },
+              promedio_valoracion: { $avg: '$resenias.valoracion' }
+            }
+          },
+          {
+            $addFields: {
+              promedio_valoracion: { $ifNull: ["$promedio_valoracion", 0] }
+            }
+          },
+          {
+            $sort: { fecha_lanzamiento: -1 }
+          },
+          {
+            $limit: 5
+          }
         ]);
-
-        res.json(peliculas);
+      };
+  
+      const peliculas = await obtenerDatos('pelicula');
+      const series = await obtenerDatos('serie');
+      const libros = await obtenerDatos('libro');
+  
+      res.json({ peliculas, series, libros });
     } catch (err) {
-        res.status(500).json({ message: err.message });
+      res.status(500).json({ message: err.message });
     }
 });
+  
 
 app.get('/api/buscar-peliculas', async (req, res) => {
     const termino = req.query.q;
