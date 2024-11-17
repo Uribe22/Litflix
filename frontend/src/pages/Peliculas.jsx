@@ -18,7 +18,7 @@ export default function Peliculas() {
           const valoraciones = pelicula.resenias.map(r => r.valoracion);
           const promedio = valoraciones.length > 0 
             ? (valoraciones.reduce((sum, val) => sum + val, 0) / valoraciones.length).toFixed(1) 
-            : null;
+            : 0;
 
           return { ...pelicula, promedio_valoracion: promedio };
         });

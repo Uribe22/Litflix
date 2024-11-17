@@ -39,6 +39,14 @@
   color: #ffffff !important;
 }
 
+.navbar-brand {
+  color: #ffffff !important;
+}
+
+.navbar .navbar-brand:hover {
+  color: #0c8fc3 !important;
+}
+
 /* Pantallas medianas */
 @media (max-width: 768px) {
   .custom-navbar {

@@ -1,10 +1,27 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Nav, Navbar, Dropdown } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom'; // Importar useLocation
 import '../styles/Menu.css';
 import Buscador from './Buscador';
 
 function MenuComponent() {
+  const [sesionIniciada, setSesionIniciada] = useState(false);
+  const location = useLocation();  // Usar useLocation para detectar cambios en la ruta
+
+  // Verifica el estado de la sesión cada vez que cambie la ruta
+  useEffect(() => {
+    const sesionUsuario = localStorage.getItem("token") !== null;
+    setSesionIniciada(sesionUsuario);
+  }, [location]);  // El hook se ejecutará cada vez que cambie la ubicación
+
+  // Maneja el cierre de sesión
+  const cerrarSesion = () => {
+    localStorage.removeItem("token");
+    setSesionIniciada(false);  // Actualiza el estado de la sesión
+
+    alert("Se ha cerrado tu sesión");
+  };
+
   return (
     <Navbar expand="lg" className="custom-navbar mb-3">
       <Container fluid>
@@ -18,7 +35,7 @@ function MenuComponent() {
             <Link className="nav-link" to="/libros">Libros</Link>
           </Nav>
 
-          <Buscador/> 
+          <Buscador/>
                    
           <Nav className="ml-auto">
             <Dropdown align="end">
@@ -31,8 +48,18 @@ function MenuComponent() {
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
-                <Dropdown.Item as={Link} to="/registro">Registrarse</Dropdown.Item>
-                <Dropdown.Item as={Link} to="/inicio-sesion">Iniciar sesión</Dropdown.Item>
+                {sesionIniciada ? (
+                  <>
+                    <Dropdown.Item as={Link} to="/">Lista de Pendientes</Dropdown.Item>
+                    <Dropdown.Item onClick={cerrarSesion}>Cerrar sesión</Dropdown.Item>
+                  </>
+                ) : (
+                  <>
+                    <Dropdown.Item as={Link} to="/inicio-sesion">Iniciar sesión</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/registro">Registrarse</Dropdown.Item>
+                  </>
+                )}
+                
               </Dropdown.Menu>
             </Dropdown>
           </Nav>
