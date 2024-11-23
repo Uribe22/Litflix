@@ -1,6 +1,6 @@
 import React from 'react'; 
 import { useLocation } from 'react-router-dom';
-import TarjetaObra from '../components/TarjetaObra';
+import Tarjeta from '../components/Tarjeta'; 
 
 export default function Resultados() {
     const location = useLocation();
@@ -14,18 +14,19 @@ export default function Resultados() {
             <div className="grid">
                 {resultados.length > 0 ? (
                     resultados.map((obra) => (
-                        <TarjetaObra
+                        <Tarjeta
                             key={obra._id || obra.id}
-                            idObra={obra._id || obra.id} 
+                            id={obra._id || obra.id}
                             titulo={obra.titulo}
                             tipo={obra.tipo}
                             imagen={obra.imagen}
-                            fecha_lanzamiento={obra.fecha}
-                            calificacion_promedio={obra.promedio_valoracion}
+                            fecha={obra.fecha_lanzamiento || obra.fecha}
+                            calificacion={obra.promedio_valoracion}
+                            contexto="obra"
                         />
                     ))
                 ) : (
-                    <h1 className="titulo-tipo">No se encontraron resultados para "{termino}"</h1>
+                    <h2 className="titulo-tipo">No se encontraron resultados para "{termino}"</h2>
                 )}
             </div>
         </div>

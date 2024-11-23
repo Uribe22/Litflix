@@ -5,15 +5,11 @@
   margin-top: 10px;
 }
 
-.estrella-imagen {
-  width: 20px;
-  height: 20px;
-  margin-right: 4px;
+.estrella {
+  font-size: 20px; 
+  color: #e8b726; 
 }
 
-.calificacion-vacia {
-  font-size: 0.8rem;
-  color: #676666;
-  margin-top: 5px;
-  text-align: center;
+.estrella.vacia {
+  color: #ddd; 
 }

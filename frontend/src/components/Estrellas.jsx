@@ -1,4 +1,5 @@
 import React from 'react';
+import { FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa';
 import '../styles/Estrella.css';
 
 export default function Estrellas({ calificacion }) {
@@ -8,17 +9,11 @@ export default function Estrellas({ calificacion }) {
 
     for (let i = 1; i <= 5; i++) {
       if (i <= Math.floor(calificacionEscalada)) {
-        estrellas.push(
-          <img key={i} src="/iconos/estrella_llena.png" alt="Estrella llena" className="estrella-imagen" />
-        );
+        estrellas.push(<FaStar key={i} className="estrella llena" />);
       } else if (i === Math.ceil(calificacionEscalada) && calificacionEscalada % 1 >= 0.5) {
-        estrellas.push(
-          <img key={i} src="/iconos/estrella_media.png" alt="Estrella media" className="estrella-imagen" />
-        );
+        estrellas.push(<FaStarHalfAlt key={i} className="estrella media" />);
       } else {
-        estrellas.push(
-          <img key={i} src="/iconos/estrella_vacia.png" alt="Estrella vacía" className="estrella-imagen" />
-        );
+        estrellas.push(<FaRegStar key={i} className="estrella vacia" />);
       }
     }
     return estrellas;

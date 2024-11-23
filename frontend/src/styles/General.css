@@ -42,12 +42,10 @@ body {
 }
 
 .sin-resultados {
-  font-size: 1.5rem;
-  margin-top: 20px;
-  color: #ffffff; 
-  font-weight: bold;
-  position: absolute;
-  justify-content: center;
+    font-family: "Merriweather", serif;
+    color: #4bc8f0;
+    font-size: 24px; 
+  
 }
 
 .sin-resultados a:hover {

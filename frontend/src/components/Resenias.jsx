@@ -1,39 +1,113 @@
-import React from 'react';
-import Estrellas from './Estrellas'; 
+import React, { useState } from 'react';
+import Estrellas from './Estrellas';
 import Carrusel from './Carrusel';
+import '../styles/Resenias.css';
 
-export default function Resenias({ resenias }) {
-  const renderResena = (reseña) => (
-    <div className="p-2">
-      <div className="w-full h-full border p-6 flex flex-col rounded-lg shadow-lg bg-white">
-        <div className="flex items-start mb-4">
-          <div className="flex-grow">
-            <h4 className="calificacion-usuario">{reseña.autor}</h4>
+export default function Resenias({ resenias, agregarResena, usuarioAutenticado }) {
+  const [mostrarListaCompleta, setMostrarListaCompleta] = useState(false);
+  const [nuevaReseña, setNuevaReseña] = useState('');
+  const [calificacion, setCalificacion] = useState(0);
+  const [expandir, setExpandir] = useState(null);
+
+  const handleVerMasResenias = () => {
+    setMostrarListaCompleta(!mostrarListaCompleta);
+  };
+
+  const toggleExpandir = (index) => {
+    setExpandir(expandir === index ? null : index);
+  };
+
+  const enviarReseña = () => {
+    if (!usuarioAutenticado) {
+      alert('Debes iniciar sesión para agregar una reseña.');
+      return;
+    }
+
+    if (nuevaReseña.trim() === '' || calificacion === 0) {
+      alert('Por favor, completa todos los campos.');
+      return;
+    }
+
+    const nuevaResenaObj = {
+      autor: usuarioAutenticado.nombre,
+      comentario: nuevaReseña,
+      valoracion: calificacion,
+      fecha: new Date(),
+    };
+
+    agregarResena(nuevaResenaObj);
+    setNuevaReseña('');
+    setCalificacion(0);
+  };
+
+  const renderReseña = (reseña, index) => {
+    const esExpandido = expandir === index;
+    const textoReseña =
+      reseña.comentario.length > 100 && !esExpandido
+        ? `${reseña.comentario.substring(0, 100)}...`
+        : reseña.comentario;
+
+    return (
+      <div key={index} className={`tarjeta-resena ${esExpandido ? 'expandido' : ''}`}>
+        <div className="tarjeta-resena-header">
+          <div className="tarjeta-resena-avatar">
+            <img src="https://via.placeholder.com/50" alt="Avatar" />
           </div>
+          <h4 className="tarjeta-resena-autor">{reseña.autor}</h4>
         </div>
-        <div className="calificacion-usuario mb-2">
+        <p className="tarjeta-resena-comentario">{textoReseña}</p>
+        {reseña.comentario.length > 100 && (
+          <button className="ver-mas-boton" onClick={() => toggleExpandir(index)}>
+            {esExpandido ? 'Ver menos' : 'Ver más'}
+          </button>
+        )}
+        <div className="tarjeta-resena-footer">
           <Estrellas calificacion={reseña.valoracion} />
-        </div>
-        <p className="text-gray-700 mb-4 flex-grow text-sm">{reseña.comentario}</p>
-        <div className="flex items-center justify-between text-sm text-gray-500">
-        <span style={{ color: '#224160;' }}>{reseña.fecha ? new Date(reseña.fecha).toLocaleDateString() : 'Fecha no disponible'}</span>
-
+          <span>{new Date(reseña.fecha).toLocaleDateString()}</span>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
-    <div className="reseñas w-full max-w-6xl mx-auto p-4">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-white">Reseñas de Usuarios</h2>
-        <button className="text-blue-600 hover:underline boton-reseñas">Ver más reseñas</button>
+    <div className="reseñas-container">
+      <div className="reseñas-header">
+        <h2>Reseñas de Usuarios</h2>
       </div>
-      {resenias && resenias.length > 0 ? (
-        <Carrusel items={resenias} renderItem={renderResena} />
+
+      {mostrarListaCompleta ? (
+        <div className="reseñas-lista-scrollable">
+          {resenias.map((reseña, index) => renderReseña(reseña, index))}
+        </div>
       ) : (
-        <p className="text-white">No hay reseñas disponibles.</p>
+        resenias && resenias.length > 0 ? (
+          <Carrusel
+            items={resenias}
+            renderItem={(reseña, index) => renderReseña(reseña, index)}
+          />
+        ) : (
+          <p className="reseñas-empty">No hay reseñas disponibles.</p>
+        )
       )}
+
+      <button className="boton-reseñas" onClick={handleVerMasResenias}>
+        {mostrarListaCompleta ? 'Volver al Carrusel' : 'Ver más reseñas'}
+      </button>
+
+      <div className="agregar-reseña">
+        <h3>Agregar Reseña</h3>
+        <div className="calificacion">
+          <Estrellas calificacion={calificacion} setCalificacion={setCalificacion} />
+        </div>
+        <textarea
+          placeholder="Escribe tu reseña..."
+          value={nuevaReseña}
+          onChange={(e) => setNuevaReseña(e.target.value)}
+        />
+        <button className="boton-enviar" onClick={enviarReseña}>
+          Enviar
+        </button>
+      </div>
     </div>
   );
 }

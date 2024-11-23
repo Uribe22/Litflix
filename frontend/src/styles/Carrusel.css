@@ -1,49 +1,91 @@
+.carrusel-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-color: transparent;
+  padding: 0 20px; /* Asegura un espacio a los lados */
+}
+
 .carrusel {
-    display: flex;
-    overflow-x: auto;
-    gap: 16px;
-    padding: 16px 0;
-    background-color: #1a3b5d;
-    justify-content: center;
-    border-radius: 8px;
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  transition: transform 0.5s ease-in-out;
+}
 
-  }
-  
+.carrusel-item {
+  flex: 0 0 calc(33.33% - 16px); /* Mostrar tres elementos a la vez */
+  transition: all 0.3s ease;
+}
+
+/* Botones de navegación */
+.carrusel-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-60%);
+  background-color: #1e90ff;
+  border: none;
+  color: white;
+  font-size: 24px;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Posicionar las flechas hacia afuera del carrusel */
+.carrusel-button.prev {
+  left: 0px; /* Ajustar según el diseño */
+}
+
+.carrusel-button.next {
+  right: 10px; /* Ajustar según el diseño */
+}
+
+/* Cambiar color al hover */
+.carrusel-button:hover {
+  background-color: #0056b3;
+}
+
+/* Deshabilitar botones */
+.carrusel-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+/* Estilo responsivo para pantallas pequeñas */
+@media (max-width: 768px) {
   .carrusel-item {
-    flex: 0 0 auto;
-    width: 250px; 
-    border: 1px solid #e2e2e2;
-    border-radius: 8px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    background-color: white;
+    flex: 0 0 calc(50% - 16px); /* Mostrar dos elementos por fila en pantallas pequeñas */
   }
-  
-  .carrusel-item img {
-    border-radius: 50%;
-    margin-right: 8px;
-  }
-  
-  .carrusel-item .calificacion {
-    display: flex;
-    align-items: center;
-    
-  }
-  
-  .carrusel-item h4 {
-    font-size: 1.2em;
-    font-weight: bold;
-    color: #224160;
-    justify-items: center;
-  }
-  
-  .carrusel-item p {
-    color: #666;
-    font-size: 0.9em;
-    margin: 8px 0;
 
+  .carrusel-button.prev {
+    left: -30px; /* Acercar las flechas para pantallas pequeñas */
   }
-  .calificacion-usuario{
-    color: #1a3b5d;
-    justify-content: center;
-  
+
+  .carrusel-button.next {
+    right: -30px;
   }
+}
+
+@media (max-width: 480px) {
+  .carrusel-item {
+    flex: 0 0 calc(100% - 16px); /* Mostrar un solo elemento por fila en pantallas muy pequeñas */
+  }
+
+  .carrusel-button.prev,
+  .carrusel-button.next {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    left: -20px;
+    right: -20px;
+  }
+}

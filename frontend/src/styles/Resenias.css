@@ -1,0 +1,103 @@
+.reseñas-container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  color: #333;
+}
+
+.reseñas-lista-scrollable {
+  max-width: 100%; 
+  width: 100%;
+  max-height: 500px;
+  overflow-y: auto;
+  margin: 0 auto;
+  padding-right: 10px;
+}
+
+
+.reseñas-lista-scrollable::-webkit-scrollbar {
+  width: 8px;
+}
+
+.reseñas-lista-scrollable::-webkit-scrollbar-thumb {
+  background: #007bff;
+  border-radius: 4px;
+}
+
+
+.tarjeta-resena {
+  background-color: #f9f9f9;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 14px;
+  margin-bottom: 20px;
+  width: 100%; /* Asegura un ancho uniforme */
+  height: 200px; /* Altura inicial fija */
+  overflow: hidden; /* Ocultar contenido extra */
+  transition: all 0.3s ease; /* Animación suave */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.tarjeta-resena.expandido {
+  height: auto; /* Permite expandirse */
+  overflow: visible; /* Mostrar todo el contenido */
+}
+.tarjeta-resena-header {
+  display: flex;
+  align-items: center;
+}
+
+.tarjeta-resena-avatar img {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  margin-right: 15px;
+}
+
+.tarjeta-resena-autor {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.tarjeta-resena-comentario {
+  font-size: 1rem;
+  margin: 10px 20px;
+}
+
+.ver-mas-boton {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.ver-mas-boton:hover {
+  text-decoration: underline;
+}
+
+.tarjeta-resena-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #888;
+}
+
+/* Botón de cambiar vista */
+.boton-reseñas {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.boton-reseñas:hover {
+  background-color: #0056b3;
+}

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import TarjetaObra from '../components/TarjetaObra';
+import Tarjeta from '../components/Tarjeta';
+
 
 export default function Inicio() {
   const [novedades, setNovedades] = useState({ peliculas: [], series: [], libros: [] });
@@ -22,29 +23,35 @@ export default function Inicio() {
     obtenerNovedades();
   }, []);
 
+  const renderCategoria = (categoria) => (
+    <div key={categoria} className={`categoria-contenedor categoria-${categoria}`}>
+      <h2 className="categoria-titulo">{categoria.charAt(0).toUpperCase() + categoria.slice(1)}</h2>
+      {novedades[categoria].length > 0 ? (
+        <div className="grid">
+          {novedades[categoria].map((obra) => (
+            <Tarjeta
+              key={obra._id || obra.id}
+              id={obra._id || obra.id}
+              titulo={obra.titulo}
+              tipo={obra.tipo}
+              imagen={obra.imagen}
+              fecha_lanzamiento={obra.fecha_lanzamiento}
+              calificacion={obra.promedio_valoracion}
+              contexto="obra"
+            />
+          ))}
+        </div>
+      ) : (
+        <p className="categoria-empty">No hay novedades en esta categoría.</p>
+      )}
+    </div>
+  );
+
   return (
     <div className="contenedor-inicio">
       <h1 className="titulo-tipo">Novedades</h1>
-      {error && <p>{error}</p>}
-      
-      {['peliculas', 'series', 'libros'].map((categoria) => (
-        <>
-          <h2 className="categoria">{categoria.charAt(0).toUpperCase() + categoria.slice(1)}</h2>
-          <div className="grid">
-            {novedades[categoria].map((obra) => (
-              <TarjetaObra
-                key={obra._id || obra.id}
-                idObra={obra._id || obra.id}
-                titulo={obra.titulo}
-                tipo={obra.tipo}
-                imagen={obra.imagen}
-                fecha_lanzamiento={obra.fecha_lanzamiento}
-                calificacion_promedio={obra.promedio_valoracion}
-              />
-            ))}
-          </div>
-        </>
-      ))}
+      {error && <div className="error-mensaje">{error}</div>}
+      {['peliculas', 'series', 'libros'].map((categoria) => renderCategoria(categoria))}
     </div>
   );
 }

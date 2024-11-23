@@ -100,18 +100,6 @@ function DetalleObra() {
 
         <Resenias resenias={obra.resenias} />
 
-        <div className="agregar-reseña">
-          <h3>Agregar reseña</h3>
-          <div className="calificacion">
-            <Estrellas idObra={obra._id} />
-          </div>
-          <textarea 
-            placeholder="Escribe tu reseña..." 
-            value={nuevaReseña} 
-            onChange={(e) => setNuevaReseña(e.target.value)} 
-          />
-          <button className="boton-enviar" onClick={enviarReseña}>Enviar</button>
-        </div>
       </div>
     </div>
   );
