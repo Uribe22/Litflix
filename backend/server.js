@@ -1,14 +1,17 @@
 require('dotenv').config();
 const express = require('express');
-const mongoose = require('mongoose');
 const cors = require('cors');
+
+const mongoose = require('mongoose');
+const mysql = require('mysql2/promise');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const pelicula = require('./models/Pelicula');
 const serie = require('./models/Serie');
 const libro = require('./models/Libro');
-const usuario = require('./models/Usuario')
+const pendientes = require('./models/Pendientes');
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -25,6 +28,12 @@ mongoose.connect(process.env.DB_HOST, {
 .then(() => console.log('Conectado a MongoDB'))
 .catch(err => console.error('Error de conexión a MongoDB', err));
 
+const pool = mysql.createPool({
+    host: process.env.MSQL_HOST,
+    user: process.env.USER,
+    password: process.env.PASSWORD,
+    database: process.env.DB
+});
 
 app.get('/api/peliculas', async (req, res) => {
     try {
@@ -250,24 +259,28 @@ app.get('/api/buscar', async (req, res) => {
 
 app.post('/api/verificar-usuario', async (req, res) => {
     const { nombre, correo } = req.body;
-  
+
     try {
-      const usuarioExistente = await usuario.findOne({ $or: [{ correo }, { nombre }] });
+        const [rows] = await pool.query(
+            'SELECT correo, nombre FROM usuarios WHERE correo = ? OR nombre = ?',
+            [correo, nombre]
+        );
 
-      if (!usuarioExistente) {
-        return res.status(200).json({ message: 'Disponible' });
-      }
+        if (rows.length === 0) {
+            return res.status(200).json({ message: 'Disponible' });
+        }
 
-      if (usuarioExistente.correo === correo) {
-        return res.status(400).json({ message: 'Correo no disponible' });
-      }
+        if (rows[0].correo === correo) {
+            return res.status(400).json({ message: 'Correo no disponible' });
+        }
 
-      return res.status(400).json({ message: 'Nombre de usuario no disponible' });
-
+        return res.status(400).json({ message: 'Nombre de usuario no disponible' });
     } catch (error) {
-      res.status(500).json({ message: 'Error al verificar usuario', error });
+        console.error('Error al verificar usuario:', error);
+        res.status(500).json({ message: 'Error al verificar usuario', error });
     }
 });
+
 
 app.post('/api/usuarios', async (req, res) => {
     const { nombre, correo, contrasenia } = req.body;
@@ -275,46 +288,59 @@ app.post('/api/usuarios', async (req, res) => {
     try {
         const contraseniaEncriptada = await bcrypt.hash(contrasenia, 10);
 
-        const nuevoUsuario = new usuario( {nombre, correo, contrasenia:contraseniaEncriptada, pendientes: []} );
-        await nuevoUsuario.save();
+        const [result] = await pool.query(
+            'INSERT INTO usuarios (nombre, correo, contrasenia) VALUES (?, ?, ?)',
+            [nombre, correo, contraseniaEncriptada]
+        );
+
+        const id_usuario = result.insertId;
+
+        const lista_pendientes = new pendientes({ id_usuario, lista: [] });
+        await lista_pendientes.save();
 
         const token = jwt.sign(
-            { usuarioId: nuevoUsuario._id, correo: nuevoUsuario.correo },
+            { usuarioId: id_usuario, correo },
             JWT_SECRET,
             { expiresIn: '1h' }
-        )
+        );
 
-        res.status(201).json({ message: 'Usuario creado exitósamente', token })
+        res.status(201).json({ message: 'Usuario creado exitosamente', token });
     } catch (error) {
+        console.error('Error al crear usuario:', error);
         res.status(400).json({ message: 'Error al crear usuario', error });
     }
 });
 
+
 app.post("/api/iniciar-sesion", async (req, res) => {
     const { correo, contrasenia } = req.body;
-  
+
     try {
-      const inicio = await usuario.findOne({ correo });
-  
-      if (!inicio) {
-        return res.status(400).json({ message: "El correo no existe." });
-      }
-  
-      const esValida = await bcrypt.compare(contrasenia, inicio.contrasenia);
-  
-      if (!esValida) {
-        return res.status(400).json({ message: "Contraseña incorrecta." });
-      }
-  
-      const token = jwt.sign(
-        { userId: usuario._id },
-        JWT_SECRET,
-        { expiresIn: '1h' });
-      res.json({ token });
-  
+        const [rows] = await pool.query(
+            'SELECT id, contrasenia FROM usuarios WHERE correo = ?',
+            [correo]
+        );
+
+        if (rows.length === 0) {
+            return res.status(400).json({ message: "El correo no existe." });
+        }
+
+        const esValida = await bcrypt.compare(contrasenia, rows[0].contrasenia);
+
+        if (!esValida) {
+            return res.status(400).json({ message: "Contraseña incorrecta." });
+        }
+
+        const token = jwt.sign(
+            { usuarioId: rows[0].id },
+            JWT_SECRET,
+            { expiresIn: '1h' }
+        );
+
+        res.json({ token });
     } catch (error) {
-      console.error("Error en el servidor:", error);
-      res.status(500).json({ message: "Error en el servidor." });
+        console.error("Error en el servidor:", error);
+        res.status(500).json({ message: "Error en el servidor." });
     }
 });
 
