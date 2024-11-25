@@ -61,7 +61,7 @@ export default function Libros() {
     setLibrosFiltrados(resultadosFiltrados);
   }, [filtros, libros]);
 
-  const handleApplyFilter = (nuevosFiltros) => {
+  const aplicarFiltros = (nuevosFiltros) => {
     setFiltros(nuevosFiltros);
   };
 
@@ -75,7 +75,7 @@ export default function Libros() {
       {error && <p>{error}</p>}
 
       <Filtro
-        onApplyFilter={handleApplyFilter}
+        onApplyFilter={aplicarFiltros}
         resetFilters={resetearFiltros}
       />
 

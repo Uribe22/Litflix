@@ -8,11 +8,10 @@ export default function Peliculas() {
   const [error, setError] = useState("");
   const [filtros, setFiltros] = useState({
     genero: "",
-    anio: "", // Asegúrate de que sea "anio" en todo el código
+    anio: "",
     calificacion: "",
   });
 
-  // Obtener películas al cargar el componente
   useEffect(() => {
     const obtenerPeliculas = async () => {
       try {
@@ -45,7 +44,6 @@ export default function Peliculas() {
     obtenerPeliculas();
   }, []);
 
-  // Filtrar películas cuando cambian los filtros
   useEffect(() => {
     const resultadosFiltrados = peliculas.filter((pelicula) => {
       const anioLanzamiento = pelicula.fecha_lanzamiento
@@ -58,7 +56,7 @@ export default function Peliculas() {
               g.toLowerCase() === filtros.genero.toLowerCase()
             )
           : true) &&
-        (filtros.anio // Aquí aseguramos que anio sea el mismo nombre
+        (filtros.anio
           ? anioLanzamiento === parseInt(filtros.anio, 10)
           : true) &&
         (filtros.calificacion
@@ -70,12 +68,10 @@ export default function Peliculas() {
     setPeliculasFiltradas(resultadosFiltrados);
   }, [filtros, peliculas]);
 
-  // Manejar la aplicación de filtros
-  const handleApplyFilter = (nuevosFiltros) => {
+  const aplicarFiltros = (nuevosFiltros) => {
     setFiltros(nuevosFiltros);
   };
 
-  // Resetear filtros
   const resetearFiltros = () => {
     setFiltros({ genero: "", anio: "", calificacion: "" });
   };
@@ -86,7 +82,7 @@ export default function Peliculas() {
       {error && <p>{error}</p>}
 
       <Filtro
-        onApplyFilter={handleApplyFilter}
+        onApplyFilter={aplicarFiltros}
         resetFilters={resetearFiltros}
       />
 

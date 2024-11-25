@@ -4,7 +4,7 @@ import Filtro from '../components/Filtro';
 
 export default function Series() {
   const [series, setSeries] = useState([]);
-  const [seriesFiltradas, setSeriesFiltradas] = useState([]); // Estado para las series filtradas
+  const [seriesFiltradas, setSeriesFiltradas] = useState([]);
   const [error, setError] = useState('');
   const [filtros, setFiltros] = useState({
     genero: '',
@@ -32,7 +32,7 @@ export default function Series() {
         });
 
         setSeries(seriesConValoracion);
-        setSeriesFiltradas(seriesConValoracion); // Inicializar con todas las series
+        setSeriesFiltradas(seriesConValoracion);
       } catch (err) {
         setError(err.message);
       }
@@ -41,7 +41,6 @@ export default function Series() {
     obtenerSeries();
   }, []);
 
-  // Filtrar series cuando cambian los filtros
   useEffect(() => {
     const resultadosFiltrados = series.filter((serie) => {
       const anioLanzamiento = serie.fecha_lanzamiento
@@ -62,7 +61,7 @@ export default function Series() {
     setSeriesFiltradas(resultadosFiltrados);
   }, [filtros, series]);
 
-  const handleApplyFilter = (nuevosFiltros) => {
+  const aplicarFiltros = (nuevosFiltros) => {
     setFiltros(nuevosFiltros);
   };
 
@@ -76,7 +75,7 @@ export default function Series() {
       {error && <p>{error}</p>}
 
       <Filtro
-        onApplyFilter={handleApplyFilter}
+        onApplyFilter={aplicarFiltros}
         resetFilters={resetearFiltros}
       />
 

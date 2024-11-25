@@ -1,25 +1,41 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Nav, Navbar, Dropdown } from 'react-bootstrap';
-import { Link, useLocation } from 'react-router-dom'; // Importar useLocation
+import { Link, useLocation } from 'react-router-dom';
 import '../styles/Menu.css';
 import Buscador from './Buscador';
+import Swal from 'sweetalert2';
 
 function MenuComponent() {
   const [sesionIniciada, setSesionIniciada] = useState(false);
-  const location = useLocation();  // Usar useLocation para detectar cambios en la ruta
+  const location = useLocation();
 
-  // Verifica el estado de la sesión cada vez que cambie la ruta
   useEffect(() => {
     const sesionUsuario = localStorage.getItem("token") !== null;
     setSesionIniciada(sesionUsuario);
-  }, [location]);  // El hook se ejecutará cada vez que cambie la ubicación
+  }, [location]);
 
-  // Maneja el cierre de sesión
+  const confirmarCerrarSesion = async (id) => {
+    const result = await Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Estás a punto de cerrar tu sesión actual',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Cerrar sesión',
+      cancelButtonText: 'Cancelar',
+    });
+
+    if (result.isConfirmed) {
+      cerrarSesion();
+    }
+  };
+
   const cerrarSesion = () => {
     localStorage.removeItem("token");
-    setSesionIniciada(false);  // Actualiza el estado de la sesión
+    setSesionIniciada(false);
 
-    alert("Se ha cerrado tu sesión");
+    Swal.fire('Se ha cerrado tu sesión correctamente');
   };
 
   return (
@@ -50,8 +66,8 @@ function MenuComponent() {
               <Dropdown.Menu>
                 {sesionIniciada ? (
                   <>
-                    <Dropdown.Item as={Link} to="/">Lista de Pendientes</Dropdown.Item>
-                    <Dropdown.Item onClick={cerrarSesion}>Cerrar sesión</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/lista-pendientes">Lista de Pendientes</Dropdown.Item>
+                    <Dropdown.Item onClick={confirmarCerrarSesion}>Cerrar sesión</Dropdown.Item>
                   </>
                 ) : (
                   <>

@@ -304,7 +304,7 @@ app.post('/api/usuarios', async (req, res) => {
             { expiresIn: '1h' }
         );
 
-        res.status(201).json({ message: 'Usuario creado exitosamente', token });
+        res.status(201).json({ message: 'Usuario creado exitosamente', token, nombre });
     } catch (error) {
         console.error('Error al crear usuario:', error);
         res.status(400).json({ message: 'Error al crear usuario', error });
@@ -317,7 +317,7 @@ app.post("/api/iniciar-sesion", async (req, res) => {
 
     try {
         const [rows] = await pool.query(
-            'SELECT id, contrasenia FROM usuarios WHERE correo = ?',
+            'SELECT id, nombre, contrasenia FROM usuarios WHERE correo = ?',
             [correo]
         );
 
@@ -331,13 +331,14 @@ app.post("/api/iniciar-sesion", async (req, res) => {
             return res.status(400).json({ message: "Contraseña incorrecta." });
         }
 
+        const nombre = rows[0].nombre;
         const token = jwt.sign(
             { usuarioId: rows[0].id },
             JWT_SECRET,
             { expiresIn: '1h' }
         );
 
-        res.json({ token });
+        res.json({ token, nombre });
     } catch (error) {
         console.error("Error en el servidor:", error);
         res.status(500).json({ message: "Error en el servidor." });

@@ -3,6 +3,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import "../styles/Autenticacion.css";
+import Swal from 'sweetalert2';
 
 const InicioSesion = () => {
   const [formData, setFormData] = useState({
@@ -10,7 +11,6 @@ const InicioSesion = () => {
     contrasenia: ""
   });
 
-  const [error, setError] = useState("");
   const [MostrarContrasenia, setMostrarContrasenia] = useState(false);
   const navigate = useNavigate();
 
@@ -24,7 +24,6 @@ const InicioSesion = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
 
     try {
       const response = await axios.post('http://localhost:5000/api/iniciar-sesion', {
@@ -32,13 +31,25 @@ const InicioSesion = () => {
         contrasenia: formData.contrasenia
       });
 
-      const { token } = response.data;
+      const { token, nombre } = response.data;
       localStorage.setItem("token", token);
 
-      alert("Sesión iniciada correctamente");
+      Swal.fire({
+        title: 'Sesión iniciada correctamente',
+        text: `Bienvenido de vuelta ${nombre}`,
+        icon: 'success',
+        confirmButtonText: 'Genial'
+      });
+
       navigate("/");
     } catch (error) {
-      setError(error.response?.data?.message || 'Error al iniciar sesión');
+      Swal.fire({
+        title: 'Error de inicio de sesión',
+        text: error.response?.data?.message || 'Error al iniciar sesión',
+        icon: 'error',
+        confirmButtonText: 'Cerrar',
+      });
+
       console.error("Error de inicio de sesión:", error);
     }
   };
@@ -76,7 +87,6 @@ const InicioSesion = () => {
             {MostrarContrasenia ? <FaEyeSlash /> : <FaEye />}
           </button>
         </div>
-        {error && <p className="error-autenticacion">{error}</p>}
         <button type="submit" className="boton-autenticacion">
           Entrar
         </button>

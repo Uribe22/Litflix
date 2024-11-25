@@ -31,13 +31,13 @@
     width: 100%;
     padding: 18px;
     font-size: 18px;
-    border: 1px solid #ccc;
+    border: 1px solid #cccccc;
     border-radius: 4px;
     box-sizing: border-box;
   }
   
   .campo-texto-autenticacion input::placeholder {
-    color: #aaa;
+    color: #aaaaaa;
     font-size: 16px;
     transition: all 0.2s ease-in-out;
   }

@@ -3,6 +3,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/Autenticacion.css";
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -12,7 +13,6 @@ const Register = () => {
     confirmar_contrasenia: ""
   });
 
-  const [error, setError] = useState("");
   const [MostrarContrasenia, setMostrarContrasenia] = useState(false);
   const [MostrarConfirmarContrasenia, setMostrarConfirmarContrasenia] = useState(false);
   const navigate = useNavigate();
@@ -28,11 +28,21 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.contrasenia.length < 8) {
-      setError("Contraseña insegura, mínimo 8 caracteres");
+      Swal.fire({
+        title: 'Error de registro',
+        text: 'Las contraseñas deben tener al menos 8 caracteres',
+        icon: 'error',
+        confirmButtonText: 'Cerrar',
+      });
       return;
     }
     else if (formData.contrasenia !== formData.confirmar_contrasenia) {
-      setError("Las contraseñas no coinciden");
+      Swal.fire({
+        title: 'Error de registro',
+        text: 'Las contraseñas no coinciden',
+        icon: 'error',
+        confirmButtonText: 'Cerrar',
+      });
       return;
     }
     
@@ -49,16 +59,26 @@ const Register = () => {
           contrasenia: formData.contrasenia
         });
 
-        const { token } = registro.data;
+        const { token, nombre } = registro.data;
         localStorage.setItem('token', token);
 
-        setError('');
-        alert('Usuario registrado exitósamente', token);
+        Swal.fire({
+          title: 'Cuenta creada exitósamente',
+          text: `¡Bienvenido a Litflix! ${nombre}`,
+          icon: 'success',
+          confirmButtonText: 'Genial'
+        });
 
         navigate('/');
       }
     } catch (error) {
-      setError(error.response?.data?.message || 'Error al registrar al usuario');
+      Swal.fire({
+        title: 'Error de inicio de sesión',
+        text: error.response?.data?.message || 'Error al iniciar sesión',
+        icon: 'error',
+        confirmButtonText: 'Cerrar',
+      });
+
       console.error('Error al registrar usuario:', error);
     }
   };
@@ -125,7 +145,6 @@ const Register = () => {
             {MostrarConfirmarContrasenia ? <FaEyeSlash /> : <FaEye />}
           </button>
         </div>
-        {error && <p className="error-autenticacion">{error}</p>}
         <button type="submit" className="boton-autenticacion">
           Registrarse
         </button>
