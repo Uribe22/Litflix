@@ -35,6 +35,22 @@ const pool = mysql.createPool({
     database: process.env.DB
 });
 
+function verificarToken(req, res, next) {
+    const headerAut = req.headers['authorization'];
+    if (!headerAut) {
+        return res.status(401).json({ message: 'No se proporcionó el token de acceso' });
+    }
+
+    const token = headerAut.split(' ')[1];
+    try {
+        const payload = jwt.verify(token, JWT_SECRET);
+        req.usuario = payload;
+        next();
+    } catch (err) {
+        return res.status(403).json({ message: 'Token inválido o expirado' });
+    }
+}
+
 app.get('/api/peliculas', async (req, res) => {
     try {
         const peliculas = await pelicula.aggregate([
@@ -282,7 +298,7 @@ app.post('/api/verificar-usuario', async (req, res) => {
 });
 
 
-app.post('/api/usuarios', async (req, res) => {
+app.post('/api/registrar', async (req, res) => {
     const { nombre, correo, contrasenia } = req.body;
 
     try {
@@ -333,7 +349,7 @@ app.post("/api/iniciar-sesion", async (req, res) => {
 
         const nombre = rows[0].nombre;
         const token = jwt.sign(
-            { usuarioId: rows[0].id },
+            { usuarioId: rows[0].id, correo },
             JWT_SECRET,
             { expiresIn: '1h' }
         );
@@ -344,6 +360,26 @@ app.post("/api/iniciar-sesion", async (req, res) => {
         res.status(500).json({ message: "Error en el servidor." });
     }
 });
+
+app.get('/api/pendientes', verificarToken, async (req, res) => {
+    try {
+      const { usuario } = req;
+      const id_usuario = usuario.usuarioId;
+  
+      const lista_pendientes = await pendientes.findOne({ id_usuario });
+  
+    console.log(lista_pendientes);
+
+      if (!lista_pendientes) {
+        return res.status(200).json([]);
+      }
+
+      res.status(200).json(lista_pendientes.lista);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).json({ message: "Error interno del servidor" });
+    }
+});  
 
 app.get('/', (req, res) => {
     res.send('¡Bienvenido a Litflix!');

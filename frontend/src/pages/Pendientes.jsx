@@ -1,82 +1,67 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import '../styles/Pendientes.css';
 
 const Pendientes = () => {
-  const [artworks, setArtworks] = useState([
-    {
-      id: 1,
-      image: 'https://via.placeholder.com/150',
-      name: 'Obra1',
-      rating: 4.5,
-    },
-    {
-      id: 2,
-      image: 'https://via.placeholder.com/150',
-      name: 'Obra2',
-      rating: 4,
-    },
-    {
-      id: 3,
-      image: 'https://via.placeholder.com/150',
-      name: 'Obra3',
-      rating: 4.5,
-    },
-    {
-      id: 4,
-      image: 'https://via.placeholder.com/150',
-      name: 'Obra4',
-      rating: 5,
-    },
-  ]);
+  const [listaPendientes, setListaPendientes] = useState([]);
+  const [estaCargando, setEstaCargando] = useState(true);
+  const [error, setError] = useState(null);
 
-  const removeArtwork = async (id) => {
-    const result = await Swal.fire({
-      title: '¿Estás seguro?',
-      text: 'No podrás deshacer esta acción.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar',
-    });
+  const fetchPendientes = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:5000/api/pendientes', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
 
-    if (result.isConfirmed) {
-      setArtworks(artworks.filter((artwork) => artwork.id !== id));
-      Swal.fire('¡Eliminado!', 'La obra ha sido eliminada.', 'success');
+      if (!response.ok) {
+        throw new Error(`Error al obtener pendientes: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      if (data && data.length > 0) {
+        setListaPendientes(data);
+      } else {
+        setListaPendientes([]);
+      }
+      setEstaCargando(false);
+    } catch (err) {
+      setError(err.message);
+      setEstaCargando(false);
     }
   };
 
-  const viewDetails = (id) => {
-    Swal.fire({
-      title: 'Detalles de la obra',
-      text: `Estás viendo los detalles de la obra con ID: ${id}`,
-      icon: 'info',
-      confirmButtonText: 'Cerrar',
-    });
-  };
+  useEffect(() => {
+    fetchPendientes();
+  }, []);
+
+  if (estaCargando) {
+    return <p>Cargando pendientes...</p>;
+  }
+
+  if (error) {
+    return <p>Error: {error}</p>;
+  }
 
   return (
     <div className="pendientes-container">
       <h1>Lista de Pendientes</h1>
-      <div className="pendientes-grid">
-        {artworks.map((artwork) => (
-          <div className="pendientes-card" key={artwork.id}>
-            <img className="pendientes-image" src={artwork.image} alt={artwork.name} />
-            <h2 className="pendientes-title">{artwork.name}</h2>
-            <p className="pendientes-rating">Valoración: {artwork.rating}⭐</p>
-            <div className="pendientes-actions">
-              <button className="btn btn-details" onClick={() => viewDetails(artwork.id)}>
-                Ver Detalles
-              </button>
-              <button className="btn btn-remove" onClick={() => removeArtwork(artwork.id)}>
-                Eliminar
-              </button>
+      {listaPendientes.length === 0 ? (
+        <p>No hay pendientes por mostrar.</p>
+      ) : (
+        <div className="pendientes-grid">
+          {listaPendientes.map((pendiente, index) => (
+            <div className="pendientes-card" key={index}>
+              <img className='pendientes-image' src='http://localhost:5000/imagenes/Shrek.jpg'></img>
+              <h2 className="pendientes-title">{pendiente.titulo}</h2>
+              <p className="pendientes-rating">Expectativa: {pendiente.espectativa || "N/A"}⭐</p>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

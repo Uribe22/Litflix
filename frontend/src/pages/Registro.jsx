@@ -53,7 +53,7 @@ const Register = () => {
       });
 
       if (verificacion.status === 200) {
-        const registro = await axios.post('http://localhost:5000/api/usuarios', {
+        const registro = await axios.post('http://localhost:5000/api/registrar', {
           nombre: formData.nombre_usuario,
           correo: formData.correo,
           contrasenia: formData.contrasenia
