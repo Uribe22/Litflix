@@ -8,7 +8,7 @@ export default function Peliculas() {
   const [error, setError] = useState("");
   const [filtros, setFiltros] = useState({
     genero: "",
-    anio: "", // Asegúrate de que sea "anio" en todo el código
+    anio: "", 
     calificacion: "",
   });
 

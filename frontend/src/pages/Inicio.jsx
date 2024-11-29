@@ -27,7 +27,7 @@ export default function Inicio() {
     <div key={categoria} className={`categoria-contenedor categoria-${categoria}`}>
       <h2 className="categoria-titulo">{categoria.charAt(0).toUpperCase() + categoria.slice(1)}</h2>
       {novedades[categoria].length > 0 ? (
-        <div className="grid">
+        <div className="gridd">
           {novedades[categoria].map((obra) => (
             <Tarjeta
               key={obra._id || obra.id}
@@ -49,7 +49,7 @@ export default function Inicio() {
 
   return (
     <div className="contenedor-inicio">
-      <h1 className="titulo-tipo">Novedades</h1>
+      <h1 className="titulo-inicio">Novedades</h1>
       {error && <div className="error-mensaje">{error}</div>}
       {['peliculas', 'series', 'libros'].map((categoria) => renderCategoria(categoria))}
     </div>
