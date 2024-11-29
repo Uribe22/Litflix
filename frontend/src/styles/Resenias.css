@@ -2,48 +2,57 @@
   max-width: 100%;
   margin: 0 auto;
   padding: 20px;
-  color: #333;
+  color: #343232;
+  width: 96%;
+  justify-self: center;
+  
 }
 
 .reseñas-lista-scrollable {
-  max-width: 100%; 
   width: 100%;
   max-height: 500px;
   overflow-y: auto;
   margin: 0 auto;
   padding-right: 10px;
+  justify-content: center;
 }
-
 
 .reseñas-lista-scrollable::-webkit-scrollbar {
   width: 8px;
 }
-
+.reseñas-lista-scrollable:only-child {
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+}
 .reseñas-lista-scrollable::-webkit-scrollbar-thumb {
   background: #007bff;
   border-radius: 4px;
 }
-
-
+.reseñas-lista-scrollable:only-child .tarjeta-resena {
+  margin: 0 auto; 
+}
 .tarjeta-resena {
-  background-color: #f9f9f9;
-  border: 2px solid #ddd;
+  background-color: #ffffff; 
+  border: 2px solid #bdc3c7;
   border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 14px;
-  margin-bottom: 20px;
-  width: 100%; /* Asegura un ancho uniforme */
-  height: 200px; /* Altura inicial fija */
-  overflow: hidden; /* Ocultar contenido extra */
-  transition: all 0.3s ease; /* Animación suave */
+  box-shadow: 0 4px 6px rgba(117, 8, 8, 0.1);
+  padding: 15px;
+  margin-bottom: 40px;
+  margin: 5px;
+  height: 200px;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  transition: all 0.3s ease;
 }
+
 .tarjeta-resena.expandido {
-  height: auto; /* Permite expandirse */
-  overflow: visible; /* Mostrar todo el contenido */
+  height: auto;
+  overflow: visible;
 }
+
 .tarjeta-resena-header {
   display: flex;
   align-items: center;
@@ -64,17 +73,19 @@
 .tarjeta-resena-comentario {
   font-size: 1rem;
   margin: 10px 20px;
+
 }
 
 .ver-mas-boton {
   background: none;
   border: none;
-  color: #007bff;
+  color: #17c7d4;
   cursor: pointer;
   font-size: 0.9rem;
 }
 
 .ver-mas-boton:hover {
+  color: #007bff;
   text-decoration: underline;
 }
 
@@ -84,14 +95,19 @@
   align-items: center;
   font-size: 0.9rem;
   color: #888;
+  margin-top: 10px;
 }
 
-/* Botón de cambiar vista */
+.tarjeta-resena-footer .estrellas {
+  display: flex;
+  align-items: center;
+}
+
 .boton-reseñas {
   display: block;
   margin: 20px auto;
   padding: 10px 20px;
-  background-color: #007bff;
+  background-color:#4a8eb9; 
   color: white;
   border: none;
   border-radius: 4px;
@@ -100,4 +116,157 @@
 
 .boton-reseñas:hover {
   background-color: #0056b3;
+}
+
+.agregar-reseña {
+  background-color: #1a3b5d;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 30px;
+  justify-self: center;
+  width: 97%;
+}
+
+.agregar-reseña h3 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  color: #ffffff;
+}
+
+.agregar-reseña textarea {
+  width: 100%;
+  height: 100px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 1rem;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  resize: none;
+}
+
+.agregar-reseña textarea:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+.boton-enviar {
+  background-color: #4a8eb9;
+  color: white;
+  display: block;
+  width: 100%;
+  font-size: 1rem;
+  padding: 10px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.boton-enviar:hover {
+  background-color: #365f8f;
+}
+
+.reseñas-lista-scrollable {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); 
+  gap: 20px;
+  justify-content: center;
+}
+
+@media screen and (max-width: 768px) {
+  .reseñas-lista-scrollable {
+    grid-template-columns: 1fr; /* 1 columna en pantallas más pequeñas */
+  }
+
+  .tarjeta-resena {
+    padding: 14px;
+    height: 300px;
+  }
+
+  .tarjeta-resena-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .tarjeta-resena-avatar img {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 10px;
+  }
+
+  .tarjeta-resena-autor {
+    font-size: 1.1rem;
+  }
+
+  .tarjeta-resena-comentario {
+    font-size: 0.95rem;
+  }
+
+  .tarjeta-resena-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 0.8rem;
+  }
+
+  .ver-mas-boton {
+    font-size: 0.8rem;
+  }
+
+  .agregar-reseña {
+    padding: 15px;
+  }
+
+  .agregar-reseña h3 {
+    font-size: 1.2rem;
+  }
+
+  .agregar-reseña textarea {
+    height: 80px;
+    font-size: 0.9rem;
+  }
+
+  .boton-enviar {
+    font-size: 0.9rem;
+    padding: 8px;
+  }
+
+  .boton-reseñas {
+    width: 100%;
+    padding: 12px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .reseñas-lista-scrollable {
+    grid-template-columns: 1fr; /* 1 columna en pantallas más pequeñas */
+  }
+
+  .tarjeta-resena {
+    width: 100%;
+  }
+
+  .tarjeta-resena-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 0.8rem;
+    width: 100%;
+  }
+
+  .boton-reseñas {
+    width: 100%;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    
+  }
+
+  .agregar-reseña h3 {
+    font-size: 1.1rem;
+  }
+
+  .agregar-reseña textarea {
+    height: 70px;
+    font-size: 0.9rem;
+  }
 }

@@ -1,33 +1,25 @@
-import React from 'react';
-import { FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa';
+import React, { useState } from 'react';
+import { FaStar } from 'react-icons/fa';
 import '../styles/Estrella.css';
 
-export default function Estrellas({ calificacion }) {
+export default function Estrellas({ calificacion, setCalificacion, interactiva = false }) {
+  const [hover, setHover] = useState(0);
+
   const renderizarEstrellas = () => {
     const estrellas = [];
-    const calificacionEscalada = calificacion || 0;
-
     for (let i = 1; i <= 5; i++) {
-      if (i <= Math.floor(calificacionEscalada)) {
-        estrellas.push(<FaStar key={i} className="estrella llena" />);
-      } else if (i === Math.ceil(calificacionEscalada) && calificacionEscalada % 1 >= 0.5) {
-        estrellas.push(<FaStarHalfAlt key={i} className="estrella media" />);
-      } else {
-        estrellas.push(<FaRegStar key={i} className="estrella vacia" />);
-      }
+      estrellas.push(
+        <FaStar
+          key={i}
+          className={`estrella ${i <= (hover || calificacion) ? 'llena' : 'vacia'}`}
+          onMouseEnter={() => interactiva && setHover(i)}
+          onMouseLeave={() => interactiva && setHover(0)}
+          onClick={() => interactiva && setCalificacion(calificacion === i ? 0 : i)} // Permite seleccionar 0
+        />
+      );
     }
     return estrellas;
   };
 
-  return (
-    <div className="calificacion-estrellas">
-      {calificacion !== null ? (
-        <>
-          {renderizarEstrellas()}
-        </>
-      ) : (
-        <p className="calificacion-vacia">No hay calificación disponible</p>
-      )}
-    </div>
-  );
+  return <div className="calificacion-estrellas">{renderizarEstrellas()}</div>;
 }

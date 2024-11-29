@@ -7,7 +7,6 @@ export default function Resultados() {
     const { resultados, termino } = location.state || { resultados: [], termino: '' };
 
     console.log('Datos recibidos en Resultados:', resultados);
-
     return (
         <div className="contenedor">
             <h1 className="titulo-tipo">Resultados de búsqueda para "{termino}"</h1>
