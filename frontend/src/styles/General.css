@@ -11,6 +11,7 @@ body {
   font-size: 4rem;
   color: #fff;
   font-style: italic;
+  
 }
 
 .litflix-title:hover {
@@ -29,7 +30,46 @@ body {
   text-align: center;
   margin-bottom: 20px;
   margin-top: 30px;
+  margin-left: 250px;
 }
+
+@media (max-width: 1024px) {
+  .titulo-tipo {
+    font-size: 2.2rem;
+    margin-left: 150px;
+  }
+}
+
+@media (max-width: 768px) {
+  .titulo-tipo {
+    font-size: 1.8rem;
+    margin-left: 100px;
+  }
+}
+
+@media (max-width: 480px) {
+  .titulo-tipo {
+    font-size: 1.5rem;
+    margin-left: 0;
+    padding: 10px;
+  }
+}
+
+@media (max-width: 320px) {
+  .titulo-tipo {
+    font-size: 1.3rem;
+  }
+}
+
+.titulo-inicio {
+  font-family: "Merriweather", serif;
+  color: #4bc8f0;
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 20px;
+  margin-top: 30px;
+}
+
 
 .categoria {
   font-family: "Merriweather", serif;

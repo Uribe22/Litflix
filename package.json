@@ -11,11 +11,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.7.8",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "concurrently": "^9.0.1",
+    "cookie-parser": "^1.4.7",
     "jsonwebtoken": "^9.0.2",
+    "jwt-decode": "^4.0.0",
     "mysql2": "^3.11.4",
+    "mysqldump": "^3.2.0",
     "react-icons": "^5.3.0",
     "react-scripts": "^5.0.1",
     "sweetalert2": "^11.14.5"
