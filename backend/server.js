@@ -368,7 +368,7 @@ app.get('/api/pendientes', verificarToken, async (req, res) => {
   
       const lista_pendientes = await pendientes.findOne({ id_usuario });
   
-    console.log(lista_pendientes);
+        console.log(lista_pendientes);
 
       if (!lista_pendientes) {
         return res.status(200).json([]);

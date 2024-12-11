@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import '../styles/Pendientes.css';
 
@@ -6,6 +7,7 @@ const Pendientes = () => {
   const [listaPendientes, setListaPendientes] = useState([]);
   const [estaCargando, setEstaCargando] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const fetchPendientes = async () => {
     try {
@@ -46,6 +48,10 @@ const Pendientes = () => {
     return <p>Error: {error}</p>;
   }
 
+  const Redireccionar = (id, tipo) => {
+    navigate(`/detalleobra/${tipo}/${id}`);
+  };
+
   return (
     <div className="pendientes-container">
       <h1>Lista de Pendientes</h1>
@@ -54,10 +60,11 @@ const Pendientes = () => {
       ) : (
         <div className="pendientes-grid">
           {listaPendientes.map((pendiente, index) => (
-            <div className="pendientes-card" key={index}>
-              <img className='pendientes-image' src='http://localhost:5000/imagenes/Shrek.jpg'></img>
-              <h2 className="pendientes-title">{pendiente.titulo}</h2>
-              <p className="pendientes-rating">Expectativa: {pendiente.espectativa || "N/A"}⭐</p>
+            <div className="pendientes-tarjeta" key={index} onClick={() => Redireccionar(pendiente.id, pendiente.tipo)}>
+              <img className='pendientes-imagen' src={`http://localhost:5000/imagenes/${pendiente.imagen}.jpg`}></img>
+              <h2 className="pendientes-titulo">{pendiente.titulo}</h2>
+              <p className="pendientes-fecha"></p>
+              <p className="pendientes-expectativa">Expectativa: {pendiente.espectativa || "N/A"}⭐</p>
             </div>
           ))}
         </div>

@@ -14,9 +14,11 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;
+    justify-content: center;
+    margin: 0 auto;
 }
   
-.pendientes-card {
+.pendientes-tarjeta {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -25,9 +27,20 @@
     padding: 15px;
     background-color: #1a3b5d;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.pendientes-tarjeta:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.pendientes-tarjeta:active {
+    transform: translateY(0px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
   
-.pendientes-image {
+.pendientes-imagen {
     width: 120px;
     height: 150px;
     object-fit: cover;
@@ -35,7 +48,7 @@
     margin-bottom: 10px;
 }
   
-.pendientes-title {
+.pendientes-titulo {
     font-size: 20px;
     font-weight: bold;
     text-align: center;
@@ -48,15 +61,10 @@
     -webkit-box-orient: vertical;
 }
   
-.pendientes-rating {
+.pendientes-expectativa {
     font-size: 14px;
     color: #dba800;
     margin-bottom: 15px;
-}
-  
-.pendientes-actions {
-    display: flex;
-    gap: 10px;
 }
   
 .btn {
@@ -68,12 +76,12 @@
     font-size: 14px;
 }
   
-.btn-details {
+.btn-detalles {
     background-color: #007BFF;
     color: #fff;
 }
   
-.btn-remove {
+.btn-eliminar {
     background-color: #FF4D4D;
     color: #fff;
 }
