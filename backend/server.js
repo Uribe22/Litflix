@@ -30,16 +30,14 @@ const verificarToken = (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
-        req.usuarioId = decoded.usuarioId;  // Verifica si el token contiene `usuarioId`
-        console.log('ID de usuario:', req.usuarioId);  // Verifica el valor
+        req.usuarioId = decoded.usuarioId;
+        console.log('ID de usuario:', req.usuarioId);
         next();
     } catch (error) {
         console.error('Error al verificar token:', error);
         res.status(403).json({ message: 'Token inválido o expirado.' });
     }
 };
-
-
 
 mongoose.connect(process.env.DB_HOST, {
     useNewUrlParser: true,
@@ -366,6 +364,7 @@ app.post("/api/iniciar-sesion", async (req, res) => {
         res.status(500).json({ message: "Error en el servidor." });
     }
 });
+
 const renovarToken = (req, res) => {
     const token = req.headers.authorization?.split(' ')[1];
 
@@ -375,8 +374,8 @@ const renovarToken = (req, res) => {
 
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
-        req.usuarioId = decoded.usuarioId; // ID del usuario
-        req.nombreUsuario = decoded.nombre; // Nombre del usuario
+        req.usuarioId = decoded.usuarioId;
+        req.nombreUsuario = decoded.nombre;
         next();
     } catch (error) {
         console.error('Error al verificar token:', error);
@@ -425,8 +424,6 @@ app.get('/api/pendientes', verificarToken, async (req, res) => {
         res.status(500).json({ message: "Error interno del servidor" });
     }
 });
-
-
 
 app.post("/api/pendientes/agregar", verificarToken, async (req, res) => {
     try {
