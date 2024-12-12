@@ -11,13 +11,17 @@ function DetalleObra() {
   const { tipo, id } = useParams();
   const [obra, setObra] = useState(null);
   const [usuarioAutenticado, setUsuarioAutenticado] = useState(null);
+  const [mostrarTextoCompleto, setMostrarTextoCompleto] = useState(false);
+
+  const toggleTextoCompleto = () => {
+    setMostrarTextoCompleto(!mostrarTextoCompleto);
+  };
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     if (storedToken) {
       try {
         const usuario = jwtDecode(storedToken);
-        console.log("Usuario autenticado decodificado:", usuario);
         setUsuarioAutenticado(usuario);
       } catch (error) {
         Swal.fire({
@@ -58,14 +62,12 @@ function DetalleObra() {
         const obraEncontrada = data.find((item) => item._id === id);
 
         if (obraEncontrada) {
-          const valoraciones = obraEncontrada.resenias.map((r) => r.valoracion);
-          const promedioValoracion =
-            valoraciones.length > 0
-              ? (
-                  valoraciones.reduce((sum, val) => sum + val, 0) / 
-                  valoraciones.length
-                ).toFixed(1)
-              : 0;
+          const valoraciones = obraEncontrada.resenias
+            .map((r) => r.valoracion)
+            .filter((val) => typeof val === 'number' && !isNaN(val));
+          const promedioValoracion = valoraciones.length > 0 
+            ? parseFloat((valoraciones.reduce((sum, val) => sum + val, 0) / valoraciones.length).toFixed(1)) 
+            : 0;
 
           setObra({ ...obraEncontrada, promedio_valoracion: promedioValoracion });
         } else {
@@ -89,7 +91,6 @@ function DetalleObra() {
     obtenerObra();
   }, [tipo, id]);
 
-  // Función para agregar la obra a la lista de pendientes
   const agregarPendiente = async () => {
     if (!usuarioAutenticado) {
       Swal.fire({
@@ -109,13 +110,9 @@ function DetalleObra() {
         },
       };
 
-      // Enviar la solicitud para agregar a la lista de pendientes
       const response = await axios.post(
         `http://localhost:5000/api/agregar-pendiente`,
-        {
-          id_pelicula: obra._id, // Suponiendo que es una película, ajusta según el tipo de obra
-          tipo: tipo, // Puede ser "pelicula", "serie", etc.
-        },
+        { id_pelicula: obra._id, tipo: tipo },
         config
       );
 
@@ -137,32 +134,33 @@ function DetalleObra() {
     }
   };
 
-  const agregarResenaLocalmente = (nuevaResena) => {
-    setObra((prevObra) => ({
-      ...prevObra,
-      resenias: [...prevObra.resenias, nuevaResena],
-    }));
-  };
-
   if (!obra) return <p>Cargando...</p>;
 
   return (
     <div className="detalle-obra-contenedor">
       <div className="detalle-obra">
         <div className="detalle-obra-header">
-          <img
-            src={`http://localhost:5000/imagenes/${obra.imagen}.jpg`}
-            alt={obra.titulo}
-            className="obra-imagen"
-          />
+          <img src={`http://localhost:5000/imagenes/${obra.imagen}.jpg`} alt={obra.titulo} className="obra-imagen" />
           <div className="detalle-obra-info">
             <h1>{obra.titulo}</h1>
             <p>Director/Autor: {obra.director || obra.creador || obra.autor}</p>
             <p>Productora: {obra.productora}</p>
             <p>Fecha de estreno: {new Date(obra.fecha_lanzamiento).toLocaleDateString()}</p>
-            <p className="sinopsis">Sinopsis: {obra.sinopsis}</p>
+            <div className="sinopsis">
+  <p>
+    {mostrarTextoCompleto
+      ? obra.sinopsis
+      : `${obra.sinopsis.substring(0, 150)}...`}
+  </p>
+  {obra.sinopsis.length > 150 && (
+    <button className="boton-leer-mas" onClick={toggleTextoCompleto}>
+      {mostrarTextoCompleto ? "Leer menos" : "Leer más"}
+    </button>
+  )}
+</div>
+
             <div className="calificacion">
-              <Estrellas calificacion={obra.promedio_valoracion || 0} interactiva={false} />
+              <Estrellas calificacion={obra.promedio_valoracion} interactiva={false} />
               <p>{obra.promedio_valoracion ? `${obra.promedio_valoracion} / 5` : "No hay valoraciones aún"}</p>
             </div>
             <button className="boton-lista" onClick={agregarPendiente}>
@@ -170,15 +168,10 @@ function DetalleObra() {
             </button>
           </div>
         </div>
-        <Resenias
-          resenias={obra.resenias}
-          tipo={tipo}
-          idRelacionado={obra._id}
-          usuarioAutenticado={usuarioAutenticado}
-          agregarResenaLocalmente={agregarResenaLocalmente}
-        />
+        <Resenias resenias={obra.resenias} tipo={tipo} idRelacionado={obra._id} usuarioAutenticado={usuarioAutenticado} />
       </div>
     </div>
   );
 }
+
 export default DetalleObra;

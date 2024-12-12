@@ -14,7 +14,7 @@
 }
 @media (min-width: 992px) {
   .detalle-obra {
-    width: 93%; /* Para pantallas grandes, ocupa el 70% del ancho */
+    width: 93%; 
   }
 }
 
@@ -68,6 +68,7 @@
   display: flex;
   align-items: center;
   font-size: 1.2rem;
+  
 }
 
 .boton-lista {
@@ -113,4 +114,31 @@
     justify-content: center;
     margin-top: 20px;
   }
+}
+.sinopsis {
+  margin-right: 50px;
+  background-color: #1a3b5d;
+  border-radius: 8px;
+  color: #ffffff;
+  line-height: 1.6;
+  position: relative; 
+}
+
+.sinopsis p {
+  margin: 0;
+  text-align: justify; 
+}
+
+.boton-leer-mas {
+  background: none;
+  border: none;
+  color: #1E90FF;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 10px;
+  text-align: left;
+  float: left; 
+}
+.boton-leer-mas:hover {
+  text-decoration: underline;
 }
