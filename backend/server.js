@@ -30,14 +30,16 @@ const verificarToken = (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
-        req.usuarioId = decoded.usuarioId;
-        console.log('ID de usuario:', req.usuarioId);
+        req.usuarioId = decoded.usuarioId;  // Verifica si el token contiene `usuarioId`
+        console.log('ID de usuario:', req.usuarioId);  // Verifica el valor
         next();
     } catch (error) {
         console.error('Error al verificar token:', error);
         res.status(403).json({ message: 'Token inválido o expirado.' });
     }
 };
+
+
 
 mongoose.connect(process.env.DB_HOST, {
     useNewUrlParser: true,
@@ -139,7 +141,54 @@ app.get('/api/novedades-recientes', async (req, res) => {
       res.status(500).json({ message: err.message });
     }
 });
-  
+app.post('/api/resenias', verificarToken, async (req, res) => {
+    console.log('Datos recibidos en el backend:', req.body);
+
+    const { tipo, idRelacionado, comentario, valoracion } = req.body;
+
+    if (!tipo || !idRelacionado || !comentario || valoracion === undefined) {
+        return res.status(400).json({ message: 'Todos los campos son obligatorios.' });
+    }
+
+    try {
+        // Buscar el nombre del usuario que está haciendo la reseña
+        const [usuario] = await pool.query('SELECT nombre FROM usuarios WHERE id = ?', [req.usuarioId]);
+
+        if (!usuario || usuario.length === 0) {
+            return res.status(404).json({ message: 'Usuario no encontrado.' });
+        }
+
+        // Seleccionar el modelo según el tipo
+        const model = tipo === 'pelicula' ? pelicula : tipo === 'serie' ? serie : libro;
+
+        const itemRelacionado = await model.findById(idRelacionado).populate('resenias.autor');
+
+        if (!itemRelacionado) {
+            return res.status(404).json({ message: `No se encontró un ${tipo} con el ID proporcionado.` });
+        }
+
+        // Crear la nueva reseña con el nombre del usuario
+        const nuevaResena = {
+            autor: usuario[0].nombre, // Asignar el nombre del usuario
+            comentario,
+            valoracion,
+            fecha: new Date(),
+        };
+
+        // Agregar la reseña al array y guardar el documento
+        itemRelacionado.resenias.push(nuevaResena);
+        const resultado = await itemRelacionado.save();
+
+        console.log('Reseña guardada correctamente en MongoDB:', nuevaResena);
+
+        // Enviar la respuesta al cliente
+        res.status(201).json({ message: 'Reseña agregada exitosamente.', reseña: nuevaResena });
+    } catch (error) {
+        console.error('Error al guardar la reseña en MongoDB:', error);
+        res.status(500).json({ message: 'Error interno del servidor.' });
+    }
+});
+
 
 app.get('/api/buscar-peliculas', async (req, res) => {
     const termino = req.query.q;
@@ -425,26 +474,7 @@ app.get('/api/pendientes', verificarToken, async (req, res) => {
     }
 });
 
-app.post("/api/pendientes/agregar", verificarToken, async (req, res) => {
-    try {
-      const { id_usuario, obra } = req.body;
-  
-      let lista_pendientes = await pendientes.findOne({ id_usuario });
-  
-      if (!lista_pendientes) {
-        return res.status(400).json({ message: "No se encontró la lista de pendientes para este usuario." });
-      }
-  
-      lista_pendientes.lista.push(obra);
-      await lista_pendientes.save();
-  
-      res.status(200).json({ message: "Obra agregada a la lista de pendientes" });
-    } catch (err) {
-      console.error(err.message);
-      res.status(500).json({ message: "Error al agregar obra a la lista de pendientes" });
-    }
-  });
-  
+
 
 app.get('/', (req, res) => {
     res.send('¡Bienvenido a Litflix!');
