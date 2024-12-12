@@ -30,16 +30,19 @@ const verificarToken = (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
-        req.usuarioId = decoded.usuarioId;  // Verifica si el token contiene `usuarioId`
-        console.log('ID de usuario:', req.usuarioId);  // Verifica el valor
+        req.usuarioId = decoded.usuarioId;
+        console.log('ID de usuario:', req.usuarioId);
         next();
     } catch (error) {
         console.error('Error al verificar token:', error);
-        res.status(403).json({ message: 'Token inválido o expirado.' });
+
+        if (error.name === 'TokenExpiredError') {
+            return res.status(401).json({ message: 'El token ha expirado. Por favor, inicia sesión nuevamente.' });
+        }
+
+        return res.status(401).json({ message: 'Token inválido.' });
     }
 };
-
-
 
 mongoose.connect(process.env.DB_HOST, {
     useNewUrlParser: true,
@@ -54,8 +57,6 @@ const pool = mysql.createPool({
     password: process.env.PASSWORD,
     database: process.env.DB
 });
-
-
 
 app.get('/api/peliculas', async (req, res) => {
     try {
@@ -141,6 +142,7 @@ app.get('/api/novedades-recientes', async (req, res) => {
       res.status(500).json({ message: err.message });
     }
 });
+
 app.post('/api/resenias', verificarToken, async (req, res) => {
     console.log('Datos recibidos en el backend:', req.body);
 
@@ -151,14 +153,12 @@ app.post('/api/resenias', verificarToken, async (req, res) => {
     }
 
     try {
-        // Buscar el nombre del usuario que está haciendo la reseña
         const [usuario] = await pool.query('SELECT nombre FROM usuarios WHERE id = ?', [req.usuarioId]);
 
         if (!usuario || usuario.length === 0) {
             return res.status(404).json({ message: 'Usuario no encontrado.' });
         }
 
-        // Seleccionar el modelo según el tipo
         const model = tipo === 'pelicula' ? pelicula : tipo === 'serie' ? serie : libro;
 
         const itemRelacionado = await model.findById(idRelacionado).populate('resenias.autor');
@@ -167,21 +167,18 @@ app.post('/api/resenias', verificarToken, async (req, res) => {
             return res.status(404).json({ message: `No se encontró un ${tipo} con el ID proporcionado.` });
         }
 
-        // Crear la nueva reseña con el nombre del usuario
         const nuevaResena = {
-            autor: usuario[0].nombre, // Asignar el nombre del usuario
+            autor: usuario[0].nombre,
             comentario,
             valoracion,
             fecha: new Date(),
         };
 
-        // Agregar la reseña al array y guardar el documento
         itemRelacionado.resenias.push(nuevaResena);
         const resultado = await itemRelacionado.save();
 
         console.log('Reseña guardada correctamente en MongoDB:', nuevaResena);
 
-        // Enviar la respuesta al cliente
         res.status(201).json({ message: 'Reseña agregada exitosamente.', reseña: nuevaResena });
     } catch (error) {
         console.error('Error al guardar la reseña en MongoDB:', error);
@@ -350,7 +347,6 @@ app.post('/api/verificar-usuario', async (req, res) => {
     }
 });
 
-
 app.post('/api/registrar', async (req, res) => {
     const { nombre, correo, contrasenia } = req.body;
 
@@ -380,7 +376,6 @@ app.post('/api/registrar', async (req, res) => {
     }
 });
 
-
 app.post("/api/iniciar-sesion", async (req, res) => {
     const { correo, contrasenia } = req.body;
 
@@ -404,7 +399,7 @@ app.post("/api/iniciar-sesion", async (req, res) => {
         const token = jwt.sign(
             { usuarioId: rows[0].id, correo },
             JWT_SECRET,
-            { expiresIn: '1h' }
+            { expiresIn: '1d' }
         );
 
         res.json({ token, nombre });
@@ -413,26 +408,6 @@ app.post("/api/iniciar-sesion", async (req, res) => {
         res.status(500).json({ message: "Error en el servidor." });
     }
 });
-
-const renovarToken = (req, res) => {
-    const token = req.headers.authorization?.split(' ')[1];
-
-    if (!token) {
-        return res.status(401).json({ message: 'No autorizado. Token requerido.' });
-    }
-
-    try {
-        const decoded = jwt.verify(token, JWT_SECRET);
-        req.usuarioId = decoded.usuarioId;
-        req.nombreUsuario = decoded.nombre;
-        next();
-    } catch (error) {
-        console.error('Error al verificar token:', error);
-        res.status(403).json({ message: 'Token inválido o expirado.' });
-    }
-};
-
-app.post('/api/renovar-token', renovarToken);
 
 app.get('/api/pendientes', verificarToken, async (req, res) => {
     try {
@@ -453,28 +428,40 @@ app.get('/api/pendientes', verificarToken, async (req, res) => {
         res.status(500).json({ message: "Error interno del servidor" });
     }
 });
-app.get('/api/pendientes', verificarToken, async (req, res) => {
+
+app.post("/api/pendientes/agregar", verificarToken, async (req, res) => {
     try {
-        const id_usuario = req.usuarioId;
-        console.log(`Buscando pendientes para el usuario con ID: ${id_usuario}`);
-
-       
-        const lista_pendientes = await pendientes.findOne({ id_usuario });
-
-        if (!lista_pendientes) {
-            console.log('No se encontraron pendientes para este usuario.');
-            return res.status(200).json([]);  
-        }
-
-        console.log('Lista de pendientes:', lista_pendientes);
-        res.status(200).json(lista_pendientes.lista);
+      const { id_usuario, obra, expectativa } = req.body;
+  
+      console.log(`Exp: ${expectativa}`)
+      let lista_pendientes = await pendientes.findOne({ id_usuario });
+  
+      if (!lista_pendientes) {
+        lista_pendientes = new pendientes({
+          id_usuario,
+          lista: [
+            {
+              ...obra,
+              expectativa,
+            },
+          ],
+        });
+        await lista_pendientes.save();
+      } else {
+        lista_pendientes.lista.push({
+          ...obra,
+          expectativa,
+        });
+        await lista_pendientes.save();
+      }
+  
+      res.status(200).json({ message: "Obra agregada a la lista de pendientes" });
     } catch (err) {
-        console.error('Error en /api/pendientes:', err.message);
-        res.status(500).json({ message: "Error interno del servidor" });
+      console.error(err.message);
+      res.status(500).json({ message: "Error al agregar obra a la lista de pendientes" });
     }
-});
-
-
+  });
+  
 
 app.get('/', (req, res) => {
     res.send('¡Bienvenido a Litflix!');

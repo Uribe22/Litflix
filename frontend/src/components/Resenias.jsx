@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate  } from "react-router-dom";
 import axios from "axios";
 import { renovarTokenSiEsNecesario } from "../utils/gestorDeTokens";
 import Swal from "sweetalert2";
@@ -11,6 +12,7 @@ export default function Resenias({ resenias, tipo, idRelacionado, usuarioAutenti
   const [nuevaReseña, setNuevaReseña] = useState("");
   const [calificacion, setCalificacion] = useState(0);
   const [expandir, setExpandir] = useState(null);
+  const navigate = useNavigate();
 
   const handleVerMasResenias = () => {
     setMostrarListaCompleta(!mostrarListaCompleta);
@@ -30,7 +32,7 @@ export default function Resenias({ resenias, tipo, idRelacionado, usuarioAutenti
         cancelButtonText: "Cancelar",
       }).then((result) => {
         if (result.isConfirmed) {
-          window.location.href = "/inicio-sesion"; // Redirige al login
+          window.location.href = "/inicio-sesion";
         }
       });
       
@@ -53,8 +55,10 @@ export default function Resenias({ resenias, tipo, idRelacionado, usuarioAutenti
         Swal.fire({
           title: "Sesión expirada",
           text: "Tu sesión ha expirado. Por favor, inicia sesión nuevamente.",
-          icon: "error",
-          confirmButtonText: "Aceptar",
+          icon: "warning",
+          confirmButtonText: "Iniciar sesión",
+        }).then(() => {
+          navigate("/inicio-sesion");
         });
         return;
       }
@@ -66,8 +70,6 @@ export default function Resenias({ resenias, tipo, idRelacionado, usuarioAutenti
         fecha: new Date(),
         
       };
-      
-
   
       const response = await axios.post(
         `http://localhost:5000/api/resenias`,
@@ -93,7 +95,6 @@ export default function Resenias({ resenias, tipo, idRelacionado, usuarioAutenti
       setNuevaReseña("");
       setCalificacion(0);
   
-      // Actualiza las reseñas localmente
       agregarResenaLocalmente(response.data.reseña);
     } catch (error) {
       console.error("Error al enviar la reseña:", error.response || error);
