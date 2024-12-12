@@ -35,7 +35,9 @@ function MenuComponent() {
     localStorage.removeItem("token");
     setSesionIniciada(false);
 
-    Swal.fire('Se ha cerrado tu sesión correctamente');
+    setTimeout(() => {
+      Swal.fire('Se ha cerrado tu sesión correctamente');
+    }, 200);
   };
 
   return (
@@ -56,11 +58,7 @@ function MenuComponent() {
           <Nav className="ml-auto">
             <Dropdown align="end">
               <Dropdown.Toggle variant="link" className="text-white">
-                <img 
-                  src="../iconos/usuario.png" 
-                  alt="Usuario" 
-                  style={{ width: '3rem', height: '3rem' }} 
-                />
+                <img src="/iconos/usuario.png" alt="Usuario" style={{ width: '3rem', height: '3rem' }} />
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
