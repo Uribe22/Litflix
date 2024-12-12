@@ -87,7 +87,6 @@ const Pendientes = () => {
             <div className="pendientes-tarjeta" key={index} onClick={() => Redireccionar(pendiente.id, pendiente.tipo)}>
               <img className='pendientes-imagen' src={`http://localhost:5000/imagenes/${pendiente.imagen}.jpg`} alt={pendiente.titulo} />
               <h2 className="pendientes-titulo">{pendiente.titulo}</h2>
-              <p className="pendientes-expectativa">Expectativa: {pendiente.espectativa || "N/A"}⭐</p>
             </div>
           ))}
         </div>

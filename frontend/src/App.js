@@ -14,6 +14,7 @@ import Series from './pages/Series';
 import Libros from './pages/Libros';  
 import DetalleObra from './pages/DetalleObra';
 import Pendientes from './pages/Pendientes';
+import AjustesCuenta from './pages/AjustesCuenta';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
           <Route path="/registro" element={<Registro/>} />
           <Route path="/inicio-sesion" element={<InicioSesion/>} />
           <Route path="/lista-pendientes" element={<Pendientes/>} />
+          <Route path="/ajustes-cuenta" element={<AjustesCuenta/>} />
         </Routes>
       </div>
     </Router>

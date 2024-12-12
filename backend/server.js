@@ -460,8 +460,7 @@ app.post("/api/pendientes/agregar", verificarToken, async (req, res) => {
       console.error(err.message);
       res.status(500).json({ message: "Error al agregar obra a la lista de pendientes" });
     }
-  });
-  
+});
 
 app.get('/', (req, res) => {
     res.send('¡Bienvenido a Litflix!');

@@ -65,6 +65,7 @@ function MenuComponent() {
                 {sesionIniciada ? (
                   <>
                     <Dropdown.Item as={Link} to="/lista-pendientes">Lista de Pendientes</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/ajustes-cuenta">Ajustes de Cuenta</Dropdown.Item>
                     <Dropdown.Item onClick={confirmarCerrarSesion}>Cerrar sesión</Dropdown.Item>
                   </>
                 ) : (
