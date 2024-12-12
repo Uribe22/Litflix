@@ -166,7 +166,7 @@ export default function Resenias({ resenias, tipo, idRelacionado, usuarioAutenti
           value={nuevaReseña}
           onChange={(e) => setNuevaReseña(e.target.value)}
         />
-        <button className="boton-enviar color-black " onClick={enviarReseña}>
+        <button className="boton-enviar" onClick={enviarReseña}>
           Enviar
         </button>
       </div>

@@ -30,13 +30,15 @@ const verificarToken = (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
-        req.usuarioId = decoded.usuarioId;
+        req.usuarioId = decoded.usuarioId;  // Verifica si el token contiene `usuarioId`
+        console.log('ID de usuario:', req.usuarioId);  // Verifica el valor
         next();
     } catch (error) {
         console.error('Error al verificar token:', error);
         res.status(403).json({ message: 'Token inválido o expirado.' });
     }
 };
+
 
 
 mongoose.connect(process.env.DB_HOST, {
@@ -53,21 +55,7 @@ const pool = mysql.createPool({
     database: process.env.DB
 });
 
-function verificarToken(req, res, next) {
-    const headerAut = req.headers['authorization'];
-    if (!headerAut) {
-        return res.status(401).json({ message: 'No se proporcionó el token de acceso' });
-    }
 
-    const token = headerAut.split(' ')[1];
-    try {
-        const payload = jwt.verify(token, JWT_SECRET);
-        req.usuario = payload;
-        next();
-    } catch (err) {
-        return res.status(403).json({ message: 'Token inválido o expirado' });
-    }
-}
 
 app.get('/api/peliculas', async (req, res) => {
     try {
@@ -445,26 +433,47 @@ const renovarToken = (req, res) => {
 
 app.post('/api/renovar-token', renovarToken);
 
-
 app.get('/api/pendientes', verificarToken, async (req, res) => {
     try {
-      const { usuario } = req;
-      const id_usuario = usuario.usuarioId;
-  
-      const lista_pendientes = await pendientes.findOne({ id_usuario });
-  
-        console.log(lista_pendientes);
+        const id_usuario = req.usuarioId;
+        console.log(`Buscando pendientes para el usuario con ID: ${id_usuario}`);
 
-      if (!lista_pendientes) {
-        return res.status(200).json([]);
-      }
+        const lista_pendientes = await pendientes.findOne({ id_usuario });
 
-      res.status(200).json(lista_pendientes.lista);
+            if (!lista_pendientes) {
+            console.log('No se encontraron pendientes para este usuario.');
+            return res.status(200).json([]);
+        }
+
+        console.log('Lista de pendientes:', lista_pendientes);
+        res.status(200).json(lista_pendientes.lista);
     } catch (err) {
-      console.error(err.message);
-      res.status(500).json({ message: "Error interno del servidor" });
+        console.error('Error en /api/pendientes:', err.message);
+        res.status(500).json({ message: "Error interno del servidor" });
     }
-});  
+});
+app.get('/api/pendientes', verificarToken, async (req, res) => {
+    try {
+        const id_usuario = req.usuarioId;
+        console.log(`Buscando pendientes para el usuario con ID: ${id_usuario}`);
+
+       
+        const lista_pendientes = await pendientes.findOne({ id_usuario });
+
+        if (!lista_pendientes) {
+            console.log('No se encontraron pendientes para este usuario.');
+            return res.status(200).json([]);  
+        }
+
+        console.log('Lista de pendientes:', lista_pendientes);
+        res.status(200).json(lista_pendientes.lista);
+    } catch (err) {
+        console.error('Error en /api/pendientes:', err.message);
+        res.status(500).json({ message: "Error interno del servidor" });
+    }
+});
+
+
 
 app.get('/', (req, res) => {
     res.send('¡Bienvenido a Litflix!');
