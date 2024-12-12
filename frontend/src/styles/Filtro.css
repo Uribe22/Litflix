@@ -1,6 +1,6 @@
 .dropdown-container {
   position:fixed;
-  top: 106px;
+  top: 105px;
   left: 0;
   width: 270px;
   z-index: 100;
@@ -18,16 +18,13 @@
 .dropdown-button {
   display: none;
 }
-
 .dropdown-content {
   display: flex;
   flex-direction: column;
   position: static;
   padding: 15px;
-  border-radius: 5px;
   background-color:  #0a1929; 
   height: 100vh;
-  
 }
 
 .filter-group {

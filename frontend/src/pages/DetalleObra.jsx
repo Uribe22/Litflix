@@ -62,7 +62,7 @@ function DetalleObra() {
           const promedioValoracion =
             valoraciones.length > 0
               ? (
-                  valoraciones.reduce((sum, val) => sum + val, 0) /
+                  valoraciones.reduce((sum, val) => sum + val, 0) / 
                   valoraciones.length
                 ).toFixed(1)
               : 0;
@@ -89,13 +89,60 @@ function DetalleObra() {
     obtenerObra();
   }, [tipo, id]);
 
+  // Función para agregar la obra a la lista de pendientes
+  const agregarPendiente = async () => {
+    if (!usuarioAutenticado) {
+      Swal.fire({
+        title: "No has iniciado sesión",
+        text: "Por favor, inicia sesión para agregar esta obra a tu lista de pendientes.",
+        icon: "warning",
+        confirmButtonText: "Iniciar sesión",
+      });
+      return;
+    }
+
+    try {
+      const storedToken = localStorage.getItem("token");
+      const config = {
+        headers: {
+          Authorization: `Bearer ${storedToken}`,
+        },
+      };
+
+      // Enviar la solicitud para agregar a la lista de pendientes
+      const response = await axios.post(
+        `http://localhost:5000/api/agregar-pendiente`,
+        {
+          id_pelicula: obra._id, // Suponiendo que es una película, ajusta según el tipo de obra
+          tipo: tipo, // Puede ser "pelicula", "serie", etc.
+        },
+        config
+      );
+
+      if (response.status === 200) {
+        Swal.fire({
+          title: "Obra agregada",
+          text: "La obra ha sido añadida a tu lista de pendientes.",
+          icon: "success",
+          confirmButtonText: "Aceptar",
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        title: "Error",
+        text: "Hubo un problema al agregar la obra a tu lista de pendientes.",
+        icon: "error",
+        confirmButtonText: "Aceptar",
+      });
+    }
+  };
+
   const agregarResenaLocalmente = (nuevaResena) => {
     setObra((prevObra) => ({
       ...prevObra,
       resenias: [...prevObra.resenias, nuevaResena],
     }));
   };
-  
 
   if (!obra) return <p>Cargando...</p>;
 
@@ -118,7 +165,9 @@ function DetalleObra() {
               <Estrellas calificacion={obra.promedio_valoracion || 0} interactiva={false} />
               <p>{obra.promedio_valoracion ? `${obra.promedio_valoracion} / 5` : "No hay valoraciones aún"}</p>
             </div>
-            <button className="boton-lista">+ Agregar a lista de pendientes</button>
+            <button className="boton-lista" onClick={agregarPendiente}>
+              + Agregar a lista de pendientes
+            </button>
           </div>
         </div>
         <Resenias
