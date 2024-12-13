@@ -46,6 +46,7 @@
     object-fit: cover;
     border-radius: 8px;
     margin-bottom: 10px;
+    margin-top: -10px;
 }
   
 .pendientes-titulo {
@@ -67,21 +68,38 @@
     margin-bottom: 15px;
 }
   
-.btn {
-    width: 120px;
-    padding: 8px 12px;
+.eliminar-boton-superior {
+    position: relative;
+    right: -150px;
+    background-color: red;
     border: none;
-    border-radius: 5px;
+    border-radius: 50%;
+    color: white;
+    font-size: 16px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
+    opacity: 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.eliminar-boton-superior:hover {
+    background-color: darkred;
+}
+
+.pendientes-tipo {
     font-size: 14px;
+    color: white;
+    background-color: #333;
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-top: 4px;
 }
-  
-.btn-detalles {
-    background-color: #007BFF;
-    color: #fff;
-}
-  
-.btn-eliminar {
-    background-color: #FF4D4D;
-    color: #fff;
+
+.pendientes-tarjeta:hover .eliminar-boton-superior {
+    opacity: 1;
 }

@@ -416,7 +416,7 @@ app.get('/api/pendientes', verificarToken, async (req, res) => {
 
         const lista_pendientes = await pendientes.findOne({ id_usuario });
 
-            if (!lista_pendientes) {
+        if (!lista_pendientes) {
             console.log('No se encontraron pendientes para este usuario.');
             return res.status(200).json([]);
         }
@@ -431,9 +431,8 @@ app.get('/api/pendientes', verificarToken, async (req, res) => {
 
 app.post("/api/pendientes/agregar", verificarToken, async (req, res) => {
     try {
-      const { id_usuario, obra, expectativa } = req.body;
+      const { id_usuario, obra } = req.body;
   
-      console.log(`Exp: ${expectativa}`)
       let lista_pendientes = await pendientes.findOne({ id_usuario });
   
       if (!lista_pendientes) {
@@ -441,16 +440,14 @@ app.post("/api/pendientes/agregar", verificarToken, async (req, res) => {
           id_usuario,
           lista: [
             {
-              ...obra,
-              expectativa,
+              ...obra
             },
           ],
         });
         await lista_pendientes.save();
       } else {
         lista_pendientes.lista.push({
-          ...obra,
-          expectativa,
+          ...obra
         });
         await lista_pendientes.save();
       }
@@ -459,6 +456,36 @@ app.post("/api/pendientes/agregar", verificarToken, async (req, res) => {
     } catch (err) {
       console.error(err.message);
       res.status(500).json({ message: "Error al agregar obra a la lista de pendientes" });
+    }
+});
+
+app.delete('/api/pendientes/:id', verificarToken, async (req, res) => {
+    const usuarioId = req.usuarioId;
+    const obraId = req.params.id;
+
+    try {
+        const pendiente = await pendientes.findOne({ id_usuario: usuarioId });
+        console.log(pendiente);
+
+        if (!pendiente) {
+            return res.status(404).json({ message: 'No se encontró la lista de pendientes para este usuario.' });
+        }
+
+        const obraIndex = pendiente.lista.findIndex(obra => obra.id === obraId);
+
+        if (obraIndex === -1) {
+            return res.status(404).json({ message: 'La obra no se encuentra en la lista de pendientes.' });
+        }
+
+        pendiente.lista.splice(obraIndex, 1);
+
+        await pendiente.save();
+
+        console.log(`Obra eliminada con ID: ${obraId} para el usuario ${usuarioId}`);
+        res.status(200).json({ message: 'Obra eliminada correctamente de la lista de pendientes.' });
+    } catch (error) {
+        console.error('Error al eliminar la obra:', error);
+        res.status(500).json({ message: 'Error al eliminar la obra.' });
     }
 });
 
@@ -471,11 +498,9 @@ app.post('/api/ajustes-cuenta/cambiar-nombre', verificarToken, async (req, res) 
     }
 
     try {
-        // Obtener una conexión del pool de MySQL
         const connection = await pool.getConnection();
 
         try {
-            // Verificar si el nuevo nombre ya está en uso
             const [rows] = await connection.execute(
                 'SELECT id FROM usuarios WHERE nombre = ?',
                 [nuevoNombre]

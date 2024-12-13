@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import '../styles/Pendientes.css';
+import { FaTrash } from 'react-icons/fa';
 
 const Pendientes = () => {
   const [listaPendientes, setListaPendientes] = useState([]);
@@ -76,6 +77,52 @@ const Pendientes = () => {
     navigate(`/detalleobra/${tipo}/${id}`);
   };
 
+  const eliminarPendiente = async (pendienteId) => {
+    const result = await Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Esta acción no se puede deshacer.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+    });
+  
+    if (result.isConfirmed) {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`http://localhost:5000/api/pendientes/${pendienteId}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+  
+        if (!response.ok) {
+          throw new Error(`Error al eliminar pendiente: ${response.statusText}`);
+        }
+  
+        const data = await response.json();
+        Swal.fire({
+          title: 'Eliminado',
+          text: data.message,
+          icon: 'success',
+          confirmButtonText: 'Aceptar',
+        });
+  
+        // Actualizar la lista de pendientes después de eliminar
+        setListaPendientes(listaPendientes.filter(pendiente => pendiente.id !== pendienteId));
+      } catch (err) {
+        Swal.fire({
+          title: 'Error',
+          text: err.message,
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+        });
+      }
+    }
+  };
+  
+
   return (
     <div className="pendientes-container">
       <h1>Lista de Pendientes</h1>
@@ -84,9 +131,22 @@ const Pendientes = () => {
       ) : (
         <div className="pendientes-grid">
           {listaPendientes.map((pendiente, index) => (
-            <div className="pendientes-tarjeta" key={index} onClick={() => Redireccionar(pendiente.id, pendiente.tipo)}>
-              <img className='pendientes-imagen' src={`http://localhost:5000/imagenes/${pendiente.imagen}.jpg`} alt={pendiente.titulo} />
+            <div className="pendientes-tarjeta" key={index}>
+              <button
+                className="eliminar-boton-superior"
+                onClick={() => eliminarPendiente(pendiente.id)}
+                title="Eliminar pendiente"
+              >
+                <FaTrash />
+              </button>
+              <img
+                className='pendientes-imagen'
+                src={`http://localhost:5000/imagenes/${pendiente.imagen}.jpg`}
+                alt={pendiente.titulo}
+                onClick={() => Redireccionar(pendiente.id, pendiente.tipo)}
+              />
               <h2 className="pendientes-titulo">{pendiente.titulo}</h2>
+              <p className="pendientes-tipo">{pendiente.tipo}</p>
             </div>
           ))}
         </div>
