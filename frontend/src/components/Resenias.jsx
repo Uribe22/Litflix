@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { renovarTokenSiEsNecesario } from "../utils/gestorDeTokens";
 import Swal from "sweetalert2";
-import Estrellas from "./Estrellas";
+import Estrellas from "./Estrellas";  // El componente de Estrellas ya soporta medias estrellas
 import Carrusel from "./Carrusel";
 import "../styles/Resenias.css";
 
@@ -29,6 +29,14 @@ export default function Resenias({
     setExpandir(expandir === index ? null : index);
   };
 
+  const incrementarCalificacion = () => {
+    if (calificacion < 5) setCalificacion((prev) => parseFloat((prev + 0.5).toFixed(1)));
+  };
+
+  const decrementarCalificacion = () => {
+    if (calificacion > 0) setCalificacion((prev) => parseFloat((prev - 0.5).toFixed(1)));
+  };
+
   const enviarReseña = async () => {
     if (!usuarioAutenticado) {
       Swal.fire({
@@ -45,7 +53,7 @@ export default function Resenias({
       });
       return;
     }
-  
+
     if (!nuevaReseña.trim() || calificacion === 0) {
       Swal.fire({
         title: "Campos incompletos",
@@ -55,7 +63,7 @@ export default function Resenias({
       });
       return;
     }
-  
+
     try {
       const token = await renovarTokenSiEsNecesario();
       if (!token) {
@@ -69,20 +77,20 @@ export default function Resenias({
         });
         return;
       }
-  
+
       const nuevaResenaObj = {
         autor: usuarioAutenticado.nombre,
         comentario: nuevaReseña,
         valoracion: calificacion,
         fecha: new Date(),
       };
-  
+
       const endpoint = tieneResenaUsuario
         ? `http://localhost:5000/api/resenias/${tipo}/${idRelacionado}`
         : `http://localhost:5000/api/resenias`;
-  
+
       const method = tieneResenaUsuario ? "PUT" : "POST";
-  
+
       const response = await axios({
         method,
         url: endpoint,
@@ -95,7 +103,7 @@ export default function Resenias({
           Authorization: `Bearer ${token}`,
         },
       });
-  
+
       Swal.fire({
         title: "¡Reseña enviada!",
         text: tieneResenaUsuario
@@ -106,10 +114,10 @@ export default function Resenias({
       }).then(() => {
         window.location.reload();
       });
-  
+
       setNuevaReseña("");
       setCalificacion(0);
-  
+
       agregarResenaLocalmente(response.data.reseña);
     } catch (error) {
       console.error("Error al enviar la reseña:", error.response || error);
@@ -136,7 +144,7 @@ export default function Resenias({
       >
         <div className="tarjeta-resena-header">
           <div className="tarjeta-resena-avatar">
-            <img src="https://via.placeholder.com/50" alt="Avatar" />
+            <img src="https://cdn-icons-png.flaticon.com/512/6073/6073873.png" alt="Avatar" />
           </div>
           <h4 className="tarjeta-resena-autor">{reseña.autor}</h4>
         </div>
@@ -188,6 +196,22 @@ export default function Resenias({
             setCalificacion={setCalificacion}
             interactiva={true}
           />
+          <div className="calificacion-buttons">
+            <button
+              className="calificacion-button"
+              onClick={decrementarCalificacion}
+              disabled={calificacion <= 0}
+            >
+              -
+            </button>
+            <button
+              className="calificacion-button"
+              onClick={incrementarCalificacion}
+              disabled={calificacion >= 5}
+            >
+              +
+            </button>
+          </div>
         </div>
         <textarea
           placeholder="Escribe tu reseña..."

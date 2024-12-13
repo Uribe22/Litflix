@@ -1,20 +1,17 @@
 .contenedor-autenticacion {
-    max-width: 600px;
-    width: 80%;
-    margin: 50px auto;
-    padding: 30px;
-    background-color: #1a3b5d;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f4f4f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
   
   h2 {
     text-align: center;
-    font-family: "Merriweather", serif;
-    font-size: 28px;
-    font-weight: bold;
-    color: white;
     margin-bottom: 20px;
+    color: #333;
   }
   
   .formulario-autenticacion {
@@ -86,7 +83,7 @@
   
   .boton-autenticacion {
     padding: 12px;
-    background-color: #4c87af;
+    background-color:  #0c8fc3 !important;
     color: white;
     font-family: "Merriweather", serif;
     border: none;
@@ -102,7 +99,7 @@
 
   .link-autenticacion {
     padding: 5px;
-    color: white;
+    color: rgb(0, 0, 0);
     font-family: "Merriweather", serif;
     border: none;
     font-size: 15px;

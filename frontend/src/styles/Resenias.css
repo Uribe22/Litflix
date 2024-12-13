@@ -5,7 +5,6 @@
   color: #343232;
   width: 96%;
   justify-self: center;
-  
 }
 
 .reseñas-lista-scrollable {
@@ -20,18 +19,22 @@
 .reseñas-lista-scrollable::-webkit-scrollbar {
   width: 8px;
 }
+
 .reseñas-lista-scrollable:only-child {
   display: flex;
   justify-content: center; 
   align-items: center; 
 }
+
 .reseñas-lista-scrollable::-webkit-scrollbar-thumb {
   background: #007bff;
   border-radius: 4px;
 }
+
 .reseñas-lista-scrollable:only-child .tarjeta-resena {
   margin: 0 auto; 
 }
+
 .tarjeta-resena {
   background-color: #ffffff; 
   border: 2px solid #bdc3c7;
@@ -73,13 +76,12 @@
 .tarjeta-resena-comentario {
   font-size: 1rem;
   margin: 10px 20px;
-
 }
 
 .ver-mas-boton {
   background: none;
   border: none;
-  color: #17c7d4;
+  color: #0c8fc3;
   cursor: pointer;
   font-size: 0.9rem;
 }
@@ -107,7 +109,7 @@
   display: block;
   margin: 20px auto;
   padding: 10px 20px;
-  background-color:#4a8eb9; 
+  background-color: #4a8eb9; 
   color: white;
   border: none;
   border-radius: 4px;
@@ -119,7 +121,7 @@
 }
 
 .agregar-reseña {
-  background-color: #1a3b5d;
+  background-color: #333;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -151,6 +153,7 @@
   outline: none;
   box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
+
 .boton-enviar {
   background-color: #4a8eb9;
   color: white;
@@ -175,7 +178,35 @@
   justify-content: center;
 }
 
-@media screen and (max-width: 768px) {
+.calificacion-buttons {
+  display: flex;
+  gap: 10px; /* Espacio entre los botones */
+  margin-top: 10px;
+  align-items: center;
+}
+
+/* Estilo de los botones de calificación */
+.calificacion-button {
+  padding: 5px 10px;
+  font-size: 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.calificacion-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.calificacion-button:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+/* Responsividad para pantallas más pequeñas */
+@media (max-width: 768px) {
   .reseñas-lista-scrollable {
     grid-template-columns: 1fr; /* 1 columna en pantallas más pequeñas */
   }
@@ -236,9 +267,13 @@
     width: 100%;
     padding: 12px;
   }
+
+  .calificacion-buttons {
+    justify-content: flex-start;
+  }
 }
 
-@media screen and (max-width: 480px) {
+@media (max-width: 480px) {
   .reseñas-lista-scrollable {
     grid-template-columns: 1fr; /* 1 columna en pantallas más pequeñas */
   }
@@ -258,7 +293,6 @@
     width: 100%;
     padding: 8px 16px;
     font-size: 0.9rem;
-    
   }
 
   .agregar-reseña h3 {

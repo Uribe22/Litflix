@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Tarjeta from '../components/Tarjeta';
 import Filtro from '../components/Filtro';
 
-export default function Libros() {
+export default function Libros({ resultadosBusqueda, terminoBusqueda, onSearch }) {
   const [libros, setLibros] = useState([]);
   const [librosFiltrados, setLibrosFiltrados] = useState([]);
   const [error, setError] = useState('');
@@ -42,7 +42,15 @@ export default function Libros() {
   }, []);
 
   useEffect(() => {
-    const resultadosFiltrados = libros.filter((libro) => {
+    let resultados = libros;
+
+    // Aplicar búsqueda
+    if (resultadosBusqueda && terminoBusqueda) {
+      resultados = resultadosBusqueda;
+    }
+
+    // Aplicar filtros
+    const resultadosFiltrados = resultados.filter((libro) => {
       const anioLanzamiento = libro.fecha_lanzamiento
         ? new Date(libro.fecha_lanzamiento).getFullYear()
         : null;
@@ -59,7 +67,7 @@ export default function Libros() {
     });
 
     setLibrosFiltrados(resultadosFiltrados);
-  }, [filtros, libros]);
+  }, [resultadosBusqueda, terminoBusqueda, filtros, libros]);
 
   const aplicarFiltros = (nuevosFiltros) => {
     setFiltros(nuevosFiltros);
@@ -78,6 +86,12 @@ export default function Libros() {
         onApplyFilter={aplicarFiltros}
         resetFilters={resetearFiltros}
       />
+       {terminoBusqueda && (
+        <p className="resultado-busquedas">
+          Resultados para "{terminoBusqueda}":
+        </p>
+      )}
+
 
       <div className="grid">
         {librosFiltrados.length > 0 ? (
@@ -91,12 +105,17 @@ export default function Libros() {
               fecha={libro.fecha_lanzamiento}
               calificacion={libro.promedio_valoracion}
               contexto="obra"
-            />
-          ))
-        ) : (
-          <p>No se encontraron libros con los filtros aplicados.</p>
-        )}
+              />
+            ))
+          ) : (
+            <p className="sin-resultados">
+              {terminoBusqueda
+                ? `No se encontraron resultados para "${terminoBusqueda}".`
+                : "No se encontraron libros con los filtros aplicados."}
+            </p>
+          )}
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
+  

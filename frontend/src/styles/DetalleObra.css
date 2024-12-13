@@ -2,22 +2,22 @@
   padding: 20px;
   margin: 0 auto;
   color: white;
-  width: 100%; 
+  width: 100%;
   margin-top: 30px;
 }
 
 .detalle-obra-header {
-  background: #1a3b5d;
+  background: #333;
   border-radius: 8px;
   width: 90%;
   justify-self: center;
 }
+
 @media (min-width: 992px) {
   .detalle-obra {
-    width: 93%; 
+    width: 93%;
   }
 }
-
 
 .detalle-obra-header {
   display: flex;
@@ -45,7 +45,8 @@
 
 .detalle-obra-info {
   flex: 1;
-  text-align: left;
+  text-align: justify;
+  margin-right: 20px;
 }
 
 .detalle-obra-info h1 {
@@ -60,21 +61,47 @@
 
 .sinopsis {
   font-size: 1.2rem;
-  margin: 20px 0;
+  margin: 20px;
   color: #c0c0c0;
+  max-height: 200px; /* Limitar la altura de la sinopsis */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 6; /* Limita a 6 líneas, puedes ajustar */
+  -webkit-box-orient: vertical;
+}
+
+.sinopsis.expandido {
+  max-height: none;
+  -webkit-line-clamp: none;
+}
+
+.ver-mas {
+  color: #1e90ff;
+  cursor: pointer;
+  font-weight: bold;
+  text-align: center;
+  display: block;
+  margin-top: 10px;
 }
 
 .calificacion {
   display: flex;
   align-items: center;
-  font-size: 1.2rem;
-  
+  font-size: 3.2rem;
+  justify-content: left; /* Centrado del ranking con las estrellas */
 }
-
+.calificacion p{
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+  justify-content: left;
+  margin-top: 10px;
+}
 .boton-lista {
   margin-top: 15px;
   padding: 10px 20px;
-  background-color: #1E90FF;
+  background-color: #1e90ff;
   color: white;
   border: none;
   border-radius: 5px;
@@ -84,7 +111,7 @@
 .boton-enviar {
   margin-top: 10px;
   padding: 10px 20px;
-  background-color: #1E90FF;
+  background-color: #1e90ff;
   color: white;
   border: none;
   border-radius: 5px;
@@ -101,7 +128,6 @@
     justify-content: center;
   }
 
-  
   .obra-imagen {
     margin-bottom: 20px;
   }
@@ -114,31 +140,33 @@
     justify-content: center;
     margin-top: 20px;
   }
-}
-.sinopsis {
-  margin-right: 50px;
-  background-color: #1a3b5d;
-  border-radius: 8px;
-  color: #ffffff;
-  line-height: 1.6;
-  position: relative; 
+
+  .sinopsis {
+    max-height: none;
+    -webkit-line-clamp: none;
+  }
 }
 
-.sinopsis p {
-  margin: 0;
-  text-align: justify; 
-}
+@media (max-width: 480px) {
+  .detalle-obra-info h1 {
+    font-size: 1.5rem;
+  }
 
-.boton-leer-mas {
-  background: none;
-  border: none;
-  color: #1E90FF;
-  font-size: 1rem;
-  cursor: pointer;
-  margin-top: 10px;
-  text-align: left;
-  float: left; 
-}
-.boton-leer-mas:hover {
-  text-decoration: underline;
+  .detalle-obra-info p {
+    font-size: 1rem;
+  }
+
+  .sinopsis {
+    font-size: 1rem;
+    margin: 10px;
+  }
+
+  .obra-imagen {
+    width: 100%;
+    height: auto;
+  }
+
+  .calificacion {
+    font-size: 1rem;
+  }
 }

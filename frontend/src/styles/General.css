@@ -1,17 +1,16 @@
 body {
-  background-color: #152738;
+  background-color: #fbf4f4;
   margin: 0;
   padding: 0;
   min-height: 100vh;
-  font-family: Arial, sans-serif; 
+  font-family: Arial, sans-serif;
 }
 
 .litflix-title {
-  font-family: "Londrina Sketch", sans-serif;
+  font-family: "Merriweather", sans-serif;
   font-size: 4rem;
   color: #fff;
   font-style: italic;
-  
 }
 
 .litflix-title:hover {
@@ -25,12 +24,11 @@ body {
 
 .titulo-tipo {
   font-family: "Merriweather", serif;
-  color:  #0a1929;
+  color: #0c8fc3 !important;
   font-size: 2.5rem;
   text-align: center;
   margin-bottom: 20px;
   margin-top: 30px;
-  margin-left: 250px;
 }
 
 @media (max-width: 1024px) {
@@ -63,18 +61,17 @@ body {
 
 .titulo-inicio {
   font-family: "Merriweather", serif;
-  color: #4bc8f0;
-  font-size: 2.5rem;
+  color: #0c8fc3 !important;
+  font-size: 3.5rem;
   text-align: center;
   margin-bottom: 20px;
   margin-top: 30px;
 }
 
-
 .categoria {
   font-family: "Merriweather", serif;
   color: #4bc8f0;
-  font-size: 1,5rem;
+  font-size: 1.5rem;
   text-align: center;
   font-weight: lighter;
   margin-bottom: 10px;
@@ -82,12 +79,17 @@ body {
 }
 
 .sin-resultados {
-    font-family: "Merriweather", serif;
-    color: #4bc8f0;
-    font-size: 24px; 
-  
+  font-family: "Merriweather", serif;
+  color: #4bc8f0;
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 20px;
+  margin-top: 30px;
 }
 
-.sin-resultados a:hover {
-  text-decoration: underline; 
+.resultado-busquedas {
+  font-size: 1.5rem;
+  color: #4bc8f0;
+  margin-bottom: 20px;
+  text-align: center;
 }

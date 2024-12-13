@@ -17,14 +17,14 @@
 }
 
 .carrusel-item {
-  flex: 0 0 calc(33.33% - 16px); /* Mostrar tres elementos a la vez por defecto */
+  flex: 0 0 calc(33.33% - 16px); /* Mostrar tres elementos por defecto */
   transition: all 0.3s ease;
 }
 
 .carrusel-button {
   position: absolute;
   top: 50%;
-  transform: translateY(-50%); 
+  transform: translateY(-50%);
   background-color: #1e90ff;
   border: none;
   color: white;
@@ -41,11 +41,11 @@
 }
 
 .carrusel-button.prev {
-  left: 0px;
+  left: 10px; /* Ajuste para la flecha previa */
 }
 
 .carrusel-button.next {
-  right: 10px;
+  right: 10px; /* Ajuste para la flecha siguiente */
 }
 
 .carrusel-button:hover {
@@ -57,10 +57,10 @@
   cursor: not-allowed;
 }
 
-
+/* Responsividad para pantallas más pequeñas */
 @media (max-width: 1024px) {
   .carrusel-item {
-    flex: 0 0 calc(50% - 16px); 
+    flex: 0 0 calc(50% - 16px); /* 2 ítems por fila en pantallas medianas */
   }
 
   .carrusel-button.prev,
@@ -71,10 +71,15 @@
   }
 }
 
-
 @media (max-width: 768px) {
+  .carrusel {
+    justify-content: flex-start; /* Alinea los ítems a la izquierda */
+    width: 100%;
+    margin-left: 0;
+  }
+
   .carrusel-item {
-    flex: 0 0 calc(50% - 16px); 
+    flex: 0 0 calc(100% - 16px); /* 1 ítem por fila en pantallas pequeñas */
   }
 
   .carrusel-button.prev,
@@ -82,14 +87,14 @@
     width: 50px;
     height: 50px;
     font-size: 26px;
-    left: 5px;
-    right: 5px;
+    left: 10px;  /* Ajusta la posición de las flechas */
+    right: 10px;
   }
 }
 
 @media (max-width: 480px) {
   .carrusel-item {
-    flex: 0 0 calc(100% - 16px);
+    flex: 0 0 calc(100% - 16px); /* 1 ítem por fila en pantallas muy pequeñas */
   }
 
   .carrusel-button.prev,
@@ -97,7 +102,7 @@
     width: 40px;
     height: 40px;
     font-size: 20px;
-    left: 10px;
+    left: 10px;  /* Ajusta la posición de las flechas */
     right: 10px;
   }
 }

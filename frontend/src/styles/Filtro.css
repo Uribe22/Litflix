@@ -1,145 +1,50 @@
+/* Contenedor del filtro */
 .dropdown-container {
-  position:fixed;
-  top: 105px;
-  left: 0;
-  width: 270px;
-  z-index: 100;
-  transition: top 0.3s ease;
-}
-
-.filtrar {
-  margin-top: 140px;
-  justify-content: left;
-  font-family: "Londrina Sketch", sans-serif;
-  color: #ccc;
- 
-}
-
-.dropdown-button {
-  display: none;
-}
-.dropdown-content {
   display: flex;
-  flex-direction: column;
-  position: static;
-  padding: 15px;
-  background-color:  #0a1929; 
-  height: 100vh;
+  flex-wrap: wrap;
+  justify-content: space-between;  /* Distribuye los elementos en la misma fila */
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  background-color: #ffffff;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  margin: 10px 0;
+  border-radius: 8px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
+/* Estilo de los grupos de filtros */
 .filter-group {
-  display: flex;
-  flex-direction: column;
+  flex: 1;
+  min-width: 150px;  /* Ancho mínimo */
 }
 
-.filter-group label {
-  font-weight: bold;
-  margin-bottom: 8px;
-  color: #46bde2;
-  margin-top: 30px;
-  
-}
-
+/* Estilo de los select de filtro */
 .filter-select {
   width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.filter-apply-button,
-.filter-reset-button {
-  font-size: 16px;
   padding: 10px;
-  width: 100%;
-  margin-top: 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  text-align: center;
+  font-size: 1rem;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  color: #333333;
 }
 
-.filter-apply-button {
-  background-color: #4a8eb9;
-  color: white;
-}
-
-.filter-apply-button:hover {
-  background-color: #218838;
-}
-
-.filter-reset-button {
-  background-color: #07679e;
-  color: white;
-}
-
-.filter-reset-button:hover {
-  background-color: #c9302c;
-}
-
-@media (max-width: 768px) {
-  .dropdown-container {
-    position: relative;
-    width: 100%;
-    top: 0;
-    left: 0;
-    height: auto;
-    padding: 10px;
-    box-sizing: border-box;
-    z-index: 99;
-  }
-
-  .dropdown-content {
-    width: 100%;
-    box-shadow: none;
-    padding: 10px;
-  }
-
-  .filter-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .filter-apply-button,
-  .filter-reset-button {
-    width: 100%;
-  }
-
-  .filtrar {
-    font-size: 14px;
-  }
-
-  .main-content {
-    margin-left: 0;
-    padding-top: 10px; 
-  }
-}
-
-
-.main-content {
-  margin-left: 0;
-}
-
-@media (max-width: 768px) {
-  .main-content {
-    margin-left: 0;
-  }
-}
-
+/* Calificación mínima */
 .calificacion-controls {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-top: 10px;
 }
 
 .calificacion-button {
   padding: 5px 10px;
-  font-size: 16px;
+  font-size: 1rem;
   border: none;
-  border-radius: 5px;
-  background-color: #007bff;
+  border-radius: 4px;
+  background-color:  #0c8fc3 !important;
   color: white;
   cursor: pointer;
   transition: background-color 0.3s ease;
@@ -154,7 +59,131 @@
   background-color: #0056b3;
 }
 
-.estrella {
-  font-size: 24px;
-  color: gold;
+/* Botones de aplicar y reset */
+.filter-buttons {
+  display: flex;
+  gap: 20px;  /* Mantiene los botones separados */
+  justify-content: center;  /* Alinea los botones en el centro */
+  width: auto;  /* Asegura que los botones no se estiren */
+}
+
+/* Estilo para los botones */
+.filter-apply-button,
+.filter-reset-button {
+  font-size: 1rem;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: "Roboto", sans-serif;
+}
+
+.filter-apply-button {
+  background-color: #0c8fc3 !important;
+  color: white;
+}
+
+.filter-apply-button:hover {
+  background-color: #0056b3;
+}
+
+.filter-reset-button {
+  background-color: #ff4d4d;
+  color: white;
+}
+
+.filter-reset-button:hover {
+  background-color: #cc0000;
+}
+
+/* Responsividad para pantallas grandes (desde 1366px) */
+@media (min-width: 1366px) {
+  .dropdown-container {
+    width: 80%;  /* Hace el contenedor más grande */
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .filter-buttons {
+    justify-content: flex-start;  /* Alinea los botones a la izquierda si es necesario */
+  }
+}
+
+/* Responsividad para pantallas medianas (desde 1024px hasta 1366px) */
+@media (max-width: 1366px) and (min-width: 1024px) {
+  .dropdown-container {
+    width: 75%;
+  }
+
+  .filter-apply-button,
+  .filter-reset-button {
+    width: 48%;  /* Hace que los botones se alineen en una fila */
+  }
+}
+
+/* Responsividad para pantallas pequeñas (hasta 1024px) */
+@media (max-width: 1024px) {
+  .dropdown-container {
+    width: 90%;
+  }
+
+  .filter-apply-button,
+  .filter-reset-button {
+    width: 48%;
+    margin-top: 10px;
+  }
+
+  .filter-buttons {
+    justify-content: space-between;  /* Los botones se alinean en fila */
+    width: 100%;
+  }
+}
+
+/* Responsividad para dispositivos móviles (hasta 768px) */
+@media (max-width: 768px) {
+  .dropdown-container {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .filter-group {
+    width: 100%;
+    text-align: center;
+  }
+
+  .filter-apply-button,
+  .filter-reset-button {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .filter-buttons {
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+/* Responsividad para pantallas muy pequeñas (hasta 480px) */
+@media (max-width: 480px) {
+  .dropdown-container {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .filter-group {
+    width: 100%;
+    text-align: center;
+  }
+
+  .filter-apply-button,
+  .filter-reset-button {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .filter-buttons {
+    justify-content: center;
+    width: 100%;
+  }
 }

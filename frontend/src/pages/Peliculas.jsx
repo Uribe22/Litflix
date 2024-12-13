@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import Tarjeta from "../components/Tarjeta";
 import Filtro from "../components/Filtro";
 
-export default function Peliculas() {
-  const [peliculas, setPeliculas] = useState([]);
-  const [peliculasFiltradas, setPeliculasFiltradas] = useState([]);
+export default function Peliculas({ resultadosBusqueda, terminoBusqueda, onSearch }) {
+  const [peliculas, setPeliculas] = useState([]); // Todas las películas
+  const [peliculasFiltradas, setPeliculasFiltradas] = useState([]); // Películas mostradas en pantalla
   const [error, setError] = useState("");
   const [filtros, setFiltros] = useState({
     genero: "",
@@ -12,15 +12,15 @@ export default function Peliculas() {
     calificacion: "",
   });
 
+  // Cargar todas las películas al montar el componente
   useEffect(() => {
     const obtenerPeliculas = async () => {
       try {
         const response = await fetch("http://localhost:5000/api/peliculas");
-        if (!response.ok) {
-          throw new Error("Error en la carga de películas");
-        }
+        if (!response.ok) throw new Error("Error en la carga de películas");
         const data = await response.json();
 
+        // Calcular promedio de valoraciones
         const peliculasConValoracion = data.map((pelicula) => {
           const valoraciones = pelicula.resenias.map((r) => r.valoracion);
           const promedio =
@@ -35,7 +35,7 @@ export default function Peliculas() {
         });
 
         setPeliculas(peliculasConValoracion);
-        setPeliculasFiltradas(peliculasConValoracion);
+        setPeliculasFiltradas(peliculasConValoracion); // Inicialmente mostramos todas
       } catch (err) {
         setError(err.message);
       }
@@ -44,8 +44,17 @@ export default function Peliculas() {
     obtenerPeliculas();
   }, []);
 
+  // Actualizar los resultados de búsqueda y aplicar filtros
   useEffect(() => {
-    const resultadosFiltrados = peliculas.filter((pelicula) => {
+    let resultados = peliculas;
+
+    // Aplicar búsqueda
+    if (resultadosBusqueda && terminoBusqueda) {
+      resultados = resultadosBusqueda;
+    }
+
+    // Aplicar filtros
+    const resultadosFiltrados = resultados.filter((pelicula) => {
       const anioLanzamiento = pelicula.fecha_lanzamiento
         ? new Date(pelicula.fecha_lanzamiento).getFullYear()
         : null;
@@ -66,7 +75,7 @@ export default function Peliculas() {
     });
 
     setPeliculasFiltradas(resultadosFiltrados);
-  }, [filtros, peliculas]);
+  }, [resultadosBusqueda, terminoBusqueda, filtros, peliculas]);
 
   const aplicarFiltros = (nuevosFiltros) => {
     setFiltros(nuevosFiltros);
@@ -74,17 +83,22 @@ export default function Peliculas() {
 
   const resetearFiltros = () => {
     setFiltros({ genero: "", anio: "", calificacion: "" });
+    setPeliculasFiltradas(peliculas); // Reiniciar la lista completa
   };
 
   return (
-    <div className="contenedor">
+    <div className="contenedor-inicio">
       <h1 className="titulo-tipo">Películas</h1>
       {error && <p>{error}</p>}
 
-      <Filtro
-        onApplyFilter={aplicarFiltros}
-        resetFilters={resetearFiltros}
-      />
+      {/* Filtro */}
+      <Filtro onApplyFilter={aplicarFiltros} resetFilters={resetearFiltros} />
+
+      {terminoBusqueda && (
+        <p className="resultado-busquedas">
+          Resultados para "{terminoBusqueda}":
+        </p>
+      )}
 
       <div className="grid">
         {peliculasFiltradas.length > 0 ? (
@@ -102,7 +116,9 @@ export default function Peliculas() {
           ))
         ) : (
           <p className="sin-resultados">
-            No se encontraron películas con los filtros aplicados.
+            {terminoBusqueda
+              ? `No se encontraron resultados para "${terminoBusqueda}".`
+              : "No se encontraron películas con los filtros aplicados."}
           </p>
         )}
       </div>

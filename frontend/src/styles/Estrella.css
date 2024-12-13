@@ -19,3 +19,23 @@
 .estrella.vacia {
   color: #ddd;
 }
+.calificacion-estrellas {
+  display: flex;
+  gap: 5px;
+}
+
+.estrella {
+  color: #f39c12; /* Color dorado para las estrellas */
+}
+
+.llena {
+  color: #f39c12; /* Estrella llena dorada */
+}
+
+.media {
+  color: #f1c40f; /* Estrella media con un color amarillo más claro */
+}
+
+.vacia {
+  color: #ccc; /* Color gris para las estrellas vacías */
+}

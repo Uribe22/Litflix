@@ -1,13 +1,3 @@
-.gridd {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, 250px); 
-  gap: 20px; 
-  justify-content: center; 
-  padding: 20px;
-  max-width: 100%; 
-  margin: 0 auto; 
-}
-
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, 250px);
@@ -15,8 +5,7 @@
   justify-content: center;
   padding: 20px;
   max-width: 100%;
-  margin-left: 250px; 
-  transition: margin-left 0.3s ease; 
+  margin: 0 auto;
 }
 
 .tarjeta-link {
@@ -25,7 +14,7 @@
 }
 
 .tarjeta-obra {
-  background-color: #1a3b5d;
+  background-color: #191818;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
   border-radius: 10px;
   overflow: hidden;
@@ -38,7 +27,7 @@
   min-height: 350px;
   text-align: center;
   padding-bottom: 10px;
-  border: 4px solid#2a4b6d;
+  border: 4px solid #2a4b6d;
   position: relative;
 }
 
@@ -46,7 +35,7 @@
   transform: translateY(-10px);
   box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.5);
   background-color: #2a4b6d;
-  border-color:#2a4b6d;
+  border-color: #2a4b6d;
 }
 
 .tarjeta-obra-imagen {
@@ -62,7 +51,7 @@
 }
 
 .tarjeta-obra h3 {
-  color: #46bde2;
+  color: #0c8fc3;
   font-size: 1rem;
   font-weight: bold;
   margin: 10px 0 5px;
@@ -91,21 +80,21 @@
 @media (max-width: 1366px) {
   .grid {
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    margin-left: 200px; 
+    margin-left: 0;
   }
 }
 
 @media (max-width: 1024px) {
   .grid {
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    margin-left: 150px; 
+    margin-left: 0;
   }
 }
 
 @media (max-width: 768px) {
   .grid {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    margin-left: 100px; 
+    margin-left: 0;
   }
 
   .tarjeta-obra h3 {
@@ -116,11 +105,26 @@
 @media (max-width: 480px) {
   .grid {
     grid-template-columns: 1fr;
-    margin-left: 10px; /* Reduce el margen izquierdo en pantallas pequeñas */
-    padding: 10px; /* Reduce el padding */
+    margin-left: 0;
+    padding: 10px;
   }
 
   .tarjeta-obra h3 {
     font-size: 0.8rem;
+  }
+
+  .dropdown-container {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .filter-apply-button,
+  .filter-reset-button {
+    width: 100%;
+  }
+
+  .tarjeta-obra {
+    width: 100%;
   }
 }
