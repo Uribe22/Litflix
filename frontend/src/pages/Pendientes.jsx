@@ -81,7 +81,7 @@ const Pendientes = () => {
   const eliminarPendiente = async (pendienteId) => {
     const result = await Swal.fire({
       title: '¿Estás seguro?',
-      text: 'Esta acción no se puede deshacer.',
+      text: 'Esta obra se eliminará de tu lista de pendientes.',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Sí, eliminar',

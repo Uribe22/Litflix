@@ -467,8 +467,10 @@ app.get('/api/pendientes', verificarToken, async (req, res) => {
             return res.status(200).json([]);
         }
 
-        console.log('Lista de pendientes:', lista_pendientes);
-        res.status(200).json(lista_pendientes.lista);
+        const listaOrdenada = lista_pendientes.lista.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+        console.log('Lista de pendientes ordenada:', listaOrdenada);
+        res.status(200).json(listaOrdenada);
     } catch (err) {
         console.error('Error en /api/pendientes:', err.message);
         res.status(500).json({ message: "Error interno del servidor" });
