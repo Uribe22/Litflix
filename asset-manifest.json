@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/Litflix/static/css/main.05b33c73.css",
+    "main.js": "/Litflix/static/js/main.30313781.js",
+    "static/js/453.8ab44547.chunk.js": "/Litflix/static/js/453.8ab44547.chunk.js",
+    "index.html": "/Litflix/index.html",
+    "main.05b33c73.css.map": "/Litflix/static/css/main.05b33c73.css.map",
+    "main.30313781.js.map": "/Litflix/static/js/main.30313781.js.map",
+    "453.8ab44547.chunk.js.map": "/Litflix/static/js/453.8ab44547.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.05b33c73.css",
+    "static/js/main.30313781.js"
+  ]
+}
