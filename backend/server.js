@@ -462,6 +462,73 @@ app.post("/api/pendientes/agregar", verificarToken, async (req, res) => {
     }
 });
 
+app.post('/api/ajustes-cuenta/cambiar-nombre', verificarToken, async (req, res) => {
+    const { nuevoNombre } = req.body;
+    const usuarioId = req.usuarioId;
+
+    if (!nuevoNombre) {
+        return res.status(400).json({ message: 'El nuevo nombre es requerido.' });
+    }
+
+    try {
+        // Obtener una conexión del pool de MySQL
+        const connection = await pool.getConnection();
+
+        try {
+            // Verificar si el nuevo nombre ya está en uso
+            const [rows] = await connection.execute(
+                'SELECT id FROM usuarios WHERE nombre = ?',
+                [nuevoNombre]
+            );
+
+            if (rows.length > 0) {
+                return res.status(409).json({ message: 'El nombre de usuario ya está en uso.' });
+            }
+
+            const [currentUser] = await connection.execute(
+                'SELECT nombre FROM usuarios WHERE id = ?',
+                [usuarioId]
+            );
+
+            if (currentUser.length === 0) {
+                return res.status(404).json({ message: 'Usuario no encontrado.' });
+            }
+
+            const nombreActual = currentUser[0].nombre;
+
+            await connection.execute(
+                'UPDATE usuarios SET nombre = ? WHERE id = ?',
+                [nuevoNombre, usuarioId]
+            );
+
+            await Promise.all([
+                libro.updateMany(
+                    { 'resenias.autor': nombreActual },
+                    { $set: { 'resenias.$[elem].autor': nuevoNombre } },
+                    { arrayFilters: [{ 'elem.autor': nombreActual }] }
+                ),
+                pelicula.updateMany(
+                    { 'resenias.autor': nombreActual },
+                    { $set: { 'resenias.$[elem].autor': nuevoNombre } },
+                    { arrayFilters: [{ 'elem.autor': nombreActual }] }
+                ),
+                serie.updateMany(
+                    { 'resenias.autor': nombreActual },
+                    { $set: { 'resenias.$[elem].autor': nuevoNombre } },
+                    { arrayFilters: [{ 'elem.autor': nombreActual }] }
+                )
+            ]);
+
+            return res.status(200).json({ message: 'Nombre de usuario actualizado correctamente.' });
+        } finally {
+            connection.release();
+        }
+    } catch (error) {
+        console.error('Error al cambiar el nombre de usuario:', error);
+        return res.status(500).json({ message: 'Hubo un error al cambiar el nombre de usuario.' });
+    }
+});
+
 app.post('/api/ajustes-cuenta/cambiar-correo', verificarToken, async (req, res) => {
     const { email } = req.body;
     const usuarioId = req.usuarioId;
@@ -474,6 +541,15 @@ app.post('/api/ajustes-cuenta/cambiar-correo', verificarToken, async (req, res) 
         const connection = await pool.getConnection();
 
         try {
+            const [existingEmailRows] = await connection.execute(
+                'SELECT id FROM usuarios WHERE correo = ?',
+                [email]
+            );
+
+            if (existingEmailRows.length > 0) {
+                return res.status(409).json({ message: 'El correo ya está en uso.' });
+            }
+
             const [rows] = await connection.execute(
                 'UPDATE usuarios SET correo = ? WHERE id = ?',
                 [email, usuarioId]
@@ -492,6 +568,7 @@ app.post('/api/ajustes-cuenta/cambiar-correo', verificarToken, async (req, res) 
         return res.status(500).json({ message: 'Hubo un error al cambiar el correo.' });
     }
 });
+
 
 app.post('/api/ajustes-cuenta/cambiar-contrasena', verificarToken, async (req, res) => {
     const { currentPassword, newPassword } = req.body;
@@ -536,6 +613,68 @@ app.post('/api/ajustes-cuenta/cambiar-contrasena', verificarToken, async (req, r
     } catch (error) {
         console.error('Error al cambiar la contraseña:', error);
         return res.status(500).json({ message: 'Hubo un error al cambiar la contraseña.' });
+    }
+});
+
+app.post('/api/ajustes-cuenta/eliminar-cuenta', verificarToken, async (req, res) => {
+    const { password } = req.body;
+    const usuarioId = req.usuarioId;
+
+    if (!password) {
+        return res.status(400).json({ message: 'La contraseña es requerida para confirmar la eliminación.' });
+    }
+
+    try {
+        const connection = await pool.getConnection();
+
+        try {
+            const [rows] = await connection.execute(
+                'SELECT contrasenia, nombre FROM usuarios WHERE id = ?',
+                [usuarioId]
+            );
+
+            if (rows.length === 0) {
+                return res.status(404).json({ message: 'Usuario no encontrado.' });
+            }
+
+            const storedPassword = rows[0].contrasenia;
+            const nombreUsuario = rows[0].nombre;
+
+            const passwordMatch = await bcrypt.compare(password, storedPassword);
+
+            if (!passwordMatch) {
+                return res.status(401).json({ message: 'La contraseña es incorrecta.' });
+            }
+
+            await connection.execute(
+                'DELETE FROM usuarios WHERE id = ?',
+                [usuarioId]
+            );
+
+            await Promise.all([
+                libro.updateMany(
+                    { 'resenias.autor': nombreUsuario },
+                    { $pull: { resenias: { autor: nombreUsuario } } }
+                ),
+                pelicula.updateMany(
+                    { 'resenias.autor': nombreUsuario },
+                    { $pull: { resenias: { autor: nombreUsuario } } }
+                ),
+                serie.updateMany(
+                    { 'resenias.autor': nombreUsuario },
+                    { $pull: { resenias: { autor: nombreUsuario } } }
+                )
+            ]);
+
+            await pendientes.deleteOne({ id_usuario: usuarioId });
+
+            return res.status(200).json({ message: 'Cuenta eliminada correctamente.' });
+        } finally {
+            connection.release();
+        }
+    } catch (error) {
+        console.error('Error al eliminar la cuenta:', error);
+        return res.status(500).json({ message: 'Hubo un error al eliminar la cuenta.' });
     }
 });
 

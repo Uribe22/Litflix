@@ -56,24 +56,21 @@ const AjustesCuenta = () => {
         try {
             let response;
             if (selectedField === 'name') {
-                // Consulta para cambiar el nombre
-                response = await axios.post('http://localhost:5000/api/ajustes-cuenta/cambiar-nombre', { name }, {
+                response = await axios.post('http://localhost:5000/api/ajustes-cuenta/cambiar-nombre', { nuevoNombre: name }, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 });
             } else if (selectedField === 'email') {
-                // Consulta para cambiar el correo
                 response = await axios.post('http://localhost:5000/api/ajustes-cuenta/cambiar-correo', { email }, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 });
             } else if (selectedField === 'password') {
-                // Consulta para cambiar la contraseña
                 response = await axios.post('http://localhost:5000/api/ajustes-cuenta/cambiar-contrasena', {
-                    currentPassword, // Contraseña actual
-                    newPassword: password, // Nueva contraseña
+                    currentPassword,
+                    newPassword: password,
                 }, {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -130,40 +127,64 @@ const AjustesCuenta = () => {
             confirmButtonText: 'Sí, eliminar',
             cancelButtonText: 'Cancelar',
         });
-
+    
         if (result.isConfirmed) {
-            try {
-                // Consulta para eliminar la cuenta
-                const response = await axios.post('http://localhost:5000/api/ajustes-cuenta/eliminar-cuenta', {}, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-
-                if (response.status === 200) {
-                    Swal.fire({
-                        title: 'Éxito',
-                        text: 'Tu cuenta ha sido eliminada correctamente.',
-                        icon: 'success',
-                    });
-                    navigate('/');
-                } else {
+            const password = await Swal.fire({
+                title: 'Confirmar eliminación',
+                text: 'Por favor, ingresa tu contraseña para confirmar la eliminación.',
+                input: 'password',
+                inputPlaceholder: 'Contraseña',
+                inputAttributes: {
+                    maxlength: 50,
+                },
+                inputOptions: {
+                    style: 'width: 100%; max-width: 300px;',
+                },
+                showCancelButton: true,
+                confirmButtonText: 'Confirmar',
+                cancelButtonText: 'Cancelar',
+                customClass: {
+                    popup: 'swal2-popup-custom',
+                    input: 'swal2-input-custom',
+                },
+            });
+    
+            if (password.isConfirmed && password.value) {
+                try {
+                    const response = await axios.post(
+                        'http://localhost:5000/api/ajustes-cuenta/eliminar-cuenta',
+                        { password: password.value },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        }
+                    );
+    
+                    if (response.status === 200) {
+                        Swal.fire({
+                            title: 'Éxito',
+                            text: 'Tu cuenta ha sido eliminada correctamente.',
+                            icon: 'success',
+                        });
+                        localStorage.removeItem('token');
+                        navigate('/');
+                    }
+                } catch (error) {
+                    console.error('Error al eliminar la cuenta:', error);
                     Swal.fire({
                         title: 'Error',
-                        text: 'Hubo un problema al eliminar la cuenta.',
+                        text: error.response?.data?.message || 'Hubo un error al eliminar la cuenta.',
                         icon: 'error',
                     });
                 }
-            } catch (error) {
-                console.error('Error al eliminar la cuenta:', error);
+            } else if (password.isConfirmed) {
                 Swal.fire({
                     title: 'Error',
-                    text: error.response?.data?.message || 'Hubo un problema al conectarse al servidor.',
+                    text: 'Debes ingresar tu contraseña para confirmar la eliminación.',
                     icon: 'error',
                 });
             }
-        } else {
-            console.log('Eliminación cancelada');
         }
     };
 
@@ -195,7 +216,7 @@ const AjustesCuenta = () => {
                         onChange={(e) => setName(e.target.value)}
                         disabled={selectedField !== 'name'}
                         required={selectedField === 'name'}
-                        placeholder="Nuevo nombre" // Pista para el campo de nombre
+                        placeholder="Nuevo nombre"
                     />
                 </div>
                 <div className="field">
@@ -215,7 +236,7 @@ const AjustesCuenta = () => {
                         onChange={(e) => setEmail(e.target.value)}
                         disabled={selectedField !== 'email'}
                         required={selectedField === 'email'}
-                        placeholder="Nuevo correo" // Pista para el campo de correo
+                        placeholder="Nuevo correo"
                     />
                 </div>
                 <div className="field">
@@ -256,7 +277,7 @@ const AjustesCuenta = () => {
                         placeholder="Confirmar nueva contraseña"
                     />
                 </div>
-                <button type="submit">Actualizar datos</button>
+                <button className="button-ajuste" type="submit">Actualizar datos</button>
             </form>
 
             <button className="delete-account-button" onClick={handleDeleteAccount}>

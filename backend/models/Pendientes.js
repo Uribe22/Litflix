@@ -7,8 +7,7 @@ const esquemaPendientes = new mongoose.Schema({
     titulo: { type: String, required: true },
     tipo: { type: String, required: true },
     fecha: { type: Date, required: true },
-    imagen: { type: String, required: true },
-    espectativa: { type: Number, required: false },
+    imagen: { type: String, required: true }
   }],
 });
 
