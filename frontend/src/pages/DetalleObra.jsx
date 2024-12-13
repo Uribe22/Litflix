@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate  } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import Swal from "sweetalert2";
@@ -12,6 +12,7 @@ function DetalleObra() {
   const [obra, setObra] = useState(null);
   const [usuarioAutenticado, setUsuarioAutenticado] = useState(null);
   const [pendientes, setPendientes] = useState([]);
+  const [tieneResenaUsuario, setTieneResenaUsuario] = useState(false); // Nuevo estado
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,7 +31,8 @@ function DetalleObra() {
         }).then((result) => {
           if (result.isConfirmed) {
             localStorage.removeItem('token');
-            window.location.href = "/inicio-sesion"; 
+            localStorage.removeItem('nombre');
+            window.location.href = "/inicio-sesion";
           }
         });
         setUsuarioAutenticado(null);
@@ -65,12 +67,20 @@ function DetalleObra() {
           const promedioValoracion =
             valoraciones.length > 0
               ? (
-                  valoraciones.reduce((sum, val) => sum + val, 0) / 
-                  valoraciones.length
-                ).toFixed(1)
+                valoraciones.reduce((sum, val) => sum + val, 0) /
+                valoraciones.length
+              ).toFixed(1)
               : 0;
 
           setObra({ ...obraEncontrada, promedio_valoracion: promedioValoracion });
+
+          if (usuarioAutenticado) {
+            console.log(localStorage.getItem("nombre"));
+            const tieneResena = obraEncontrada.resenias.some(
+              (resena) => resena.autor === localStorage.getItem("nombre")
+            );
+            setTieneResenaUsuario(tieneResena);
+          }
         } else {
           Swal.fire({
             title: "Obra no encontrada",
@@ -90,7 +100,7 @@ function DetalleObra() {
     };
 
     obtenerObra();
-  }, [tipo, id]);
+  }, [tipo, id, usuarioAutenticado]);
 
   useEffect(() => {
     const obtenerPendientes = async () => {
@@ -152,16 +162,17 @@ function DetalleObra() {
         confirmButtonText: "Iniciar sesión",
       }).then(() => {
         localStorage.removeItem('token');
+        localStorage.removeItem('nombre');
         navigate("/inicio-sesion");
       });
       return;
     }
-  
+
     try {
       const token = localStorage.getItem("token");
       const usuario = jwtDecode(token);
       const id_usuario = usuario.usuarioId;
-  
+
       await axios.post(
         "http://localhost:5000/api/pendientes/agregar",
         {
@@ -180,21 +191,21 @@ function DetalleObra() {
           }
         }
       );
-  
+
       Swal.fire({
         title: "Obra agregada",
         text: "La obra ha sido agregada a tu lista de pendientes.",
         icon: "success",
         confirmButtonText: "Aceptar",
       });
-  
+
       setPendientes((prevPendientes) => [...prevPendientes, { id: obra._id }]);
     } catch (error) {
       console.error("Detalles del error:", error);
-  
+
       if (error.response) {
         const { status, data } = error.response;
-  
+
         if (status === 401) {
           Swal.fire({
             title: "Sesión expirada",
@@ -203,6 +214,7 @@ function DetalleObra() {
             confirmButtonText: "Iniciar sesión",
           }).then(() => {
             localStorage.removeItem('token');
+            localStorage.removeItem('nombre');
             navigate("/inicio-sesion");
           });
         } else {
@@ -222,13 +234,16 @@ function DetalleObra() {
         });
       }
     }
-  };  
+  };
 
   const agregarResenaLocalmente = (nuevaResena) => {
     setObra((prevObra) => ({
       ...prevObra,
       resenias: [...prevObra.resenias, nuevaResena],
     }));
+
+    // Actualizar el estado de si el usuario tiene una reseña
+    setTieneResenaUsuario(true);
   };
 
   if (!obra) return <p>Cargando...</p>;
@@ -263,6 +278,7 @@ function DetalleObra() {
           idRelacionado={obra._id}
           usuarioAutenticado={usuarioAutenticado}
           agregarResenaLocalmente={agregarResenaLocalmente}
+          tieneResenaUsuario={tieneResenaUsuario} // Pasar el estado al componente Resenias
         />
       </div>
     </div>

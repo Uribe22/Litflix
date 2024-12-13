@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate  } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { renovarTokenSiEsNecesario } from "../utils/gestorDeTokens";
 import Swal from "sweetalert2";
@@ -7,7 +7,14 @@ import Estrellas from "./Estrellas";
 import Carrusel from "./Carrusel";
 import "../styles/Resenias.css";
 
-export default function Resenias({ resenias, tipo, idRelacionado, usuarioAutenticado,agregarResenaLocalmente}) {
+export default function Resenias({
+  resenias,
+  tipo,
+  idRelacionado,
+  usuarioAutenticado,
+  agregarResenaLocalmente,
+  tieneResenaUsuario,
+}) {
   const [mostrarListaCompleta, setMostrarListaCompleta] = useState(false);
   const [nuevaReseña, setNuevaReseña] = useState("");
   const [calificacion, setCalificacion] = useState(0);
@@ -21,6 +28,7 @@ export default function Resenias({ resenias, tipo, idRelacionado, usuarioAutenti
   const toggleExpandir = (index) => {
     setExpandir(expandir === index ? null : index);
   };
+
   const enviarReseña = async () => {
     if (!usuarioAutenticado) {
       Swal.fire({
@@ -35,7 +43,6 @@ export default function Resenias({ resenias, tipo, idRelacionado, usuarioAutenti
           window.location.href = "/inicio-sesion";
         }
       });
-      
       return;
     }
   
@@ -62,34 +69,42 @@ export default function Resenias({ resenias, tipo, idRelacionado, usuarioAutenti
         });
         return;
       }
-
+  
       const nuevaResenaObj = {
         autor: usuarioAutenticado.nombre,
         comentario: nuevaReseña,
         valoracion: calificacion,
         fecha: new Date(),
-        
       };
   
-      const response = await axios.post(
-        `http://localhost:5000/api/resenias`,
-        {
+      const endpoint = tieneResenaUsuario
+        ? `http://localhost:5000/api/resenias/${tipo}/${idRelacionado}`
+        : `http://localhost:5000/api/resenias`;
+  
+      const method = tieneResenaUsuario ? "PUT" : "POST";
+  
+      const response = await axios({
+        method,
+        url: endpoint,
+        data: {
           ...nuevaResenaObj,
           tipo,
           idRelacionado,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
   
       Swal.fire({
         title: "¡Reseña enviada!",
-        text: "Tu reseña se agregó correctamente.",
+        text: tieneResenaUsuario
+          ? "Tu reseña se actualizó correctamente."
+          : "Tu reseña se agregó correctamente.",
         icon: "success",
         confirmButtonText: "Aceptar",
+      }).then(() => {
+        window.location.reload();
       });
   
       setNuevaReseña("");
@@ -105,8 +120,8 @@ export default function Resenias({ resenias, tipo, idRelacionado, usuarioAutenti
         confirmButtonText: "Aceptar",
       });
     }
-  };
-  
+  };  
+
   const renderReseña = (reseña, index) => {
     const esExpandido = expandir === index;
     const textoReseña =
@@ -115,7 +130,10 @@ export default function Resenias({ resenias, tipo, idRelacionado, usuarioAutenti
         : reseña.comentario;
 
     return (
-      <div key={index} className={`tarjeta-resena ${esExpandido ? "expandido" : ""}`}>
+      <div
+        key={index}
+        className={`tarjeta-resena ${esExpandido ? "expandido" : ""}`}
+      >
         <div className="tarjeta-resena-header">
           <div className="tarjeta-resena-avatar">
             <img src="https://via.placeholder.com/50" alt="Avatar" />
@@ -124,7 +142,10 @@ export default function Resenias({ resenias, tipo, idRelacionado, usuarioAutenti
         </div>
         <p className="tarjeta-resena-comentario">{textoReseña}</p>
         {reseña.comentario.length > 100 && (
-          <button className="ver-mas-boton" onClick={() => toggleExpandir(index)}>
+          <button
+            className="ver-mas-boton"
+            onClick={() => toggleExpandir(index)}
+          >
             {esExpandido ? "Ver menos" : "Ver más"}
           </button>
         )}
@@ -135,7 +156,6 @@ export default function Resenias({ resenias, tipo, idRelacionado, usuarioAutenti
       </div>
     );
   };
-  
 
   return (
     <div className="reseñas-container">
@@ -148,7 +168,10 @@ export default function Resenias({ resenias, tipo, idRelacionado, usuarioAutenti
           {resenias.map((reseña, index) => renderReseña(reseña, index))}
         </div>
       ) : resenias && resenias.length > 0 ? (
-        <Carrusel items={resenias} renderItem={(reseña, index) => renderReseña(reseña, index)} />
+        <Carrusel
+          items={resenias}
+          renderItem={(reseña, index) => renderReseña(reseña, index)}
+        />
       ) : (
         <p className="reseñas-empty">No hay reseñas disponibles.</p>
       )}
@@ -158,37 +181,26 @@ export default function Resenias({ resenias, tipo, idRelacionado, usuarioAutenti
       </button>
 
       <div className="agregar-reseña">
-        <h3>Agregar Reseña</h3>
+        <h3>{tieneResenaUsuario ? "Editar mi Reseña" : "Agregar Reseña"}</h3>
         <div className="calificacion">
-          <Estrellas calificacion={calificacion} setCalificacion={setCalificacion} interactiva={true} />
+          <Estrellas
+            calificacion={calificacion}
+            setCalificacion={setCalificacion}
+            interactiva={true}
+          />
         </div>
         <textarea
           placeholder="Escribe tu reseña..."
           value={nuevaReseña}
           onChange={(e) => setNuevaReseña(e.target.value)}
         />
-        <button className="boton-enviar" onClick={enviarReseña}>
-          Enviar
+        <button
+          className="boton-enviar"
+          onClick={enviarReseña}
+        >
+          {tieneResenaUsuario ? "Sobrescribir" : "Enviar"}
         </button>
       </div>
     </div>
-    
   );
-  
 }
-document.addEventListener("DOMContentLoaded", function() {
-  const botonesVerMas = document.querySelectorAll('.ver-mas-boton');
-  
-  botonesVerMas.forEach(function(boton) {
-    boton.addEventListener('click', function() {
-      const tarjeta = boton.closest('.tarjeta-resena');
-      tarjeta.classList.toggle('expandido');
-    
-      if (tarjeta.classList.contains('expandido')) {
-        boton.textContent = 'Ver menos';
-      } else {
-        boton.textContent = 'Ver más';
-      }
-    });
-  });
-});

@@ -42,6 +42,7 @@ const Pendientes = () => {
               confirmButtonText: 'Iniciar sesión',
             }).then(() => {
               localStorage.removeItem('token');
+              localStorage.removeItem('nombre');
               navigate("/inicio-sesion");
             });
           } else {
@@ -109,7 +110,6 @@ const Pendientes = () => {
           confirmButtonText: 'Aceptar',
         });
   
-        // Actualizar la lista de pendientes después de eliminar
         setListaPendientes(listaPendientes.filter(pendiente => pendiente.id !== pendienteId));
       } catch (err) {
         Swal.fire({
@@ -122,7 +122,6 @@ const Pendientes = () => {
     }
   };
   
-
   return (
     <div className="pendientes-container">
       <h1>Lista de Pendientes</h1>

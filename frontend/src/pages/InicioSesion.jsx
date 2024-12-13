@@ -33,6 +33,7 @@ const InicioSesion = () => {
 
       const { token, nombre } = response.data;
       localStorage.setItem("token", token);
+      localStorage.setItem("nombre", nombre);
 
       Swal.fire({
         title: 'Sesión iniciada correctamente',

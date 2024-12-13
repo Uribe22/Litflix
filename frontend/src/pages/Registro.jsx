@@ -61,6 +61,7 @@ const Register = () => {
 
         const { token, nombre } = registro.data;
         localStorage.setItem('token', token);
+        localStorage.setItem("nombre", nombre);
 
         Swal.fire({
           title: 'Cuenta creada exitósamente',

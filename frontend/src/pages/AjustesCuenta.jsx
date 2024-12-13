@@ -168,6 +168,7 @@ const AjustesCuenta = () => {
                             icon: 'success',
                         });
                         localStorage.removeItem('token');
+                        localStorage.removeItem('nombre');
                         navigate('/');
                     }
                 } catch (error) {

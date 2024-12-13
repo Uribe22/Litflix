@@ -31,6 +31,7 @@ const verificarToken = (req, res, next) => {
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
         req.usuarioId = decoded.usuarioId;
+        req.nombre = decoded.nombre;
         console.log('ID de usuario:', req.usuarioId);
         next();
     } catch (error) {
@@ -186,6 +187,51 @@ app.post('/api/resenias', verificarToken, async (req, res) => {
     }
 });
 
+app.put('/api/resenias/:tipo/:idRelacionado', verificarToken, async (req, res) => {
+    const { tipo, idRelacionado } = req.params;
+    const { comentario, valoracion } = req.body;
+
+    try {
+      let ModeloObra;
+      switch (tipo) {
+        case 'libro':
+          ModeloObra = libro;
+          break;
+        case 'serie':
+          ModeloObra = serie;
+          break;
+        case 'pelicula':
+          ModeloObra = pelicula;
+          break;
+        default:
+          return res.status(400).json({ message: 'Tipo de obra no válido.' });
+      }
+
+      const [usuario] = await pool.query('SELECT nombre FROM usuarios WHERE id = ?', [req.usuarioId]);
+  
+      const obra = await ModeloObra.findById(idRelacionado);
+      if (!obra) {
+        return res.status(404).json({ message: 'Obra no encontrada.' });
+      }
+  
+      const reseñaUsuario = obra.resenias.find(reseña => reseña.autor === usuario[0].nombre);
+
+      if (!reseñaUsuario) {
+        return res.status(404).json({ message: 'Reseña del usuario no encontrada.' });
+      }
+  
+      reseñaUsuario.comentario = comentario;
+      reseñaUsuario.valoracion = valoracion;
+      reseñaUsuario.fecha = new Date();
+  
+      await obra.save();
+  
+      res.status(200).json({ reseña: reseñaUsuario });
+    } catch (error) {
+      console.error('Error al editar la reseña:', error);
+      res.status(500).json({ message: 'Error al editar la reseña. Por favor, inténtalo nuevamente.' });
+    }
+  });
 
 app.get('/api/buscar-peliculas', async (req, res) => {
     const termino = req.query.q;
@@ -364,7 +410,7 @@ app.post('/api/registrar', async (req, res) => {
         await lista_pendientes.save();
 
         const token = jwt.sign(
-            { usuarioId: id_usuario, correo },
+            { usuarioId: id_usuario, correo, nombre },
             JWT_SECRET,
             { expiresIn: '1h' }
         );
@@ -397,7 +443,7 @@ app.post("/api/iniciar-sesion", async (req, res) => {
 
         const nombre = rows[0].nombre;
         const token = jwt.sign(
-            { usuarioId: rows[0].id, correo },
+            { usuarioId: rows[0].id, correo, nombre },
             JWT_SECRET,
             { expiresIn: '1d' }
         );
