@@ -6,37 +6,58 @@
     background-color: #f4f4f9;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .edit-profile h2 {
+}
+
+.edit-profile h2 {
     text-align: center;
     margin-bottom: 20px;
     color: #333;
-  }
-  
-  .field {
+}
+
+.field {
     margin-bottom: 20px;
-  }
-  
-  .input-container {
+}
+
+.input-container {
     display: flex;
     align-items: center;
     margin-bottom: 5px;
-  }
-  
-  .input-container input[type="checkbox"] {
+}
+
+/* Estilo para los círculos */
+.input-container input[type="checkbox"] {
+    appearance: none; /* Elimina el estilo predeterminado */
+    width: 20px;
+    height: 20px;
+    border: 2px solid #007bff;
+    border-radius: 50%; /* Hace que sea un círculo */
     margin-right: 10px;
-  }
-  
-  label {
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Estilo cuando el checkbox está seleccionado */
+.input-container input[type="checkbox"]:checked {
+    background-color: #007bff; /* Relleno del círculo */
+    border-color: #007bff;
+}
+
+/* Estilo cuando el checkbox está deshabilitado */
+.input-container input[type="checkbox"]:disabled {
+    border-color: #ccc;
+    background-color: #e0e0e0;
+    cursor: not-allowed;
+}
+
+label {
     font-size: 14px;
     color: rgb(0, 0, 0);
     font-weight: bold;
-  }
-  
-  input[type="text"],
-  input[type="email"],
-  input[type="password"] {
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
     width: 100%;
     padding: 10px;
     font-size: 14px;
@@ -45,30 +66,26 @@
     margin-top: 5px;
     background-color: #fff;
     transition: border-color 0.3s ease;
-  }
-  
-  input[type="checkbox"] {
-    margin-right: 10px;
-  }
-  
-  input:disabled {
+}
+
+input:disabled {
     background-color: #e0e0e0;
     cursor: not-allowed;
-  }
-  
-  input:enabled {
+}
+
+input:enabled {
     background-color: #ffffff;
     cursor: pointer;
-  }
-  
-  input[type="text"]:focus,
-  input[type="email"]:focus,
-  input[type="password"]:focus {
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
     border-color: #007bff;
     outline: none;
-  }
-  
-  button {
+}
+
+button {
     width: 100%;
     padding: 12px;
     background-color: #007bff;
@@ -78,13 +95,13 @@
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-  }
-  
-  button:hover {
+}
+
+button:hover {
     background-color: #0056b3;
-  }
-  
-  .delete-account-button {
+}
+
+.delete-account-button {
     margin-top: 20px;
     padding: 10px 20px;
     background-color: #ff6b6b;
@@ -92,9 +109,8 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
-  }
-  
-  .delete-account-button:hover {
+}
+
+.delete-account-button:hover {
     background-color: #e03e3e;
-  }
-  
+}

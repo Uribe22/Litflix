@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Nav, Navbar, Dropdown } from 'react-bootstrap';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import '../styles/Menu.css';
 import Buscador from './Buscador';
 import Swal from 'sweetalert2';
@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 function MenuComponent() {
   const [sesionIniciada, setSesionIniciada] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const sesionUsuario = localStorage.getItem("token") !== null;
@@ -38,6 +39,8 @@ function MenuComponent() {
     setTimeout(() => {
       Swal.fire('Se ha cerrado tu sesión correctamente');
     }, 200);
+
+    navigate('/');
   };
 
   return (

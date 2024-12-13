@@ -462,6 +462,83 @@ app.post("/api/pendientes/agregar", verificarToken, async (req, res) => {
     }
 });
 
+app.post('/api/ajustes-cuenta/cambiar-correo', verificarToken, async (req, res) => {
+    const { email } = req.body;
+    const usuarioId = req.usuarioId;
+
+    if (!email) {
+        return res.status(400).json({ message: 'El correo es requerido.' });
+    }
+
+    try {
+        const connection = await pool.getConnection();
+
+        try {
+            const [rows] = await connection.execute(
+                'UPDATE usuarios SET correo = ? WHERE id = ?',
+                [email, usuarioId]
+            );
+
+            if (rows.affectedRows === 1) {
+                return res.status(200).json({ message: 'Correo actualizado correctamente.' });
+            } else {
+                return res.status(404).json({ message: 'Usuario no encontrado.' });
+            }
+        } finally {
+            connection.release();
+        }
+    } catch (error) {
+        console.error('Error al cambiar el correo:', error);
+        return res.status(500).json({ message: 'Hubo un error al cambiar el correo.' });
+    }
+});
+
+app.post('/api/ajustes-cuenta/cambiar-contrasena', verificarToken, async (req, res) => {
+    const { currentPassword, newPassword } = req.body;
+    const usuarioId = req.usuarioId;
+
+    if (!currentPassword || !newPassword) {
+        return res.status(400).json({ message: 'La contraseña actual y la nueva contraseña son requeridas.' });
+    }
+
+    try {
+        const connection = await pool.getConnection();
+
+        try {
+            const [rows] = await connection.execute(
+                'SELECT contrasenia FROM usuarios WHERE id = ?',
+                [usuarioId]
+            );
+
+            if (rows.length === 0) {
+                return res.status(404).json({ message: 'Usuario no encontrado.' });
+            }
+
+            const storedPassword = rows[0].contrasenia;
+
+            const passwordMatch = await bcrypt.compare(currentPassword, storedPassword);
+
+            if (!passwordMatch) {
+                return res.status(401).json({ message: 'La contraseña actual es incorrecta.' });
+            }
+
+            const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+            await connection.execute(
+                'UPDATE usuarios SET contrasenia = ? WHERE id = ?',
+                [hashedNewPassword, usuarioId]
+            );
+
+            return res.status(200).json({ message: 'Contraseña actualizada correctamente.' });
+        } finally {
+            connection.release();
+        }
+    } catch (error) {
+        console.error('Error al cambiar la contraseña:', error);
+        return res.status(500).json({ message: 'Hubo un error al cambiar la contraseña.' });
+    }
+});
+
 app.get('/', (req, res) => {
     res.send('¡Bienvenido a Litflix!');
 });
