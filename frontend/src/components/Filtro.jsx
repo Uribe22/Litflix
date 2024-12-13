@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Estrellas from "./Estrellas";
 import "../styles/Filtro.css";
 
 export default function Filtro({ onApplyFilter }) {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [genero, setGenero] = useState("");
   const [anio, setAnio] = useState("");
   const [calificacion, setCalificacion] = useState(0);
@@ -22,7 +21,6 @@ export default function Filtro({ onApplyFilter }) {
   const handleApplyFilter = () => {
     if (typeof onApplyFilter === "function") {
       onApplyFilter({ genero, anio, calificacion });
-      setDropdownOpen(false);
     } else {
       console.error("onApplyFilter no es una función válida.");
     }
@@ -40,84 +38,69 @@ export default function Filtro({ onApplyFilter }) {
 
   return (
     <div className="dropdown-container">
-      <button
-        className="dropdown-button"
-        onClick={() => setDropdownOpen(!dropdownOpen)}
-      >
-        Filtros <span className="caret"></span>
-      </button>
+      <div className="filter-group">
+        <label htmlFor="genero-select">Género:</label>
+        <select
+          id="genero-select"
+          className="filter-select"
+          value={genero}
+          onChange={(e) => setGenero(e.target.value)}
+        >
+          <option value="">Todos</option>
+          {generos.map((g) => (
+            <option key={g} value={g}>
+              {g}
+            </option>
+          ))}
+        </select>
+      </div>
 
-      {dropdownOpen && (
-        <div className="dropdown-content">
-          <h4>Filtrar por:</h4>
+      <div className="filter-group">
+        <label htmlFor="anio-select">Año de lanzamiento:</label>
+        <select
+          id="anio-select"
+          className="filter-select"
+          value={anio}
+          onChange={(e) => setAnio(e.target.value)}
+        >
+          <option value="">Todos</option>
+          {anios.map((a) => (
+            <option key={a} value={a}>
+              {a}
+            </option>
+          ))}
+        </select>
+      </div>
 
-          {/* Filtro por Género */}
-          <div className="filter-group">
-            <label htmlFor="genero-select">Género:</label>
-            <select
-              id="genero-select"
-              className="filter-select"
-              value={genero}
-              onChange={(e) => setGenero(e.target.value)}
-            >
-              <option value="">Todos</option>
-              {generos.map((g) => (
-                <option key={g} value={g}>
-                  {g}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Filtro por Año */}
-          <div className="filter-group">
-            <label htmlFor="anio-select">Año de lanzamiento:</label>
-            <select
-              id="anio-select"
-              className="filter-select"
-              value={anio}
-              onChange={(e) => setAnio(e.target.value)}
-            >
-              <option value="">Todos</option>
-              {anios.map((a) => (
-                <option key={a} value={a}>
-                  {a}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Filtro por Calificación */}
-          <div className="filter-group">
-            <label>Calificación Mínima:</label>
-            <div className="calificacion-controls">
-              <button
-                className="calificacion-button"
-                onClick={decrementarCalificacion}
-                disabled={calificacion <= 0}
-              >
-                -
-              </button>
-              <Estrellas calificacion={calificacion} />
-              <button
-                className="calificacion-button"
-                onClick={incrementarCalificacion}
-                disabled={calificacion >= 5}
-              >
-                +
-              </button>
-            </div>
-          </div>
-
-          {/* Botones de Aplicar y Resetear */}
-          <button className="filter-apply-button" onClick={handleApplyFilter}>
-            Aplicar Filtro
+      <div className="filter-group">
+        <label>Calificación Mínima:</label>
+        <div className="calificacion-controls">
+          <button
+            className="calificacion-button"
+            onClick={decrementarCalificacion}
+            disabled={calificacion <= 0}
+          >
+            -
           </button>
-          <button className="filter-reset-button" onClick={handleResetFilter}>
-            Resetear Filtros
+          <Estrellas calificacion={calificacion} setCalificacion={setCalificacion} interactiva={true} />
+          <button
+            className="calificacion-button"
+            onClick={incrementarCalificacion}
+            disabled={calificacion >= 5}
+          >
+            +
           </button>
         </div>
-      )}
+      </div>
+
+      <div className="filter-buttons">
+        <button className="filter-apply-button" onClick={handleApplyFilter}>
+          Aplicar Filtro
+        </button>
+        <button className="filter-reset-button" onClick={handleResetFilter}>
+          Borrar Filtros
+        </button>
+      </div>
     </div>
   );
 }

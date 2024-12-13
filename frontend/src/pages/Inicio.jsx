@@ -35,7 +35,7 @@ export default function Inicio() {
               titulo={obra.titulo}
               tipo={obra.tipo}
               imagen={obra.imagen}
-              fecha_lanzamiento={obra.fecha_lanzamiento}
+              fecha={obra.fecha_lanzamiento}
               calificacion={obra.promedio_valoracion}
               contexto="obra"
             />
@@ -49,8 +49,9 @@ export default function Inicio() {
 
   return (
     <div className="contenedor-inicio">
-      <h1 className="titulo-tipo">Novedades</h1>
+      <h1 className="titulo-inicio">Novedades</h1>
       {error && <div className="error-mensaje">{error}</div>}
+     
       {['peliculas', 'series', 'libros'].map((categoria) => renderCategoria(categoria))}
     </div>
   );

@@ -1,6 +1,6 @@
 .custom-navbar {
   height: auto;
-  background-color: #1a3b5d !important;
+  background-color: #333 !important;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -32,7 +32,7 @@
 }
 
 .navbar-toggler {
-  border-color: #1a3b5d;
+  border-color: #ffffff;
 }
 
 .navbar-brand {

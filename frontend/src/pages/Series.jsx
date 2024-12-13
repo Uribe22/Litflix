@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import Tarjeta from '../components/Tarjeta';
 import Filtro from '../components/Filtro';
 
-export default function Series() {
+export default function Series({ resultadosBusqueda, terminoBusqueda, onSearch }) {
   const [series, setSeries] = useState([]);
-  const [seriesFiltradas, setSeriesFiltradas] = useState([]); // Estado para las series filtradas
+  const [seriesFiltradas, setSeriesFiltradas] = useState([]);
   const [error, setError] = useState('');
   const [filtros, setFiltros] = useState({
     genero: '',
@@ -32,7 +32,7 @@ export default function Series() {
         });
 
         setSeries(seriesConValoracion);
-        setSeriesFiltradas(seriesConValoracion); // Inicializar con todas las series
+        setSeriesFiltradas(seriesConValoracion);
       } catch (err) {
         setError(err.message);
       }
@@ -41,9 +41,16 @@ export default function Series() {
     obtenerSeries();
   }, []);
 
-  // Filtrar series cuando cambian los filtros
   useEffect(() => {
-    const resultadosFiltrados = series.filter((serie) => {
+    let resultados = series;
+
+    // Aplicar búsqueda
+    if (resultadosBusqueda && terminoBusqueda) {
+      resultados = resultadosBusqueda;
+    }
+
+    // Aplicar filtros
+    const resultadosFiltrados = resultados.filter((serie) => {
       const anioLanzamiento = serie.fecha_lanzamiento
         ? new Date(serie.fecha_lanzamiento).getFullYear()
         : null;
@@ -60,9 +67,9 @@ export default function Series() {
     });
 
     setSeriesFiltradas(resultadosFiltrados);
-  }, [filtros, series]);
+  }, [resultadosBusqueda, terminoBusqueda, filtros, series]);
 
-  const handleApplyFilter = (nuevosFiltros) => {
+  const aplicarFiltros = (nuevosFiltros) => {
     setFiltros(nuevosFiltros);
   };
 
@@ -76,9 +83,15 @@ export default function Series() {
       {error && <p>{error}</p>}
 
       <Filtro
-        onApplyFilter={handleApplyFilter}
+        onApplyFilter={aplicarFiltros}
         resetFilters={resetearFiltros}
       />
+       {terminoBusqueda && (
+        <p className="resultado-busquedas">
+          Resultados para "{terminoBusqueda}":
+        </p>
+      )}
+
 
       <div className="grid">
         {seriesFiltradas.length > 0 ? (
@@ -92,12 +105,17 @@ export default function Series() {
               fecha={serie.fecha_lanzamiento}
               calificacion={serie.promedio_valoracion}
               contexto="obra"
-            />
-          ))
-        ) : (
-          <p>No se encontraron series con los filtros aplicados.</p>
-        )}
+              />
+            ))
+          ) : (
+            <p className="sin-resultados">
+              {terminoBusqueda
+                ? `No se encontraron resultados para "${terminoBusqueda}".`
+                : "No se encontraron series con los filtros aplicados."}
+            </p>
+          )}
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
+  

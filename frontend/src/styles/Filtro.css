@@ -1,137 +1,189 @@
+/* Contenedor del filtro */
 .dropdown-container {
-    position: relative;
-    display: inline-block;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;  /* Distribuye los elementos en la misma fila */
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  background-color: #ffffff;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  margin: 10px 0;
+  border-radius: 8px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Estilo de los grupos de filtros */
+.filter-group {
+  flex: 1;
+  min-width: 150px;  /* Ancho mínimo */
+}
+
+/* Estilo de los select de filtro */
+.filter-select {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  color: #333333;
+}
+
+/* Calificación mínima */
+.calificacion-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.calificacion-button {
+  padding: 5px 10px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 4px;
+  background-color:  #0c8fc3 !important;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.calificacion-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.calificacion-button:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+/* Botones de aplicar y reset */
+.filter-buttons {
+  display: flex;
+  gap: 20px;  /* Mantiene los botones separados */
+  justify-content: center;  /* Alinea los botones en el centro */
+  width: auto;  /* Asegura que los botones no se estiren */
+}
+
+/* Estilo para los botones */
+.filter-apply-button,
+.filter-reset-button {
+  font-size: 1rem;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: "Roboto", sans-serif;
+}
+
+.filter-apply-button {
+  background-color: #0c8fc3 !important;
+  color: white;
+}
+
+.filter-apply-button:hover {
+  background-color: #0056b3;
+}
+
+.filter-reset-button {
+  background-color: #ff4d4d;
+  color: white;
+}
+
+.filter-reset-button:hover {
+  background-color: #cc0000;
+}
+
+/* Responsividad para pantallas grandes (desde 1366px) */
+@media (min-width: 1366px) {
+  .dropdown-container {
+    width: 80%;  /* Hace el contenedor más grande */
+    margin-left: auto;
+    margin-right: auto;
   }
-  
-  .dropdown-button {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
+
+  .filter-buttons {
+    justify-content: flex-start;  /* Alinea los botones a la izquierda si es necesario */
   }
-  
-  .dropdown-button:hover {
-    background-color: #0056b3;
+}
+
+/* Responsividad para pantallas medianas (desde 1024px hasta 1366px) */
+@media (max-width: 1366px) and (min-width: 1024px) {
+  .dropdown-container {
+    width: 75%;
   }
-  
-  .caret {
-    margin-left: 5px;
-  }
-  
-  .dropdown-content {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 250px; /* Asegura un tamaño mínimo */
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-    padding: 15px;
-    z-index: 1;
-    border-radius: 5px;
-  }
-  
-  .filter-group {
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .filter-group label {
-    font-weight: bold;
-    margin-bottom: 8px;
-  }
-  
-  .filter-select {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
+
   .filter-apply-button,
   .filter-reset-button {
-    font-size: 16px;
-    padding: 10px;
-    width: 100%; 
+    width: 48%;  /* Hace que los botones se alineen en una fila */
+  }
+}
+
+/* Responsividad para pantallas pequeñas (hasta 1024px) */
+@media (max-width: 1024px) {
+  .dropdown-container {
+    width: 90%;
+  }
+
+  .filter-apply-button,
+  .filter-reset-button {
+    width: 48%;
     margin-top: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+  }
+
+  .filter-buttons {
+    justify-content: space-between;  /* Los botones se alinean en fila */
+    width: 100%;
+  }
+}
+
+/* Responsividad para dispositivos móviles (hasta 768px) */
+@media (max-width: 768px) {
+  .dropdown-container {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .filter-group {
+    width: 100%;
     text-align: center;
   }
-  
-  .filter-apply-button {
-    background-color: #28a745;
-    color: white;
-  }
-  
-  .filter-apply-button:hover {
-    background-color: #218838;
-  }
-  
+
+  .filter-apply-button,
   .filter-reset-button {
-    background-color: #d9534f;
-    color: white;
-  }
-  
-  .filter-reset-button:hover {
-    background-color: #c9302c;
-  }
-  
-  /* Responsividad */
-  @media (max-width: 768px) {
-    .dropdown-content {
-      position: static;
-      width: 100%;
-      box-shadow: none;
-      padding: 10px;
-    }
-  
-    .filter-buttons {
-      display: flex;
-      flex-direction: column; /* Botones uno debajo del otro */
-      gap: 10px;
-    }
-  
-    .filter-apply-button,
-    .filter-reset-button {
-      width: 100%;
-    }
-  }
-  .calificacion-controls {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    width: 100%;
     margin-top: 10px;
   }
-  
 
-  
-  .calificacion-button {
-    padding: 5px 10px;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    background-color: #007bff;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+  .filter-buttons {
+    justify-content: center;
+    width: 100%;
   }
-  
-  .calificacion-button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
+}
+
+/* Responsividad para pantallas muy pequeñas (hasta 480px) */
+@media (max-width: 480px) {
+  .dropdown-container {
+    width: 100%;
+    padding: 10px;
   }
-  
-  .calificacion-button:hover:not(:disabled) {
-    background-color: #0056b3;
+
+  .filter-group {
+    width: 100%;
+    text-align: center;
   }
-  
-  .estrella {
-    font-size: 24px; 
-    color: gold;
+
+  .filter-apply-button,
+  .filter-reset-button {
+    width: 100%;
+    margin-top: 10px;
   }
- 
+
+  .filter-buttons {
+    justify-content: center;
+    width: 100%;
+  }
+}

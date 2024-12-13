@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Form } from 'react-bootstrap';
-import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import '../styles/Buscador.css';
 import { FaSearch } from 'react-icons/fa';
+import '../styles/Buscador.css';
 
-function Buscador() {
+function Buscador({ onSearch }) {
   const [busqueda, setBusqueda] = useState('');
   const location = useLocation();
   const navigate = useNavigate();
@@ -26,11 +26,10 @@ function Buscador() {
   const handleInputChange = (event) => {
     setBusqueda(event.target.value);
   };
-
   const handleSearch = async (event) => {
     event.preventDefault();
     if (busqueda.trim() === '') return;
-
+  
     let urlBusqueda = `http://localhost:5000/api/buscar?q=${busqueda}`;
     if (location.pathname === '/libros') {
       urlBusqueda = `http://localhost:5000/api/buscar-libros?q=${busqueda}`;
@@ -39,16 +38,22 @@ function Buscador() {
     } else if (location.pathname === '/series') {
       urlBusqueda = `http://localhost:5000/api/buscar-series?q=${busqueda}`;
     }
-
+  
     try {
       const res = await axios.get(urlBusqueda);
-      console.log('Resultados de la búsqueda:', res.data);
-      navigate(`/resultados?q=${busqueda}`, { state: { resultados: res.data, termino: busqueda } });
-      setBusqueda('');
+  
+      // Si estamos en la página de inicio, redirigir a los resultados
+      if (location.pathname === '/') {
+        navigate(`/resultados`, { state: { resultados: res.data, termino: busqueda } });
+      } else {
+        onSearch(res.data, busqueda); // Pasar los resultados a la página actual
+      }
+      setBusqueda(''); // Limpiar la búsqueda después de enviarla
     } catch (error) {
       console.error('Error en la búsqueda:', error);
     }
   };
+  
 
   return (
     <Form className="search-form d-flex" onSubmit={handleSearch}>

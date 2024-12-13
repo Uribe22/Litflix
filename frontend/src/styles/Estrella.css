@@ -2,14 +2,40 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 10px;
 }
 
 .estrella {
-  font-size: 20px; 
-  color: #e8b726; 
+  font-size: 24px;
+  margin: 0 5px;
+  cursor: pointer;
+  color: #ddd; /* Color de estrellas vacías */
+  transition: color 0.2s ease-in-out;
+}
+
+.estrella.llena {
+  color: #ffc107; /* Color de estrellas llenas */
 }
 
 .estrella.vacia {
-  color: #ddd; 
+  color: #ddd;
+}
+.calificacion-estrellas {
+  display: flex;
+  gap: 5px;
+}
+
+.estrella {
+  color: #f39c12; /* Color dorado para las estrellas */
+}
+
+.llena {
+  color: #f39c12; /* Estrella llena dorada */
+}
+
+.media {
+  color: #f1c40f; /* Estrella media con un color amarillo más claro */
+}
+
+.vacia {
+  color: #ccc; /* Color gris para las estrellas vacías */
 }

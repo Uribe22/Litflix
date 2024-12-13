@@ -2,20 +2,22 @@
   padding: 20px;
   margin: 0 auto;
   color: white;
-  width: 100%; 
+  width: 100%;
+  margin-top: 30px;
 }
 
 .detalle-obra-header {
-  background: #1a3b5d;
+  background: #333;
   border-radius: 8px;
-
+  width: 90%;
+  justify-self: center;
 }
+
 @media (min-width: 992px) {
   .detalle-obra {
-    width: 93%; /* Para pantallas grandes, ocupa el 70% del ancho */
+    width: 93%;
   }
 }
-
 
 .detalle-obra-header {
   display: flex;
@@ -43,7 +45,8 @@
 
 .detalle-obra-info {
   flex: 1;
-  text-align: left;
+  text-align: justify;
+  margin-right: 20px;
 }
 
 .detalle-obra-info h1 {
@@ -58,115 +61,57 @@
 
 .sinopsis {
   font-size: 1.2rem;
-  margin: 20px 0;
+  margin: 20px;
   color: #c0c0c0;
+  max-height: 200px; /* Limitar la altura de la sinopsis */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 6; /* Limita a 6 líneas, puedes ajustar */
+  -webkit-box-orient: vertical;
+}
+
+.sinopsis.expandido {
+  max-height: none;
+  -webkit-line-clamp: none;
+}
+
+.ver-mas {
+  color: #1e90ff;
+  cursor: pointer;
+  font-weight: bold;
+  text-align: center;
+  display: block;
+  margin-top: 10px;
 }
 
 .calificacion {
   display: flex;
   align-items: center;
-  font-size: 1.2rem;
+  font-size: 3.2rem;
+  justify-content: left; /* Centrado del ranking con las estrellas */
 }
-
+.calificacion p{
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+  justify-content: left;
+  margin-top: 10px;
+}
 .boton-lista {
   margin-top: 15px;
   padding: 10px 20px;
-  background-color: #1E90FF;
+  background-color: #1e90ff;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-}
-
-.agregar-reseña {
-  margin-top: 40px;
-  padding: 20px;
-  background-color: #1a3b5d;
-  border-radius: 8px;
-}
-
-.reseñas h2 {
-  font-size: 2rem;
-  margin-bottom: 15px;
-}
-
-.reseña {
-  background-color: #1a3b5d;
-  padding: 15px;
-  border-radius: 8px;
-  margin-bottom: 15px;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-}
-
-.reseña h4 {
-  margin: 0;
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-.reseña p {
-  margin: 10px 0;
-  flex-grow: 1;
-}
-
-.reseña .calificacion {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  margin-top: 5px;
-}
-
-.reseña .calificacion .estrellas {
-  margin-left: 0;
-}
-
-.reseña span {
-  font-size: 0.9rem;
-  color: #999;
-  position: absolute;
-  top: 5px;
-  right: 15px;
-  padding-top: 5px;
-}
-
-.boton-reseñas {
-  background-color: #1E90FF;
-  color: white;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
-.agregar-reseña h3 {
-  font-size: 1.8rem;
-  margin-bottom: 10px;
-}
-
-.agregar-reseña .calificacion {
-  display: flex;
-  justify-content: left;
-  margin-bottom: 15px;
-}
-
-textarea {
-  width: 100%;
-  height: 100px;
-  padding: 10px;
-  margin-top: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  resize: none;
 }
 
 .boton-enviar {
   margin-top: 10px;
   padding: 10px 20px;
-  background-color: #1E90FF;
+  background-color: #1e90ff;
   color: white;
   border: none;
   border-radius: 5px;
@@ -183,7 +128,6 @@ textarea {
     justify-content: center;
   }
 
-  
   .obra-imagen {
     margin-bottom: 20px;
   }
@@ -195,5 +139,34 @@ textarea {
   .boton-lista {
     justify-content: center;
     margin-top: 20px;
+  }
+
+  .sinopsis {
+    max-height: none;
+    -webkit-line-clamp: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .detalle-obra-info h1 {
+    font-size: 1.5rem;
+  }
+
+  .detalle-obra-info p {
+    font-size: 1rem;
+  }
+
+  .sinopsis {
+    font-size: 1rem;
+    margin: 10px;
+  }
+
+  .obra-imagen {
+    width: 100%;
+    height: auto;
+  }
+
+  .calificacion {
+    font-size: 1rem;
   }
 }

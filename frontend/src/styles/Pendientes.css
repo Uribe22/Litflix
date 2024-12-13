@@ -1,0 +1,104 @@
+.pendientes-container {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+  
+.pendientes-container h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+    font-family: "Merriweather", serif;
+}
+  
+.pendientes-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    justify-content: center;
+    margin: 0 auto;
+}
+  
+.pendientes-tarjeta {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #000000;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.pendientes-tarjeta:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.pendientes-tarjeta:active {
+    transform: translateY(0px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+  
+.pendientes-imagen {
+    width: 160px;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    margin-top: -10px;
+}
+  
+.pendientes-titulo {
+    font-size: 20px;
+    color: aliceblue;
+    font-family: "Merriweather", serif;
+    text-align: center;
+    margin: 10px 0;
+    line-height: 1.4;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+  
+.pendientes-expectativa {
+    font-size: 14px;
+    color: #dba800;
+    margin-bottom: 15px;
+}
+  
+.eliminar-boton-superior {
+    position: relative;
+    right: -150px;
+    background-color: red;
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 16px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.eliminar-boton-superior:hover {
+    background-color: darkred;
+}
+
+.pendientes-tipo {
+    font-size: 14px;
+    color: white;
+    background-color: #303989;
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-top: 4px;
+}
+
+.pendientes-tarjeta:hover .eliminar-boton-superior {
+    opacity: 1;
+}
